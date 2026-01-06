@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Light Theme -->
+    <color name="primary">#6750A4</color>
+    <color name="primary_variant">#7F67BE</color>
+    <color name="on_primary">#FFFFFF</color>
+    <color name="surface">#FFFBFE</color>
+    <color name="on_surface">#1C1B1F</color>
+    <color name="surface_variant">#E7E0EC</color>
+    <color name="keyboard_bg">#ECEFF1</color>
+    <color name="key_bg">#FFFFFF</color>
+    <color name="key_text">#1C1B1F</color>
+    <color name="mic_button">#6750A4</color>
+    <color name="mic_button_recording">#B3261E</color>
+
+    <!-- Dark Theme -->
+    <color name="primary_dark">#D0BCFF</color>
+    <color name="on_primary_dark">#381E72</color>
+    <color name="surface_dark">#1C1B1F</color>
+    <color name="on_surface_dark">#E6E1E5</color>
+    <color name="surface_variant_dark">#49454F</color>
+    <color name="keyboard_bg_dark">#2B2930</color>
+    <color name="key_bg_dark">#49454F</color>
+    <color name="key_text_dark">#E6E1E5</color>
+    <color name="mic_button_dark">#D0BCFF</color>
+    <color name="mic_button_recording_dark">#F2B8B5</color>
+</resources>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Voice Transcribe</string>
+    <string name="settings_title">Settings</string>
+
+    <!-- Service -->
+    <string name="service_notification_title">Voice Transcribe Active</string>
+    <string name="service_notification_text">Tap the floating mic to transcribe speech</string>
+    <string name="accessibility_service_label">Voice Transcribe Text Input</string>
+    <string name="accessibility_service_description">Allows Voice Transcribe to insert transcribed text directly into text fields. Enable this for seamless voice-to-text input.</string>
+
+    <!-- Settings -->
+    <string name="setting_service_enabled">Enable Service</string>
+    <string name="setting_language">Preferred Language</string>
+    <string name="setting_language_auto">Auto-detect</string>
+    <string name="setting_theme">Theme</string>
+    <string name="setting_theme_system">System</string>
+    <string name="setting_theme_light">Light</string>
+    <string name="setting_theme_dark">Dark</string>
+    <string name="setting_model">Speech Model</string>
+    <string name="setting_model_download">Download Model</string>
+    <string name="setting_model_ready">Model Ready</string>
+    <string name="setting_model_downloading">Downloading…</string>
+    <string name="setting_model_size">~600 MB</string>
+    <string name="setting_accessibility">Text Input Permission</string>
+    <string name="setting_accessibility_desc">Enable accessibility service for direct text input</string>
+    <string name="setting_overlay">Overlay Permission</string>
+    <string name="setting_overlay_desc">Required to show floating mic button</string>
+
+    <!-- Recording states -->
+    <string name="state_idle">Tap to speak</string>
+    <string name="state_recording">Recording…</string>
+    <string name="state_processing">Processing…</string>
+    <string name="state_error">Error occurred</string>
+
+    <!-- Permissions -->
+    <string name="permission_mic_title">Microphone Permission</string>
+    <string name="permission_mic_message">Required to record your voice for transcription.</string>
+    <string name="permission_overlay_title">Overlay Permission</string>
+    <string name="permission_overlay_message">Required to show the floating microphone button.</string>
+
+    <!-- Languages -->
+    <string name="lang_auto">Auto-detect</string>
+    <string name="lang_en">English</string>
+    <string name="lang_de">German</string>
+    <string name="lang_fr">French</string>
+    <string name="lang_es">Spanish</string>
+    <string name="lang_it">Italian</string>
+    <string name="lang_pt">Portuguese</string>
+    <string name="lang_nl">Dutch</string>
+    <string name="lang_pl">Polish</string>
+    <string name="lang_ru">Russian</string>
+    <string name="lang_uk">Ukrainian</string>
+    <string name="lang_cs">Czech</string>
+    <string name="lang_sk">Slovak</string>
+    <string name="lang_hu">Hungarian</string>
+    <string name="lang_ro">Romanian</string>
+    <string name="lang_bg">Bulgarian</string>
+    <string name="lang_hr">Croatian</string>
+    <string name="lang_sl">Slovenian</string>
+    <string name="lang_el">Greek</string>
+    <string name="lang_da">Danish</string>
+    <string name="lang_sv">Swedish</string>
+    <string name="lang_fi">Finnish</string>
+    <string name="lang_et">Estonian</string>
+    <string name="lang_lv">Latvian</string>
+    <string name="lang_lt">Lithuanian</string>
+    <string name="lang_mt">Maltese</string>
+
+    <!-- Actions -->
+    <string name="action_grant_permission">Grant Permission</string>
+    <string name="action_download">Download</string>
+    <string name="action_cancel">Cancel</string>
+</resources>

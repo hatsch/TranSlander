@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.VoiceKeyboard" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:statusBarColor">@color/primary</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+    </style>
+
+    <style name="Theme.VoiceKeyboard.Dark" parent="android:Theme.Material.NoActionBar">
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:navigationBarColor">@color/surface_dark</item>
+    </style>
+
+    <style name="KeyboardTheme">
+        <item name="android:background">@color/keyboard_bg</item>
+    </style>
+
+    <style name="KeyboardTheme.Dark">
+        <item name="android:background">@color/keyboard_bg_dark</item>
+    </style>
+</resources>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="4dp">
+
+    <ImageView
+        android:id="@+id/floating_mic_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:src="@drawable/ic_mic"
+        android:background="@drawable/mic_button_bg"
+        android:contentDescription="@string/state_idle"
+        android:scaleType="centerInside"
+        android:elevation="8dp"
+        android:padding="12dp" />
+
+</FrameLayout>

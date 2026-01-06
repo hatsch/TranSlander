@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android Studio
+*.iml
+.idea/
+local.properties
+
+# APK files
+*.apk
+*.ap_
+
+# Native libs (downloaded during build)
+app/src/main/jniLibs/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
