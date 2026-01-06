@@ -21,6 +21,7 @@ class SettingsRepository(private val context: Context) {
         private val THEME_KEY = stringPreferencesKey("theme_mode")
         private val BUTTON_X_KEY = intPreferencesKey("button_x")
         private val BUTTON_Y_KEY = intPreferencesKey("button_y")
+        private val AUTO_LOAD_MODEL_KEY = booleanPreferencesKey("auto_load_model")
 
         const val LANGUAGE_AUTO = "auto"
         const val THEME_SYSTEM = "system"
@@ -44,6 +45,16 @@ class SettingsRepository(private val context: Context) {
         val x = preferences[BUTTON_X_KEY] ?: -1
         val y = preferences[BUTTON_Y_KEY] ?: -1
         Pair(x, y)
+    }
+
+    val autoLoadModel: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[AUTO_LOAD_MODEL_KEY] ?: false
+    }
+
+    suspend fun setAutoLoadModel(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[AUTO_LOAD_MODEL_KEY] = enabled
+        }
     }
 
     suspend fun setServiceEnabled(enabled: Boolean) {

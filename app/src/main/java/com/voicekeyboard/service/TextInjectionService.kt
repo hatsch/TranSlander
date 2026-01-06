@@ -1,13 +1,132 @@
 package com.voicekeyboard.service
 
+import android.accessibilityservice.AccessibilityButtonController
 import android.accessibilityservice.AccessibilityService
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Toast
+import com.voicekeyboard.VoiceKeyboardApp
+import com.voicekeyboard.asr.AudioRecorder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TextInjectionService : AccessibilityService() {
+
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var audioRecorder: AudioRecorder? = null
+    private var recordingJob: Job? = null
+    private var isRecording = false
+
+    private var accessibilityButtonCallback: AccessibilityButtonController.AccessibilityButtonCallback? = null
+
+    override fun onServiceConnected() {
+        super.onServiceConnected()
+        instance = this
+        Log.i(TAG, "Accessibility service connected")
+
+        // Initialize recognizer
+        initializeRecognizer()
+
+        // Register accessibility button callback
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            accessibilityButtonCallback = object : AccessibilityButtonController.AccessibilityButtonCallback() {
+                override fun onClicked(controller: AccessibilityButtonController) {
+                    Log.i(TAG, "Accessibility button clicked")
+                    toggleRecording()
+                }
+
+                override fun onAvailabilityChanged(controller: AccessibilityButtonController, available: Boolean) {
+                    Log.i(TAG, "Accessibility button availability: $available")
+                }
+            }
+            accessibilityButtonController.registerAccessibilityButtonCallback(accessibilityButtonCallback!!)
+        }
+    }
+
+    private fun initializeRecognizer() {
+        Log.i(TAG, "initializeRecognizer called")
+        serviceScope.launch(Dispatchers.IO) {
+            val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
+            val modelManager = VoiceKeyboardApp.instance.modelManager
+            Log.i(TAG, "Model ready: ${modelManager.isModelReady()}, recognizer ready: ${recognizerManager.isInitialized()}")
+
+            if (!modelManager.isModelReady()) {
+                withContext(Dispatchers.Main) {
+                    showToast("Model not downloaded. Open app to download.")
+                }
+                return@launch
+            }
+
+            if (!recognizerManager.isInitialized()) {
+                val success = recognizerManager.initialize()
+                withContext(Dispatchers.Main) {
+                    if (success) {
+                        showToast("Voice recognition ready")
+                    } else {
+                        showToast("Failed to load model")
+                    }
+                }
+            }
+        }
+    }
+
+    private fun toggleRecording() {
+        Log.i(TAG, "toggleRecording called, isRecording=$isRecording")
+        if (isRecording) {
+            stopRecording()
+        } else {
+            startRecording()
+        }
+    }
+
+    private fun startRecording() {
+        val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
+        Log.i(TAG, "startRecording called, recognizer ready=${recognizerManager.isInitialized()}")
+
+        if (!recognizerManager.isInitialized()) {
+            Log.w(TAG, "Recognizer not initialized, trying to initialize")
+            showToast("Loading model, please wait...")
+            initializeRecognizer()
+            return
+        }
+
+        isRecording = true
+        showToast("Recording...")
+
+        audioRecorder = AudioRecorder()
+        recordingJob = serviceScope.launch(Dispatchers.IO) {
+            Log.i(TAG, "Starting audio recording")
+            audioRecorder?.startRecording()
+        }
+    }
+
+    private fun stopRecording() {
+        Log.i(TAG, "stopRecording called")
+        isRecording = false
+        showToast("Processing...")
+
+        recordingJob?.cancel()
+
+        serviceScope.launch(Dispatchers.IO) {
+            val audioData = audioRecorder?.stopRecording()
+            audioRecorder?.release()
+            audioRecorder = null
+
+            Log.i(TAG, "Audio data size: ${audioData?.size ?: 0}")
+            if (audioData != null && audioData.isNotEmpty()) {
+                transcribeAudio(audioData)
+            }
+        }
+    }
 
     companion object {
         private const val TAG = "TextInjectionService"
@@ -17,10 +136,23 @@ class TextInjectionService : AccessibilityService() {
         fun isEnabled(): Boolean = instance != null
     }
 
-    override fun onServiceConnected() {
-        super.onServiceConnected()
-        instance = this
-        Log.i(TAG, "Accessibility service connected")
+    private suspend fun transcribeAudio(audioData: ShortArray) {
+        Log.i(TAG, "transcribeAudio called with ${audioData.size} samples")
+        val language = VoiceKeyboardApp.instance.settingsRepository.preferredLanguage.first()
+        val langCode = if (language == "auto") null else language
+
+        val result = VoiceKeyboardApp.instance.recognizerManager.transcribe(audioData, langCode)
+        Log.i(TAG, "Transcription result: '$result'")
+
+        if (!result.isNullOrBlank()) {
+            withContext(Dispatchers.Main) {
+                injectText(result)
+            }
+        } else {
+            withContext(Dispatchers.Main) {
+                showToast("No speech detected")
+            }
+        }
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -33,6 +165,12 @@ class TextInjectionService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && accessibilityButtonCallback != null) {
+            accessibilityButtonController.unregisterAccessibilityButtonCallback(accessibilityButtonCallback!!)
+        }
+        recordingJob?.cancel()
+        audioRecorder?.release()
+        serviceScope.cancel()
         instance = null
     }
 

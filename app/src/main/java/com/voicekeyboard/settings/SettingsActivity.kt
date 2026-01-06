@@ -150,7 +150,11 @@ fun SettingsScreen(
     val serviceEnabled by settingsRepository.serviceEnabled.collectAsStateWithLifecycle(initialValue = false)
     val preferredLanguage by settingsRepository.preferredLanguage.collectAsStateWithLifecycle(initialValue = SettingsRepository.LANGUAGE_AUTO)
     val themeMode by settingsRepository.themeMode.collectAsStateWithLifecycle(initialValue = SettingsRepository.THEME_SYSTEM)
+    val autoLoadModel by settingsRepository.autoLoadModel.collectAsStateWithLifecycle(initialValue = false)
     val downloadState by modelManager.downloadState.collectAsStateWithLifecycle()
+    val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
+    val isRecognizerReady by recognizerManager.isReady.collectAsStateWithLifecycle()
+    val isRecognizerLoading by recognizerManager.isLoading.collectAsStateWithLifecycle()
 
     val hasMicPermission = remember { mutableStateOf(false) }
     val hasOverlayPermission = remember { mutableStateOf(false) }
@@ -186,12 +190,33 @@ fun SettingsScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Service Toggle
-            SettingsSection(title = "Service") {
-                SwitchSettingItem(
-                    title = stringResource(R.string.setting_service_enabled),
-                    subtitle = if (serviceEnabled) "Floating mic is active" else "Tap to enable",
+            // Accessibility Service (required)
+            SettingsSection(title = "Accessibility Service") {
+                PermissionItem(
+                    title = "Voice Keyboard Service",
+                    subtitle = if (hasAccessibilityEnabled.value)
+                        "Enabled - Use accessibility button to record"
+                        else "Enable in Settings to use voice input",
+                    icon = Icons.Default.Accessibility,
+                    isGranted = hasAccessibilityEnabled.value,
+                    onClick = { onOpenAccessibilitySettings() }
+                )
+
+                PermissionItem(
+                    title = stringResource(R.string.permission_mic_title),
+                    subtitle = if (hasMicPermission.value) "Granted" else "Required for voice input",
                     icon = Icons.Default.Mic,
+                    isGranted = hasMicPermission.value,
+                    onClick = { if (!hasMicPermission.value) onRequestMicPermission() }
+                )
+            }
+
+            // Optional Floating Mic Button
+            SettingsSection(title = "Floating Mic Button (Optional)") {
+                SwitchSettingItem(
+                    title = "Enable Floating Button",
+                    subtitle = if (serviceEnabled) "Shows red when recording" else "Additional mic button overlay",
+                    icon = Icons.Default.RadioButtonChecked,
                     checked = serviceEnabled,
                     onCheckedChange = { enabled ->
                         scope.launch {
@@ -200,42 +225,44 @@ fun SettingsScreen(
                         }
                     }
                 )
-            }
 
-            // Permissions Section
-            SettingsSection(title = "Permissions") {
-                PermissionItem(
-                    title = stringResource(R.string.permission_mic_title),
-                    subtitle = if (hasMicPermission.value) "Granted" else "Required for voice input",
-                    icon = Icons.Default.Mic,
-                    isGranted = hasMicPermission.value,
-                    onClick = { if (!hasMicPermission.value) onRequestMicPermission() }
-                )
-
-                PermissionItem(
-                    title = stringResource(R.string.setting_overlay),
-                    subtitle = if (hasOverlayPermission.value) "Granted" else stringResource(R.string.setting_overlay_desc),
-                    icon = Icons.Default.Layers,
-                    isGranted = hasOverlayPermission.value,
-                    onClick = { if (!hasOverlayPermission.value) onRequestOverlayPermission() }
-                )
-
-                PermissionItem(
-                    title = stringResource(R.string.setting_accessibility),
-                    subtitle = if (hasAccessibilityEnabled.value) "Enabled" else stringResource(R.string.setting_accessibility_desc),
-                    icon = Icons.Default.Accessibility,
-                    isGranted = hasAccessibilityEnabled.value,
-                    onClick = { onOpenAccessibilitySettings() }
-                )
+                if (!hasOverlayPermission.value) {
+                    PermissionItem(
+                        title = stringResource(R.string.setting_overlay),
+                        subtitle = "Required for floating button",
+                        icon = Icons.Default.Layers,
+                        isGranted = false,
+                        onClick = { onRequestOverlayPermission() }
+                    )
+                }
             }
 
             // Model Section
             SettingsSection(title = "Speech Model") {
                 ModelSettingItem(
                     downloadState = downloadState,
+                    isRecognizerReady = isRecognizerReady,
+                    isRecognizerLoading = isRecognizerLoading,
                     onDownload = {
                         scope.launch {
                             modelManager.downloadModel()
+                        }
+                    },
+                    onLoadModel = {
+                        scope.launch {
+                            recognizerManager.initialize()
+                        }
+                    }
+                )
+
+                SwitchSettingItem(
+                    title = "Auto-load on startup",
+                    subtitle = if (autoLoadModel) "Model loads when app starts" else "Load model manually",
+                    icon = Icons.Default.Speed,
+                    checked = autoLoadModel,
+                    onCheckedChange = { enabled ->
+                        scope.launch {
+                            settingsRepository.setAutoLoadModel(enabled)
                         }
                     }
                 )
@@ -331,39 +358,49 @@ fun PermissionItem(
 @Composable
 fun ModelSettingItem(
     downloadState: ModelManager.DownloadState,
-    onDownload: () -> Unit
+    isRecognizerReady: Boolean,
+    isRecognizerLoading: Boolean,
+    onDownload: () -> Unit,
+    onLoadModel: () -> Unit
 ) {
     ListItem(
         headlineContent = { Text(stringResource(R.string.setting_model)) },
         supportingContent = {
-            when (downloadState) {
-                is ModelManager.DownloadState.NotStarted -> Text("Parakeet v3 (~600 MB)")
-                is ModelManager.DownloadState.Downloading -> Text("Downloading: ${downloadState.progress}%")
-                is ModelManager.DownloadState.Extracting -> Text("Extracting...")
-                is ModelManager.DownloadState.Ready -> Text(stringResource(R.string.setting_model_ready))
-                is ModelManager.DownloadState.Error -> Text("Error: ${downloadState.message}")
+            when {
+                downloadState is ModelManager.DownloadState.NotStarted -> Text("Parakeet v3 (~600 MB)")
+                downloadState is ModelManager.DownloadState.Downloading -> Text("Downloading: ${downloadState.progress}%")
+                downloadState is ModelManager.DownloadState.Extracting -> Text("Extracting...")
+                downloadState is ModelManager.DownloadState.Error -> Text("Error: ${downloadState.message}")
+                isRecognizerLoading -> Text("Loading model...")
+                isRecognizerReady -> Text("Model loaded and ready")
+                downloadState is ModelManager.DownloadState.Ready -> Text("Downloaded - tap Load to activate")
             }
         },
         leadingContent = { Icon(Icons.Default.Cloud, contentDescription = null) },
         trailingContent = {
-            when (downloadState) {
-                is ModelManager.DownloadState.NotStarted,
-                is ModelManager.DownloadState.Error -> {
+            when {
+                downloadState is ModelManager.DownloadState.NotStarted ||
+                downloadState is ModelManager.DownloadState.Error -> {
                     Button(onClick = onDownload) {
                         Text(stringResource(R.string.action_download))
                     }
                 }
-                is ModelManager.DownloadState.Downloading -> {
+                downloadState is ModelManager.DownloadState.Downloading -> {
                     CircularProgressIndicator(
                         progress = { downloadState.progress / 100f },
                         modifier = Modifier.size(24.dp)
                     )
                 }
-                is ModelManager.DownloadState.Extracting -> {
+                downloadState is ModelManager.DownloadState.Extracting || isRecognizerLoading -> {
                     CircularProgressIndicator(modifier = Modifier.size(24.dp))
                 }
-                is ModelManager.DownloadState.Ready -> {
+                isRecognizerReady -> {
                     Icon(Icons.Default.Check, "Ready", tint = MaterialTheme.colorScheme.primary)
+                }
+                downloadState is ModelManager.DownloadState.Ready -> {
+                    Button(onClick = onLoadModel) {
+                        Text("Load")
+                    }
                 }
             }
         }

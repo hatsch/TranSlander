@@ -20,7 +20,6 @@ import androidx.core.app.NotificationCompat
 import com.voicekeyboard.R
 import com.voicekeyboard.VoiceKeyboardApp
 import com.voicekeyboard.asr.AudioRecorder
-import com.voicekeyboard.asr.ParakeetRecognizer
 import com.voicekeyboard.settings.SettingsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +44,6 @@ class FloatingMicService : Service() {
     private lateinit var layoutParams: WindowManager.LayoutParams
 
     private var audioRecorder: AudioRecorder? = null
-    private var recognizer: ParakeetRecognizer? = null
     private var recordingJob: Job? = null
 
     private var isRecording = false
@@ -93,7 +91,6 @@ class FloatingMicService : Service() {
         super.onDestroy()
         recordingJob?.cancel()
         audioRecorder?.release()
-        recognizer?.release()
         if (::floatingView.isInitialized) {
             windowManager.removeView(floatingView)
         }
@@ -176,15 +173,13 @@ class FloatingMicService : Service() {
     private fun initializeRecognizer() {
         Log.i(TAG, "initializeRecognizer called")
         serviceScope.launch(Dispatchers.IO) {
+            val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
             val modelManager = VoiceKeyboardApp.instance.modelManager
-            Log.i(TAG, "Model ready: ${modelManager.isModelReady()}, path: ${modelManager.getModelPath()}")
-            if (modelManager.isModelReady()) {
-                try {
-                    recognizer = ParakeetRecognizer(this@FloatingMicService, modelManager.getModelPath())
-                    Log.i(TAG, "Recognizer initialized: ${recognizer?.isReady()}")
-                } catch (e: Exception) {
-                    Log.e(TAG, "Failed to initialize recognizer", e)
-                }
+            Log.i(TAG, "Model ready: ${modelManager.isModelReady()}, recognizer ready: ${recognizerManager.isInitialized()}")
+
+            if (modelManager.isModelReady() && !recognizerManager.isInitialized()) {
+                val success = recognizerManager.initialize()
+                Log.i(TAG, "Recognizer initialization: $success")
             }
         }
     }
@@ -199,11 +194,14 @@ class FloatingMicService : Service() {
     }
 
     private fun startRecording() {
-        Log.i(TAG, "startRecording called, recognizer=${recognizer != null}")
-        if (recognizer == null) {
-            Log.w(TAG, "Recognizer is null, model still loading")
+        val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
+        Log.i(TAG, "startRecording called, recognizer ready=${recognizerManager.isInitialized()}")
+
+        if (!recognizerManager.isInitialized()) {
+            Log.w(TAG, "Recognizer not initialized, trying to load")
             TextInjectionService.instance?.showToast("Loading model, please wait...")
                 ?: android.widget.Toast.makeText(this, "Loading model, please wait...", android.widget.Toast.LENGTH_SHORT).show()
+            initializeRecognizer()
             return
         }
 
@@ -241,7 +239,7 @@ class FloatingMicService : Service() {
         val language = VoiceKeyboardApp.instance.settingsRepository.preferredLanguage.first()
         val langCode = if (language == "auto") null else language
 
-        val result = recognizer?.transcribe(audioData, langCode)
+        val result = VoiceKeyboardApp.instance.recognizerManager.transcribe(audioData, langCode)
         Log.i(TAG, "Transcription result: '$result'")
 
         if (!result.isNullOrBlank()) {
