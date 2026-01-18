@@ -25,10 +25,17 @@ An Android voice typing app that works **completely offline**. Speak into your p
 
 ## Build
 ```bash
-export ANDROID_HOME=~/Android/Sdk
-export JAVA_HOME=~/android-studio/jbr
+# IMPORTANT: Use absolute paths, not ~ (tilde doesn't expand in all contexts)
+export ANDROID_HOME=/home/hatsch/Android/Sdk
+export JAVA_HOME=/home/hatsch/android-studio/jbr
 export PATH=$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH
 ./gradlew assembleDebug
+
+# Install
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+
+# If signature mismatch error, uninstall first:
+adb uninstall com.translander && adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ## Architecture
@@ -50,7 +57,7 @@ Tap mic → AudioRecorder (16kHz PCM) → ParakeetRecognizer (ONNX)
 
 ## Key Directories
 ```
-app/src/main/java/com/voicekeyboard/
+app/src/main/java/com/translander/
 ├── asr/                  # Speech recognition
 │   ├── AudioRecorder.kt
 │   ├── ModelManager.kt       # Downloads Parakeet model from HuggingFace
@@ -78,7 +85,7 @@ Post-processing text replacements after speech recognition. User defines rules l
 
 ### Files Added/Modified
 - **NEW**: `asr/DictionaryManager.kt` - Stores rules in `replacements.json`, applies whole-word regex matching
-- `VoiceKeyboardApp.kt` - Added `dictionaryManager` instance
+- `TranslanderApp.kt` - Added `dictionaryManager` instance
 - `asr/RecognizerManager.kt` - Calls `applyReplacements()` after transcription
 - `settings/SettingsRepository.kt` - Added `dictionaryEnabled` preference
 - `settings/SettingsActivity.kt` - Added "Word Corrections" UI section with dialog
@@ -176,31 +183,16 @@ OfflineRecognizerConfig(
 - READ_EXTERNAL_STORAGE (API < 33, audio monitor)
 - READ_MEDIA_AUDIO (API >= 33, audio monitor)
 
-## Current State (Uncommitted)
+## Package Info
+- **Package**: `com.translander`
+- **App Class**: `TranslanderApp.kt`
+- **Main Activity**: `SettingsActivity.kt`
 
-Voice message transcription feature implemented:
-
-```
-New files:
-  - app/src/main/java/com/voicekeyboard/transcribe/AudioDecoder.kt
-  - app/src/main/java/com/voicekeyboard/transcribe/TranscribeActivity.kt
-  - app/src/main/java/com/voicekeyboard/transcribe/AudioMonitorService.kt
-  - app/src/main/java/com/voicekeyboard/transcribe/TranscribeManager.kt
-  - app/src/main/res/xml/file_paths.xml
-
-Modified:
-  - app/src/main/AndroidManifest.xml (permissions, activity, service, provider)
-  - app/src/main/java/com/voicekeyboard/settings/SettingsActivity.kt (transcription section)
-  - app/src/main/java/com/voicekeyboard/settings/SettingsRepository.kt (monitor settings)
-  - app/src/main/res/values/themes.xml (dialog theme)
-  - app/src/main/res/values/strings.xml (transcription strings)
-  - CLAUDE.md (documentation)
-```
-
-**Testing steps:**
-1. Build: `./gradlew assembleDebug`
-2. Install: `adb install -r app/build/outputs/apk/debug/app-debug.apk`
-3. Test share: WhatsApp → share voice message → Voice Keyboard
-4. Test open with: File manager → select audio → Open with Voice Keyboard
-5. Test monitoring: Enable in settings → Download voice in Signal → notification appears → tap → transcription works
-6. Test formats: OPUS, AAC, M4A, OGG
+## Testing
+1. Build and install (see Build section above)
+2. Test floating mic: Enable in Settings → tap to transcribe
+3. Test accessibility button: Enable in Android Settings → Accessibility → Translander
+4. Test share: WhatsApp → share voice message → Translander appears in share sheet
+5. Test open with: File manager → select audio → Open with Translander
+6. Test folder monitoring: Enable in Settings → new audio in Downloads → auto-transcription
+7. Test formats: OPUS, AAC, M4A, OGG, MP3
