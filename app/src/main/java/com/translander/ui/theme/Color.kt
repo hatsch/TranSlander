@@ -1,4 +1,4 @@
-package com.voicekeyboard.ui.theme
+package com.translander.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

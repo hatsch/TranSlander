@@ -1,4 +1,4 @@
-package com.voicekeyboard.transcribe
+package com.translander.transcribe
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -12,8 +12,8 @@ import android.os.FileObserver
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.FileProvider
-import com.voicekeyboard.R
-import com.voicekeyboard.VoiceKeyboardApp
+import com.translander.R
+import com.translander.TranslanderApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -29,7 +29,7 @@ class AudioMonitorService : Service() {
     private val TAG = "AudioMonitorService"
 
     companion object {
-        const val ACTION_STOP = "com.voicekeyboard.action.STOP_MONITOR"
+        const val ACTION_STOP = "com.translander.action.STOP_MONITOR"
 
         const val NOTIFICATION_CHANNEL_ID = "audio_monitor"
         const val SERVICE_NOTIFICATION_ID = 2001
@@ -129,7 +129,7 @@ class AudioMonitorService : Service() {
 
     private fun startMonitoring() {
         serviceScope.launch {
-            val settings = VoiceKeyboardApp.instance.settingsRepository
+            val settings = TranslanderApp.instance.settingsRepository
             val monitoredPaths = settings.monitoredFolders.first()
                 .ifEmpty { getDefaultMonitoredPaths() }
 

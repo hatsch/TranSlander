@@ -7,4 +7,4 @@
     android:canRetrieveWindowContent="true"
     android:canPerformGestures="false"
     android:accessibilityFlags="flagRequestAccessibilityButton"
-    android:settingsActivity="com.voicekeyboard.settings.SettingsActivity" />
+    android:settingsActivity="com.translander.settings.SettingsActivity" />

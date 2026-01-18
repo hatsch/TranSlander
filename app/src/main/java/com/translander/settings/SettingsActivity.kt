@@ -1,4 +1,4 @@
-package com.voicekeyboard.settings
+package com.translander.settings
 
 import android.Manifest
 import android.content.Intent
@@ -37,14 +37,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.voicekeyboard.R
-import com.voicekeyboard.VoiceKeyboardApp
-import com.voicekeyboard.asr.DictionaryManager
-import com.voicekeyboard.asr.ModelManager
-import com.voicekeyboard.service.FloatingMicService
-import com.voicekeyboard.service.TextInjectionService
-import com.voicekeyboard.transcribe.TranscribeManager
-import com.voicekeyboard.ui.theme.VoiceKeyboardTheme
+import com.translander.R
+import com.translander.TranslanderApp
+import com.translander.asr.DictionaryManager
+import com.translander.asr.ModelManager
+import com.translander.service.FloatingMicService
+import com.translander.service.TextInjectionService
+import com.translander.transcribe.TranscribeManager
+import com.translander.ui.theme.TranslanderTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -107,7 +107,7 @@ class SettingsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val settingsRepository = VoiceKeyboardApp.instance.settingsRepository
+            val settingsRepository = TranslanderApp.instance.settingsRepository
             val themeMode by settingsRepository.themeMode.collectAsStateWithLifecycle(
                 initialValue = SettingsRepository.THEME_SYSTEM
             )
@@ -118,7 +118,7 @@ class SettingsActivity : ComponentActivity() {
                 else -> null
             }
 
-            VoiceKeyboardTheme(
+            TranslanderTheme(
                 darkTheme = isDarkTheme ?: androidx.compose.foundation.isSystemInDarkTheme()
             ) {
                 SettingsScreen(
@@ -144,7 +144,7 @@ class SettingsActivity : ComponentActivity() {
         refreshTrigger.value++
 
         // Sync floating service state
-        val app = VoiceKeyboardApp.instance
+        val app = TranslanderApp.instance
         app.applicationScope.launch {
             val serviceEnabled = app.settingsRepository.serviceEnabled.first()
             val recognizerReady = app.recognizerManager.isInitialized()
@@ -266,18 +266,18 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-    val settingsRepository = VoiceKeyboardApp.instance.settingsRepository
-    val modelManager = VoiceKeyboardApp.instance.modelManager
+    val settingsRepository = TranslanderApp.instance.settingsRepository
+    val modelManager = TranslanderApp.instance.modelManager
 
     val serviceEnabled by settingsRepository.serviceEnabled.collectAsStateWithLifecycle(initialValue = false)
     val preferredLanguage by settingsRepository.preferredLanguage.collectAsStateWithLifecycle(initialValue = SettingsRepository.LANGUAGE_AUTO)
     val themeMode by settingsRepository.themeMode.collectAsStateWithLifecycle(initialValue = SettingsRepository.THEME_SYSTEM)
     val autoLoadModel by settingsRepository.autoLoadModel.collectAsStateWithLifecycle(initialValue = false)
     val downloadState by modelManager.downloadState.collectAsStateWithLifecycle()
-    val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
+    val recognizerManager = TranslanderApp.instance.recognizerManager
     val isRecognizerReady by recognizerManager.isReady.collectAsStateWithLifecycle()
     val isRecognizerLoading by recognizerManager.isLoading.collectAsStateWithLifecycle()
-    val dictionaryManager = VoiceKeyboardApp.instance.dictionaryManager
+    val dictionaryManager = TranslanderApp.instance.dictionaryManager
     val dictionaryEnabled by settingsRepository.dictionaryEnabled.collectAsStateWithLifecycle(initialValue = true)
     val replacementRules by dictionaryManager.rules.collectAsStateWithLifecycle()
     var showDictionaryDialog by remember { mutableStateOf(false) }
@@ -285,7 +285,7 @@ fun SettingsScreen(
     val audioMonitorEnabled by settingsRepository.audioMonitorEnabled.collectAsStateWithLifecycle(initialValue = false)
     val monitoredFolders by settingsRepository.monitoredFolders.collectAsStateWithLifecycle(initialValue = emptySet())
     val floatingButtonSize by settingsRepository.floatingButtonSize.collectAsStateWithLifecycle(initialValue = SettingsRepository.BUTTON_SIZE_MEDIUM)
-    val transcribeManager = VoiceKeyboardApp.instance.transcribeManager
+    val transcribeManager = TranslanderApp.instance.transcribeManager
 
     val hasMicPermission = remember { mutableStateOf(false) }
     val hasOverlayPermission = remember { mutableStateOf(false) }

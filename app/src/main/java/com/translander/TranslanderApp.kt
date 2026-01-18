@@ -1,22 +1,22 @@
-package com.voicekeyboard
+package com.translander
 
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
-import com.voicekeyboard.asr.DictionaryManager
-import com.voicekeyboard.asr.ModelManager
-import com.voicekeyboard.asr.RecognizerManager
-import com.voicekeyboard.settings.SettingsRepository
-import com.voicekeyboard.transcribe.TranscribeManager
+import com.translander.asr.DictionaryManager
+import com.translander.asr.ModelManager
+import com.translander.asr.RecognizerManager
+import com.translander.settings.SettingsRepository
+import com.translander.transcribe.TranscribeManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class VoiceKeyboardApp : Application() {
+class TranslanderApp : Application() {
 
     val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
 
@@ -75,11 +75,11 @@ class VoiceKeyboardApp : Application() {
     }
 
     companion object {
-        private const val TAG = "VoiceKeyboardApp"
+        private const val TAG = "TranslanderApp"
         const val NOTIFICATION_CHANNEL_ID = "voice_transcribe_service"
         const val NOTIFICATION_ID = 1001
 
-        lateinit var instance: VoiceKeyboardApp
+        lateinit var instance: TranslanderApp
             private set
     }
 }

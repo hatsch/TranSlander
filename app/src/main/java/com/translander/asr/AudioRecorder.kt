@@ -1,4 +1,4 @@
-package com.voicekeyboard.asr
+package com.translander.asr
 
 import android.annotation.SuppressLint
 import android.media.AudioFormat

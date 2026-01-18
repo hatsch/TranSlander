@@ -33,11 +33,11 @@ tasks.named("preBuild") {
 }
 
 android {
-    namespace = "com.voicekeyboard"
+    namespace = "com.translander"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.voicekeyboard"
+        applicationId = "com.translander"
         minSdk = 26
         targetSdk = 35
         versionCode = 1

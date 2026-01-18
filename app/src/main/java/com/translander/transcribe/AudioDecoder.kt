@@ -1,11 +1,11 @@
-package com.voicekeyboard.transcribe
+package com.translander.transcribe
 
 import android.content.Context
 import android.media.MediaCodec
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.net.Uri
-import com.voicekeyboard.asr.AudioRecorder
+import com.translander.asr.AudioRecorder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.withContext

@@ -1,4 +1,4 @@
-package com.voicekeyboard.ui.theme
+package com.translander.ui.theme
 
 import android.app.Activity
 import android.os.Build
@@ -33,7 +33,7 @@ private val LightColorScheme = lightColorScheme(
 )
 
 @Composable
-fun VoiceKeyboardTheme(
+fun TranslanderTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit

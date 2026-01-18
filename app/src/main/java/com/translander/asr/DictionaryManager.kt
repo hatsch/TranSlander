@@ -1,4 +1,4 @@
-package com.voicekeyboard.asr
+package com.translander.asr
 
 import android.content.Context
 import android.util.Log

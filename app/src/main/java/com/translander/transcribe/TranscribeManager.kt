@@ -1,9 +1,9 @@
-package com.voicekeyboard.transcribe
+package com.translander.transcribe
 
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.voicekeyboard.VoiceKeyboardApp
+import com.translander.TranslanderApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -82,7 +82,7 @@ class TranscribeManager(private val context: Context) {
      */
     fun startEnabledTriggers() {
         scope.launch {
-            val settings = VoiceKeyboardApp.instance.settingsRepository
+            val settings = TranslanderApp.instance.settingsRepository
             val monitorEnabled = settings.audioMonitorEnabled.first()
 
             if (monitorEnabled) {

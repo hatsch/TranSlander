@@ -1,4 +1,4 @@
-package com.voicekeyboard.receiver
+package com.translander.receiver
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -6,8 +6,8 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import android.util.Log
-import com.voicekeyboard.VoiceKeyboardApp
-import com.voicekeyboard.service.FloatingMicService
+import com.translander.TranslanderApp
+import com.translander.service.FloatingMicService
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 
@@ -34,7 +34,7 @@ class BootReceiver : BroadcastReceiver() {
             // Check if service was enabled in settings
             val wasEnabled = runBlocking {
                 try {
-                    VoiceKeyboardApp.instance.settingsRepository.serviceEnabled.first()
+                    TranslanderApp.instance.settingsRepository.serviceEnabled.first()
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to check service enabled state", e)
                     false

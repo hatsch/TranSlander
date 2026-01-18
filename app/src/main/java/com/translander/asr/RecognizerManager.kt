@@ -1,4 +1,4 @@
-package com.voicekeyboard.asr
+package com.translander.asr
 
 import android.content.Context
 import android.util.Log
@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
-import com.voicekeyboard.VoiceKeyboardApp
+import com.translander.TranslanderApp
 
 /**
  * Manages a shared ParakeetRecognizer instance across services.
@@ -82,7 +82,7 @@ class RecognizerManager(private val context: Context, private val modelManager: 
 
             // Apply dictionary replacements if enabled
             if (rawResult != null) {
-                val app = VoiceKeyboardApp.instance
+                val app = TranslanderApp.instance
                 val dictionaryEnabled = app.settingsRepository.dictionaryEnabled.first()
                 if (dictionaryEnabled) {
                     val corrected = app.dictionaryManager.applyReplacements(rawResult)

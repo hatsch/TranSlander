@@ -1,4 +1,4 @@
-package com.voicekeyboard.transcribe
+package com.translander.transcribe
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -25,17 +25,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.voicekeyboard.R
-import com.voicekeyboard.VoiceKeyboardApp
-import com.voicekeyboard.settings.SettingsRepository
-import com.voicekeyboard.ui.theme.VoiceKeyboardTheme
+import com.translander.R
+import com.translander.TranslanderApp
+import com.translander.settings.SettingsRepository
+import com.translander.ui.theme.TranslanderTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class TranscribeActivity : ComponentActivity() {
 
     companion object {
-        const val ACTION_TRANSCRIBE = "com.voicekeyboard.action.TRANSCRIBE"
+        const val ACTION_TRANSCRIBE = "com.translander.action.TRANSCRIBE"
         const val EXTRA_AUDIO_URI = "audio_uri"
     }
 
@@ -45,7 +45,7 @@ class TranscribeActivity : ComponentActivity() {
         val audioUri = extractAudioUri(intent)
 
         setContent {
-            val settingsRepository = VoiceKeyboardApp.instance.settingsRepository
+            val settingsRepository = TranslanderApp.instance.settingsRepository
             val themeMode by settingsRepository.themeMode.collectAsStateWithLifecycle(
                 initialValue = SettingsRepository.THEME_SYSTEM
             )
@@ -56,7 +56,7 @@ class TranscribeActivity : ComponentActivity() {
                 else -> null
             }
 
-            VoiceKeyboardTheme(
+            TranslanderTheme(
                 darkTheme = isDarkTheme ?: isSystemInDarkTheme()
             ) {
                 TranscribeScreen(
@@ -128,7 +128,7 @@ fun TranscribeScreen(
     var state by remember { mutableStateOf<TranscribeState>(TranscribeState.CheckingModel) }
     var showCopiedSnackbar by remember { mutableStateOf(false) }
 
-    val app = VoiceKeyboardApp.instance
+    val app = TranslanderApp.instance
     val recognizerManager = app.recognizerManager
     val modelManager = app.modelManager
     val settingsRepository = app.settingsRepository

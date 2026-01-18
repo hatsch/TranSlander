@@ -1,4 +1,4 @@
-package com.voicekeyboard.settings
+package com.translander.settings
 
 import android.content.Context
 import androidx.datastore.core.DataStore

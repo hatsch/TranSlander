@@ -1,4 +1,4 @@
-package com.voicekeyboard.service
+package com.translander.service
 
 import android.accessibilityservice.AccessibilityButtonController
 import android.accessibilityservice.AccessibilityService
@@ -11,8 +11,8 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import com.voicekeyboard.VoiceKeyboardApp
-import com.voicekeyboard.asr.AudioRecorder
+import com.translander.TranslanderApp
+import com.translander.asr.AudioRecorder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -55,8 +55,8 @@ class TextInjectionService : AccessibilityService() {
     private fun initializeRecognizer() {
         Log.i(TAG, "initializeRecognizer called")
         serviceScope.launch(Dispatchers.IO) {
-            val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
-            val modelManager = VoiceKeyboardApp.instance.modelManager
+            val recognizerManager = TranslanderApp.instance.recognizerManager
+            val modelManager = TranslanderApp.instance.modelManager
             Log.i(TAG, "Model ready: ${modelManager.isModelReady()}, recognizer ready: ${recognizerManager.isInitialized()}")
 
             if (!modelManager.isModelReady()) {
@@ -96,7 +96,7 @@ class TextInjectionService : AccessibilityService() {
             return
         }
 
-        val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
+        val recognizerManager = TranslanderApp.instance.recognizerManager
         Log.i(TAG, "startRecording called, recognizer ready=${recognizerManager.isInitialized()}")
 
         if (!recognizerManager.isInitialized()) {
@@ -145,10 +145,10 @@ class TextInjectionService : AccessibilityService() {
 
     private suspend fun transcribeAudio(audioData: ShortArray) {
         Log.i(TAG, "transcribeAudio called with ${audioData.size} samples")
-        val language = VoiceKeyboardApp.instance.settingsRepository.preferredLanguage.first()
+        val language = TranslanderApp.instance.settingsRepository.preferredLanguage.first()
         val langCode = if (language == "auto") null else language
 
-        val result = VoiceKeyboardApp.instance.recognizerManager.transcribe(audioData, langCode)
+        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, langCode)
         Log.i(TAG, "Transcription result: '$result'")
 
         if (!result.isNullOrBlank()) {

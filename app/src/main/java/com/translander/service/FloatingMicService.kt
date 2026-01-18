@@ -1,4 +1,4 @@
-package com.voicekeyboard.service
+package com.translander.service
 
 import android.annotation.SuppressLint
 import android.app.Notification
@@ -20,10 +20,10 @@ import androidx.core.app.NotificationCompat
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import com.voicekeyboard.R
-import com.voicekeyboard.VoiceKeyboardApp
-import com.voicekeyboard.asr.AudioRecorder
-import com.voicekeyboard.settings.SettingsActivity
+import com.translander.R
+import com.translander.TranslanderApp
+import com.translander.asr.AudioRecorder
+import com.translander.settings.SettingsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -32,13 +32,13 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.voicekeyboard.settings.SettingsRepository
+import com.translander.settings.SettingsRepository
 
 class FloatingMicService : Service() {
 
     companion object {
         private const val TAG = "FloatingMicService"
-        const val ACTION_STOP = "com.voicekeyboard.STOP_SERVICE"
+        const val ACTION_STOP = "com.translander.STOP_SERVICE"
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -87,7 +87,7 @@ class FloatingMicService : Service() {
             }
         }
 
-        startForeground(VoiceKeyboardApp.NOTIFICATION_ID, createNotification())
+        startForeground(TranslanderApp.NOTIFICATION_ID, createNotification())
         return START_NOT_STICKY  // Don't auto-restart
     }
 
@@ -97,8 +97,8 @@ class FloatingMicService : Service() {
         super.onDestroy()
         // Only sync preference to false if intentionally stopped (not restarting for size change)
         if (isIntentionalStop) {
-            VoiceKeyboardApp.instance.applicationScope.launch {
-                VoiceKeyboardApp.instance.settingsRepository.setServiceEnabled(false)
+            TranslanderApp.instance.applicationScope.launch {
+                TranslanderApp.instance.settingsRepository.setServiceEnabled(false)
             }
         }
         recordingJob?.cancel()
@@ -116,7 +116,7 @@ class FloatingMicService : Service() {
 
         // Apply button size from settings
         serviceScope.launch {
-            val size = VoiceKeyboardApp.instance.settingsRepository.floatingButtonSize.first()
+            val size = TranslanderApp.instance.settingsRepository.floatingButtonSize.first()
             val sizeDp = when (size) {
                 SettingsRepository.BUTTON_SIZE_SMALL -> 44
                 SettingsRepository.BUTTON_SIZE_LARGE -> 72
@@ -153,7 +153,7 @@ class FloatingMicService : Service() {
 
         // Restore saved position
         serviceScope.launch {
-            val (savedX, savedY) = VoiceKeyboardApp.instance.settingsRepository.buttonPosition.first()
+            val (savedX, savedY) = TranslanderApp.instance.settingsRepository.buttonPosition.first()
             if (savedX >= 0 && savedY >= 0) {
                 layoutParams.x = savedX
                 layoutParams.y = savedY
@@ -187,7 +187,7 @@ class FloatingMicService : Service() {
                     } else {
                         // Save new position
                         serviceScope.launch {
-                            VoiceKeyboardApp.instance.settingsRepository.setButtonPosition(
+                            TranslanderApp.instance.settingsRepository.setButtonPosition(
                                 layoutParams.x,
                                 layoutParams.y
                             )
@@ -203,8 +203,8 @@ class FloatingMicService : Service() {
     private fun initializeRecognizer() {
         Log.i(TAG, "initializeRecognizer called")
         serviceScope.launch(Dispatchers.IO) {
-            val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
-            val modelManager = VoiceKeyboardApp.instance.modelManager
+            val recognizerManager = TranslanderApp.instance.recognizerManager
+            val modelManager = TranslanderApp.instance.modelManager
             Log.i(TAG, "Model ready: ${modelManager.isModelReady()}, recognizer ready: ${recognizerManager.isInitialized()}")
 
             if (modelManager.isModelReady() && !recognizerManager.isInitialized()) {
@@ -231,7 +231,7 @@ class FloatingMicService : Service() {
             return
         }
 
-        val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
+        val recognizerManager = TranslanderApp.instance.recognizerManager
         Log.i(TAG, "startRecording called, recognizer ready=${recognizerManager.isInitialized()}")
 
         if (!recognizerManager.isInitialized()) {
@@ -273,10 +273,10 @@ class FloatingMicService : Service() {
 
     private suspend fun transcribeAudio(audioData: ShortArray) {
         Log.i(TAG, "transcribeAudio called with ${audioData.size} samples")
-        val language = VoiceKeyboardApp.instance.settingsRepository.preferredLanguage.first()
+        val language = TranslanderApp.instance.settingsRepository.preferredLanguage.first()
         val langCode = if (language == "auto") null else language
 
-        val result = VoiceKeyboardApp.instance.recognizerManager.transcribe(audioData, langCode)
+        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, langCode)
         Log.i(TAG, "Transcription result: '$result'")
 
         if (!result.isNullOrBlank()) {
@@ -330,7 +330,7 @@ class FloatingMicService : Service() {
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        return NotificationCompat.Builder(this, VoiceKeyboardApp.NOTIFICATION_CHANNEL_ID)
+        return NotificationCompat.Builder(this, TranslanderApp.NOTIFICATION_CHANNEL_ID)
             .setContentTitle(getString(R.string.service_notification_title))
             .setContentText(getString(R.string.service_notification_text))
             .setSmallIcon(R.drawable.ic_mic_small)
