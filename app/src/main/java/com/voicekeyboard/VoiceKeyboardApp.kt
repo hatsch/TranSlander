@@ -9,6 +9,7 @@ import com.voicekeyboard.asr.DictionaryManager
 import com.voicekeyboard.asr.ModelManager
 import com.voicekeyboard.asr.RecognizerManager
 import com.voicekeyboard.settings.SettingsRepository
+import com.voicekeyboard.transcribe.TranscribeManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -31,6 +32,9 @@ class VoiceKeyboardApp : Application() {
     lateinit var dictionaryManager: DictionaryManager
         private set
 
+    lateinit var transcribeManager: TranscribeManager
+        private set
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -38,6 +42,7 @@ class VoiceKeyboardApp : Application() {
         dictionaryManager = DictionaryManager(this)
         modelManager = ModelManager(this)
         recognizerManager = RecognizerManager(this, modelManager)
+        transcribeManager = TranscribeManager(this)
         createNotificationChannel()
 
         // Auto-load model on startup if setting is enabled
@@ -48,6 +53,9 @@ class VoiceKeyboardApp : Application() {
                 recognizerManager.initialize()
             }
         }
+
+        // Auto-start audio monitor if enabled
+        transcribeManager.startEnabledTriggers()
     }
 
     private fun createNotificationChannel() {

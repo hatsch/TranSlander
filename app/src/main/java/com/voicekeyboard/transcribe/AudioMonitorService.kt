@@ -5,7 +5,6 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Environment
@@ -24,8 +23,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
+import android.util.Log
 
 class AudioMonitorService : Service() {
+    private val TAG = "AudioMonitorService"
 
     companion object {
         const val ACTION_STOP = "com.voicekeyboard.action.STOP_MONITOR"
@@ -49,7 +50,6 @@ class AudioMonitorService : Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var fileObservers: MutableList<FileObserver> = mutableListOf()
-    private var lastNotifiedFile: String? = null
     private var debounceJob: Job? = null
 
     override fun onCreate() {
@@ -133,8 +133,11 @@ class AudioMonitorService : Service() {
             val monitoredPaths = settings.monitoredFolders.first()
                 .ifEmpty { getDefaultMonitoredPaths() }
 
+            Log.i(TAG, "Starting monitoring for paths: $monitoredPaths")
+
             for (path in monitoredPaths) {
                 val directory = File(path)
+                Log.i(TAG, "Checking path: $path, exists=${directory.exists()}, isDir=${directory.isDirectory}")
                 if (directory.exists() && directory.isDirectory) {
                     createFileObserver(directory)
                 }
@@ -143,11 +146,14 @@ class AudioMonitorService : Service() {
     }
 
     private fun createFileObserver(directory: File) {
+        Log.i(TAG, "Creating FileObserver for: ${directory.absolutePath}")
         val observer = object : FileObserver(directory, CLOSE_WRITE or MOVED_TO) {
             override fun onEvent(event: Int, path: String?) {
+                Log.d(TAG, "FileObserver event: $event, path: $path")
                 if (path == null) return
 
                 val file = File(directory, path)
+                Log.d(TAG, "File: ${file.absolutePath}, isAudio=${isAudioFile(file)}")
                 if (isAudioFile(file)) {
                     onAudioFileDetected(file)
                 }
@@ -155,6 +161,7 @@ class AudioMonitorService : Service() {
         }
         observer.startWatching()
         fileObservers.add(observer)
+        Log.i(TAG, "FileObserver started for: ${directory.absolutePath}")
     }
 
     private fun stopMonitoring() {
@@ -170,19 +177,19 @@ class AudioMonitorService : Service() {
     }
 
     private fun onAudioFileDetected(file: File) {
-        // Debounce to avoid duplicate notifications
         val filePath = file.absolutePath
-        if (filePath == lastNotifiedFile) return
+        Log.i(TAG, "onAudioFileDetected: $filePath")
 
+        // Small debounce to avoid rapid duplicate events from FileObserver
         debounceJob?.cancel()
         debounceJob = serviceScope.launch {
-            delay(DEBOUNCE_MS)
-            lastNotifiedFile = filePath
-            showAudioDetectedNotification(file)
+            delay(500)
+            Log.i(TAG, "Launching transcription for: $filePath")
+            launchTranscription(file)
         }
     }
 
-    private fun showAudioDetectedNotification(file: File) {
+    private fun launchTranscription(file: File) {
         val uri = FileProvider.getUriForFile(
             this,
             "${packageName}.fileprovider",
@@ -196,26 +203,6 @@ class AudioMonitorService : Service() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
-        val pendingIntent = PendingIntent.getActivity(
-            this, file.hashCode(), transcribeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val notification = NotificationCompat.Builder(this, "audio_detected")
-            .setSmallIcon(R.drawable.ic_mic)
-            .setContentTitle(getString(R.string.audio_detected_title))
-            .setContentText(getString(R.string.audio_detected_text))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setAutoCancel(true)
-            .setContentIntent(pendingIntent)
-            .addAction(
-                R.drawable.ic_mic,
-                getString(R.string.audio_detected_action),
-                pendingIntent
-            )
-            .build()
-
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(AUDIO_DETECTED_NOTIFICATION_ID, notification)
+        startActivity(transcribeIntent)
     }
 }

@@ -125,6 +125,8 @@ class SettingsActivity : ComponentActivity() {
                     refreshTrigger = refreshTrigger.value,
                     onRequestMicPermission = { requestMicPermission() },
                     onRequestOverlayPermission = { requestOverlayPermission() },
+                    onRequestAudioFilesPermission = { requestAudioFilesPermission() },
+                    hasAudioFilesPermission = { hasAudioFilesPermission() },
                     onOpenAccessibilitySettings = { openAccessibilitySettings() },
                     onOpenAppSettings = { openAppSettings() },
                     onStartService = { startFloatingService() },
@@ -164,6 +166,22 @@ class SettingsActivity : ComponentActivity() {
 
     private fun requestMicPermission() {
         requestPermissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+    }
+
+    private fun requestAudioFilesPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_AUDIO)
+        } else {
+            requestPermissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+        }
+    }
+
+    private fun hasAudioFilesPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     private fun requestOverlayPermission() {
@@ -237,6 +255,8 @@ fun SettingsScreen(
     refreshTrigger: Int,
     onRequestMicPermission: () -> Unit,
     onRequestOverlayPermission: () -> Unit,
+    onRequestAudioFilesPermission: () -> Unit,
+    hasAudioFilesPermission: () -> Boolean,
     onOpenAccessibilitySettings: () -> Unit,
     onOpenAppSettings: () -> Unit,
     onStartService: () -> Unit,
@@ -265,11 +285,12 @@ fun SettingsScreen(
     val audioMonitorEnabled by settingsRepository.audioMonitorEnabled.collectAsStateWithLifecycle(initialValue = false)
     val monitoredFolders by settingsRepository.monitoredFolders.collectAsStateWithLifecycle(initialValue = emptySet())
     val floatingButtonSize by settingsRepository.floatingButtonSize.collectAsStateWithLifecycle(initialValue = SettingsRepository.BUTTON_SIZE_MEDIUM)
-    val transcribeManager = remember { TranscribeManager(context) }
+    val transcribeManager = VoiceKeyboardApp.instance.transcribeManager
 
     val hasMicPermission = remember { mutableStateOf(false) }
     val hasOverlayPermission = remember { mutableStateOf(false) }
     val hasAccessibilityEnabled = remember { mutableStateOf(false) }
+    val hasAudioPermission = remember { mutableStateOf(false) }
 
     // Check permissions - refresh on every onResume via refreshTrigger
     LaunchedEffect(refreshTrigger) {
@@ -282,6 +303,8 @@ fun SettingsScreen(
         } else true
 
         hasAccessibilityEnabled.value = TextInjectionService.isEnabled()
+
+        hasAudioPermission.value = hasAudioFilesPermission()
     }
 
     Scaffold(
@@ -425,14 +448,25 @@ fun SettingsScreen(
 
             // Transcription Section
             SettingsSection(title = "Voice Message Transcription") {
+                PermissionItem(
+                    title = "Audio Files Access",
+                    subtitle = if (hasAudioPermission.value) "Granted - tap to manage" else "Required to read audio files",
+                    icon = Icons.Default.AudioFile,
+                    isGranted = hasAudioPermission.value,
+                    onClick = { if (hasAudioPermission.value) onOpenAppSettings() else onRequestAudioFilesPermission() },
+                    onRevokeClick = { onOpenAppSettings() }
+                )
+
                 SwitchSettingItem(
                     title = "Monitor Folders",
-                    subtitle = if (audioMonitorEnabled)
-                        "Watching ${monitoredFolders.size.takeIf { it > 0 } ?: "Downloads"} folder(s)"
-                    else
-                        "Notify when voice messages are downloaded",
+                    subtitle = when {
+                        !hasAudioPermission.value -> "Grant audio files permission first"
+                        audioMonitorEnabled -> "Watching ${monitoredFolders.size.takeIf { it > 0 } ?: "Downloads"} folder(s)"
+                        else -> "Notify when voice messages are downloaded"
+                    },
                     icon = Icons.Default.FolderOpen,
                     checked = audioMonitorEnabled,
+                    enabled = hasAudioPermission.value,
                     onCheckedChange = { enabled ->
                         scope.launch {
                             settingsRepository.setAudioMonitorEnabled(enabled)
