@@ -26,8 +26,13 @@ class SettingsRepository(private val context: Context) {
         private val DICTIONARY_ENABLED_KEY = booleanPreferencesKey("dictionary_enabled")
         private val AUDIO_MONITOR_ENABLED_KEY = booleanPreferencesKey("audio_monitor_enabled")
         private val MONITORED_FOLDERS_KEY = stringSetPreferencesKey("monitored_folders")
+        private val FLOATING_BUTTON_SIZE_KEY = stringPreferencesKey("floating_button_size")
 
         const val LANGUAGE_AUTO = "auto"
+
+        const val BUTTON_SIZE_SMALL = "small"   // 44dp
+        const val BUTTON_SIZE_MEDIUM = "medium" // 56dp (default)
+        const val BUTTON_SIZE_LARGE = "large"   // 72dp
         const val THEME_SYSTEM = "system"
         const val THEME_LIGHT = "light"
         const val THEME_DARK = "dark"
@@ -65,6 +70,16 @@ class SettingsRepository(private val context: Context) {
 
     val monitoredFolders: Flow<Set<String>> = context.dataStore.data.map { preferences ->
         preferences[MONITORED_FOLDERS_KEY] ?: emptySet()
+    }
+
+    val floatingButtonSize: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[FLOATING_BUTTON_SIZE_KEY] ?: BUTTON_SIZE_MEDIUM
+    }
+
+    suspend fun setFloatingButtonSize(size: String) {
+        context.dataStore.edit { preferences ->
+            preferences[FLOATING_BUTTON_SIZE_KEY] = size
+        }
     }
 
     suspend fun setDictionaryEnabled(enabled: Boolean) {

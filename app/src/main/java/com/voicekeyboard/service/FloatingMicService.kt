@@ -17,6 +17,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.core.app.NotificationCompat
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 import com.voicekeyboard.R
 import com.voicekeyboard.VoiceKeyboardApp
 import com.voicekeyboard.asr.AudioRecorder
@@ -28,6 +31,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import com.voicekeyboard.settings.SettingsRepository
 
 class FloatingMicService : Service() {
 
@@ -47,6 +52,7 @@ class FloatingMicService : Service() {
     private var recordingJob: Job? = null
 
     private var isRecording = false
+    private var isIntentionalStop = false
     private var initialX = 0
     private var initialY = 0
     private var initialTouchX = 0f
@@ -63,7 +69,6 @@ class FloatingMicService : Service() {
 
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         setupFloatingView()
-        initializeRecognizer()
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -76,6 +81,7 @@ class FloatingMicService : Service() {
 
         when (intent.action) {
             ACTION_STOP -> {
+                isIntentionalStop = true
                 stopSelf()
                 return START_NOT_STICKY
             }
@@ -89,6 +95,12 @@ class FloatingMicService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        // Only sync preference to false if intentionally stopped (not restarting for size change)
+        if (isIntentionalStop) {
+            VoiceKeyboardApp.instance.applicationScope.launch {
+                VoiceKeyboardApp.instance.settingsRepository.setServiceEnabled(false)
+            }
+        }
         recordingJob?.cancel()
         audioRecorder?.release()
         if (::floatingView.isInitialized) {
@@ -101,6 +113,24 @@ class FloatingMicService : Service() {
     private fun setupFloatingView() {
         floatingView = LayoutInflater.from(this).inflate(R.layout.floating_mic, null)
         micButton = floatingView.findViewById(R.id.floating_mic_button)
+
+        // Apply button size from settings
+        serviceScope.launch {
+            val size = VoiceKeyboardApp.instance.settingsRepository.floatingButtonSize.first()
+            val sizeDp = when (size) {
+                SettingsRepository.BUTTON_SIZE_SMALL -> 44
+                SettingsRepository.BUTTON_SIZE_LARGE -> 72
+                else -> 56  // MEDIUM (default)
+            }
+            val sizePx = (sizeDp * resources.displayMetrics.density).toInt()
+
+            withContext(Dispatchers.Main) {
+                val params = micButton.layoutParams
+                params.width = sizePx
+                params.height = sizePx
+                micButton.layoutParams = params
+            }
+        }
 
         val layoutFlag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
@@ -194,6 +224,13 @@ class FloatingMicService : Service() {
     }
 
     private fun startRecording() {
+        // Check mic permission first
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Microphone permission not granted")
+            android.widget.Toast.makeText(this, "Microphone permission required", android.widget.Toast.LENGTH_SHORT).show()
+            return
+        }
+
         val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
         Log.i(TAG, "startRecording called, recognizer ready=${recognizerManager.isInitialized()}")
 

@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -43,16 +45,17 @@ import com.voicekeyboard.service.FloatingMicService
 import com.voicekeyboard.service.TextInjectionService
 import com.voicekeyboard.transcribe.TranscribeManager
 import com.voicekeyboard.ui.theme.VoiceKeyboardTheme
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class SettingsActivity : ComponentActivity() {
 
+    private val refreshTrigger = mutableStateOf(0)
+
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        if (isGranted) {
-            checkAndStartService()
-        }
+    ) { _ ->
+        // Just refresh UI - don't auto-start service
     }
 
     private var onFolderSelected: ((String) -> Unit)? = null
@@ -119,11 +122,14 @@ class SettingsActivity : ComponentActivity() {
                 darkTheme = isDarkTheme ?: androidx.compose.foundation.isSystemInDarkTheme()
             ) {
                 SettingsScreen(
+                    refreshTrigger = refreshTrigger.value,
                     onRequestMicPermission = { requestMicPermission() },
                     onRequestOverlayPermission = { requestOverlayPermission() },
                     onOpenAccessibilitySettings = { openAccessibilitySettings() },
+                    onOpenAppSettings = { openAppSettings() },
                     onStartService = { startFloatingService() },
                     onStopService = { stopFloatingService() },
+                    onRestartService = { restartFloatingService() },
                     onPickFolder = { callback -> openFolderPicker(callback) }
                 )
             }
@@ -132,7 +138,28 @@ class SettingsActivity : ComponentActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Refresh permission states when returning from settings
+        // Trigger permission state refresh in Compose
+        refreshTrigger.value++
+
+        // Sync floating service state
+        val app = VoiceKeyboardApp.instance
+        app.applicationScope.launch {
+            val serviceEnabled = app.settingsRepository.serviceEnabled.first()
+            val recognizerReady = app.recognizerManager.isInitialized()
+            val hasMic = hasMicPermission()
+            val hasOverlay = hasOverlayPermission()
+
+            if (serviceEnabled) {
+                if (!recognizerReady || !hasMic || !hasOverlay) {
+                    // Conditions no longer met - disable
+                    app.settingsRepository.setServiceEnabled(false)
+                    stopFloatingService()
+                } else {
+                    // Conditions met - ensure service is running
+                    startFloatingService()
+                }
+            }
+        }
     }
 
     private fun requestMicPermission() {
@@ -151,6 +178,13 @@ class SettingsActivity : ComponentActivity() {
 
     private fun openAccessibilitySettings() {
         val intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+        startActivity(intent)
+    }
+
+    private fun openAppSettings() {
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+            data = Uri.parse("package:$packageName")
+        }
         startActivity(intent)
     }
 
@@ -176,6 +210,12 @@ class SettingsActivity : ComponentActivity() {
         startService(intent)
     }
 
+    private fun restartFloatingService() {
+        // Stop without ACTION_STOP so preference isn't cleared, then start
+        stopService(Intent(this, FloatingMicService::class.java))
+        startFloatingService()
+    }
+
     private fun hasMicPermission(): Boolean {
         return ContextCompat.checkSelfPermission(
             this, Manifest.permission.RECORD_AUDIO
@@ -194,11 +234,14 @@ class SettingsActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    refreshTrigger: Int,
     onRequestMicPermission: () -> Unit,
     onRequestOverlayPermission: () -> Unit,
     onOpenAccessibilitySettings: () -> Unit,
+    onOpenAppSettings: () -> Unit,
     onStartService: () -> Unit,
     onStopService: () -> Unit,
+    onRestartService: () -> Unit,
     onPickFolder: ((String) -> Unit) -> Unit
 ) {
     val context = LocalContext.current
@@ -221,14 +264,15 @@ fun SettingsScreen(
 
     val audioMonitorEnabled by settingsRepository.audioMonitorEnabled.collectAsStateWithLifecycle(initialValue = false)
     val monitoredFolders by settingsRepository.monitoredFolders.collectAsStateWithLifecycle(initialValue = emptySet())
+    val floatingButtonSize by settingsRepository.floatingButtonSize.collectAsStateWithLifecycle(initialValue = SettingsRepository.BUTTON_SIZE_MEDIUM)
     val transcribeManager = remember { TranscribeManager(context) }
 
     val hasMicPermission = remember { mutableStateOf(false) }
     val hasOverlayPermission = remember { mutableStateOf(false) }
     val hasAccessibilityEnabled = remember { mutableStateOf(false) }
 
-    // Check permissions
-    LaunchedEffect(Unit) {
+    // Check permissions - refresh on every onResume via refreshTrigger
+    LaunchedEffect(refreshTrigger) {
         hasMicPermission.value = ContextCompat.checkSelfPermission(
             context, Manifest.permission.RECORD_AUDIO
         ) == PackageManager.PERMISSION_GRANTED
@@ -266,15 +310,17 @@ fun SettingsScreen(
                         else "Enable in Settings to use voice input",
                     icon = Icons.Default.Accessibility,
                     isGranted = hasAccessibilityEnabled.value,
-                    onClick = { onOpenAccessibilitySettings() }
+                    onClick = { onOpenAccessibilitySettings() },
+                    onRevokeClick = { onOpenAccessibilitySettings() }
                 )
 
                 PermissionItem(
                     title = stringResource(R.string.permission_mic_title),
-                    subtitle = if (hasMicPermission.value) "Granted" else "Required for voice input",
+                    subtitle = if (hasMicPermission.value) "Granted - tap to manage" else "Required for voice input",
                     icon = Icons.Default.Mic,
                     isGranted = hasMicPermission.value,
-                    onClick = { if (!hasMicPermission.value) onRequestMicPermission() }
+                    onClick = { if (hasMicPermission.value) onOpenAppSettings() else onRequestMicPermission() },
+                    onRevokeClick = { onOpenAppSettings() }
                 )
             }
 
@@ -282,9 +328,15 @@ fun SettingsScreen(
             SettingsSection(title = "Floating Mic Button (Optional)") {
                 SwitchSettingItem(
                     title = "Enable Floating Button",
-                    subtitle = if (serviceEnabled) "Shows red when recording" else "Additional mic button overlay",
+                    subtitle = when {
+                        !hasMicPermission.value -> "Grant microphone permission first"
+                        !isRecognizerReady -> "Load model first"
+                        serviceEnabled -> "Shows red when recording"
+                        else -> "Additional mic button overlay"
+                    },
                     icon = Icons.Default.RadioButtonChecked,
                     checked = serviceEnabled,
+                    enabled = hasMicPermission.value && isRecognizerReady,
                     onCheckedChange = { enabled ->
                         scope.launch {
                             settingsRepository.setServiceEnabled(enabled)
@@ -302,6 +354,19 @@ fun SettingsScreen(
                         onClick = { onRequestOverlayPermission() }
                     )
                 }
+
+                ButtonSizeSettingItem(
+                    selectedSize = floatingButtonSize,
+                    onSizeSelected = { size ->
+                        scope.launch {
+                            settingsRepository.setFloatingButtonSize(size)
+                            // Restart service to apply new size (without clearing preference)
+                            if (serviceEnabled) {
+                                onRestartService()
+                            }
+                        }
+                    }
+                )
             }
 
             // Model Section
@@ -318,6 +383,16 @@ fun SettingsScreen(
                     onLoadModel = {
                         scope.launch {
                             recognizerManager.initialize()
+                        }
+                    },
+                    onUnloadModel = {
+                        recognizerManager.release()
+                        // Stop floating service when model is unloaded
+                        if (serviceEnabled) {
+                            scope.launch {
+                                settingsRepository.setServiceEnabled(false)
+                            }
+                            onStopService()
                         }
                     }
                 )
@@ -513,14 +588,15 @@ fun SwitchSettingItem(
     subtitle: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     checked: Boolean,
+    enabled: Boolean = true,
     onCheckedChange: (Boolean) -> Unit
 ) {
     ListItem(
-        headlineContent = { Text(title) },
-        supportingContent = { Text(subtitle) },
-        leadingContent = { Icon(icon, contentDescription = null) },
+        headlineContent = { Text(title, color = if (enabled) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)) },
+        supportingContent = { Text(subtitle, color = if (enabled) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.38f)) },
+        leadingContent = { Icon(icon, contentDescription = null, tint = if (enabled) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.38f)) },
         trailingContent = {
-            Switch(checked = checked, onCheckedChange = onCheckedChange)
+            Switch(checked = checked, onCheckedChange = onCheckedChange, enabled = enabled)
         }
     )
 }
@@ -531,22 +607,28 @@ fun PermissionItem(
     subtitle: String,
     icon: androidx.compose.ui.graphics.vector.ImageVector,
     isGranted: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    onRevokeClick: (() -> Unit)? = null
 ) {
+    val actualClick = if (isGranted && onRevokeClick != null) onRevokeClick else onClick
     ListItem(
         headlineContent = { Text(title) },
         supportingContent = { Text(subtitle) },
-        leadingContent = { Icon(icon, contentDescription = null) },
+        leadingContent = {
+            Icon(
+                icon,
+                contentDescription = null,
+                tint = if (isGranted) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        },
         trailingContent = {
             if (isGranted) {
                 Icon(Icons.Default.Check, "Granted", tint = MaterialTheme.colorScheme.primary)
             } else {
-                TextButton(onClick = onClick) {
-                    Text("Grant")
-                }
+                Icon(Icons.Default.ChevronRight, "Grant", tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },
-        modifier = Modifier.clickable(enabled = !isGranted, onClick = onClick)
+        modifier = Modifier.clickable(onClick = actualClick)
     )
 }
 
@@ -556,50 +638,55 @@ fun ModelSettingItem(
     isRecognizerReady: Boolean,
     isRecognizerLoading: Boolean,
     onDownload: () -> Unit,
-    onLoadModel: () -> Unit
+    onLoadModel: () -> Unit,
+    onUnloadModel: () -> Unit
 ) {
-    ListItem(
-        headlineContent = { Text(stringResource(R.string.setting_model)) },
-        supportingContent = {
-            when {
-                downloadState is ModelManager.DownloadState.NotStarted -> Text("Parakeet v3 (~600 MB)")
-                downloadState is ModelManager.DownloadState.Downloading -> Text("Downloading: ${downloadState.progress}%")
-                downloadState is ModelManager.DownloadState.Extracting -> Text("Extracting...")
-                downloadState is ModelManager.DownloadState.Error -> Text("Error: ${downloadState.message}")
-                isRecognizerLoading -> Text("Loading model...")
-                isRecognizerReady -> Text("Model loaded and ready")
-                downloadState is ModelManager.DownloadState.Ready -> Text("Downloaded - tap Load to activate")
-            }
-        },
-        leadingContent = { Icon(Icons.Default.Cloud, contentDescription = null) },
-        trailingContent = {
-            when {
-                downloadState is ModelManager.DownloadState.NotStarted ||
-                downloadState is ModelManager.DownloadState.Error -> {
-                    Button(onClick = onDownload) {
-                        Text(stringResource(R.string.action_download))
+    Column {
+        ListItem(
+            headlineContent = { Text("Parakeet TDT v3") },
+            supportingContent = {
+                when {
+                    downloadState is ModelManager.DownloadState.NotStarted -> Text("Not downloaded (~600 MB)")
+                    downloadState is ModelManager.DownloadState.Downloading -> Text("Downloading: ${downloadState.progress}%")
+                    downloadState is ModelManager.DownloadState.Extracting -> Text("Extracting...")
+                    downloadState is ModelManager.DownloadState.Error -> Text("Error: ${downloadState.message}")
+                    isRecognizerLoading -> Text("Loading model...")
+                    isRecognizerReady -> Text("Loaded and ready")
+                    downloadState is ModelManager.DownloadState.Ready -> Text("Downloaded - tap Load to activate")
+                }
+            },
+            leadingContent = { Icon(Icons.Default.RecordVoiceOver, contentDescription = null) },
+            trailingContent = {
+                when {
+                    downloadState is ModelManager.DownloadState.NotStarted ||
+                    downloadState is ModelManager.DownloadState.Error -> {
+                        Button(onClick = onDownload) {
+                            Text(stringResource(R.string.action_download))
+                        }
+                    }
+                    downloadState is ModelManager.DownloadState.Downloading -> {
+                        CircularProgressIndicator(
+                            progress = { downloadState.progress / 100f },
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                    downloadState is ModelManager.DownloadState.Extracting || isRecognizerLoading -> {
+                        CircularProgressIndicator(modifier = Modifier.size(24.dp))
+                    }
+                    isRecognizerReady -> {
+                        TextButton(onClick = onUnloadModel) {
+                            Text("Unload")
+                        }
+                    }
+                    downloadState is ModelManager.DownloadState.Ready -> {
+                        Button(onClick = onLoadModel) {
+                            Text("Load")
+                        }
                     }
                 }
-                downloadState is ModelManager.DownloadState.Downloading -> {
-                    CircularProgressIndicator(
-                        progress = { downloadState.progress / 100f },
-                        modifier = Modifier.size(24.dp)
-                    )
-                }
-                downloadState is ModelManager.DownloadState.Extracting || isRecognizerLoading -> {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp))
-                }
-                isRecognizerReady -> {
-                    Icon(Icons.Default.Check, "Ready", tint = MaterialTheme.colorScheme.primary)
-                }
-                downloadState is ModelManager.DownloadState.Ready -> {
-                    Button(onClick = onLoadModel) {
-                        Text("Load")
-                    }
-                }
             }
-        }
-    )
+        )
+    }
 }
 
 @Composable
@@ -669,6 +756,45 @@ fun ThemeSettingItem(
                     expanded = false
                 },
                 leadingIcon = if (code == selectedTheme) {
+                    { Icon(Icons.Default.Check, null) }
+                } else null
+            )
+        }
+    }
+}
+
+@Composable
+fun ButtonSizeSettingItem(
+    selectedSize: String,
+    onSizeSelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val sizes = listOf(
+        SettingsRepository.BUTTON_SIZE_SMALL to "Small",
+        SettingsRepository.BUTTON_SIZE_MEDIUM to "Medium",
+        SettingsRepository.BUTTON_SIZE_LARGE to "Large"
+    )
+    val selectedSizeName = sizes.find { it.first == selectedSize }?.second ?: "Medium"
+
+    ListItem(
+        headlineContent = { Text("Button Size") },
+        supportingContent = { Text(selectedSizeName) },
+        leadingContent = { Icon(Icons.Default.PhotoSizeSelectLarge, contentDescription = null) },
+        modifier = Modifier.clickable { expanded = true }
+    )
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        sizes.forEach { (code, name) ->
+            DropdownMenuItem(
+                text = { Text(name) },
+                onClick = {
+                    onSizeSelected(code)
+                    expanded = false
+                },
+                leadingIcon = if (code == selectedSize) {
                     { Icon(Icons.Default.Check, null) }
                 } else null
             )

@@ -7,7 +7,10 @@ import android.os.Bundle
 import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityNodeInfo
+import android.Manifest
+import android.content.pm.PackageManager
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import com.voicekeyboard.VoiceKeyboardApp
 import com.voicekeyboard.asr.AudioRecorder
 import kotlinx.coroutines.CoroutineScope
@@ -32,9 +35,6 @@ class TextInjectionService : AccessibilityService() {
         super.onServiceConnected()
         instance = this
         Log.i(TAG, "Accessibility service connected")
-
-        // Initialize recognizer
-        initializeRecognizer()
 
         // Register accessibility button callback
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -89,6 +89,13 @@ class TextInjectionService : AccessibilityService() {
     }
 
     private fun startRecording() {
+        // Check mic permission first
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+            Log.w(TAG, "Microphone permission not granted")
+            showToast("Microphone permission required. Open app to grant.")
+            return
+        }
+
         val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
         Log.i(TAG, "startRecording called, recognizer ready=${recognizerManager.isInitialized()}")
 
