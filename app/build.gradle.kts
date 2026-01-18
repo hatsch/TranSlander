@@ -1,6 +1,35 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("de.undercouch.download") version "5.6.0"
+}
+
+val sherpaOnnxVersion = "1.12.23"
+val aarFile = layout.buildDirectory.file("tmp/sherpa-onnx-$sherpaOnnxVersion.aar").get().asFile
+
+tasks.register("downloadSherpaOnnxAar") {
+    val markerFile = layout.buildDirectory.file("tmp/.aar-version-$sherpaOnnxVersion").get().asFile
+
+    onlyIf { !markerFile.exists() }
+
+    doLast {
+        aarFile.parentFile.mkdirs()
+
+        // Download AAR
+        ant.withGroovyBuilder {
+            "get"(
+                "src" to "https://github.com/k2-fsa/sherpa-onnx/releases/download/v$sherpaOnnxVersion/sherpa-onnx-$sherpaOnnxVersion.aar",
+                "dest" to aarFile,
+                "skipexisting" to "false"
+            )
+        }
+
+        markerFile.writeText(sherpaOnnxVersion)
+    }
+}
+
+tasks.named("preBuild") {
+    dependsOn("downloadSherpaOnnxAar")
 }
 
 android {
@@ -54,8 +83,8 @@ android {
 }
 
 dependencies {
-    // sherpa-onnx is included as source files in com.k2fsa.sherpa.onnx package
-    // Native libs are in app/src/main/jniLibs/
+    // sherpa-onnx AAR (downloaded during build)
+    implementation(files(aarFile))
 
     // AndroidX Core
     implementation("androidx.core:core-ktx:1.12.0")
