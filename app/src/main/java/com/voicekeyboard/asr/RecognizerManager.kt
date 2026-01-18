@@ -5,9 +5,11 @@ import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import com.voicekeyboard.VoiceKeyboardApp
 
 /**
  * Manages a shared ParakeetRecognizer instance across services.
@@ -67,6 +69,7 @@ class RecognizerManager(private val context: Context, private val modelManager: 
 
     /**
      * Transcribe audio data using the shared recognizer.
+     * Applies dictionary replacements if enabled.
      */
     suspend fun transcribe(audioData: ShortArray, languageCode: String?): String? {
         val rec = recognizer
@@ -75,7 +78,24 @@ class RecognizerManager(private val context: Context, private val modelManager: 
             return null
         }
         return withContext(Dispatchers.IO) {
-            rec.transcribe(audioData, languageCode)
+            val rawResult = rec.transcribe(audioData, languageCode)
+
+            // Apply dictionary replacements if enabled
+            if (rawResult != null) {
+                val app = VoiceKeyboardApp.instance
+                val dictionaryEnabled = app.settingsRepository.dictionaryEnabled.first()
+                if (dictionaryEnabled) {
+                    val corrected = app.dictionaryManager.applyReplacements(rawResult)
+                    if (corrected != rawResult) {
+                        Log.i(TAG, "Applied corrections: '$rawResult' -> '$corrected'")
+                    }
+                    corrected
+                } else {
+                    rawResult
+                }
+            } else {
+                null
+            }
         }
     }
 

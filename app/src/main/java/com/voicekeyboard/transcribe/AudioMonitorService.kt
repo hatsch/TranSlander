@@ -1,0 +1,221 @@
+package com.voicekeyboard.transcribe
+
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.Service
+import android.content.Context
+import android.content.Intent
+import android.os.Build
+import android.os.Environment
+import android.os.FileObserver
+import android.os.IBinder
+import androidx.core.app.NotificationCompat
+import androidx.core.content.FileProvider
+import com.voicekeyboard.R
+import com.voicekeyboard.VoiceKeyboardApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
+import java.io.File
+
+class AudioMonitorService : Service() {
+
+    companion object {
+        const val ACTION_STOP = "com.voicekeyboard.action.STOP_MONITOR"
+
+        const val NOTIFICATION_CHANNEL_ID = "audio_monitor"
+        const val SERVICE_NOTIFICATION_ID = 2001
+        const val AUDIO_DETECTED_NOTIFICATION_ID = 2002
+
+        private const val DEBOUNCE_MS = 2000L
+
+        private val AUDIO_EXTENSIONS = setOf(
+            "opus", "ogg", "m4a", "aac", "mp3", "wav", "3gp", "amr"
+        )
+
+        fun getDefaultMonitoredPaths(): Set<String> {
+            return setOf(
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath
+            )
+        }
+    }
+
+    private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private var fileObservers: MutableList<FileObserver> = mutableListOf()
+    private var lastNotifiedFile: String? = null
+    private var debounceJob: Job? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        createNotificationChannels()
+    }
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent?.action == ACTION_STOP) {
+            stopSelf()
+            return START_NOT_STICKY
+        }
+
+        startForeground(SERVICE_NOTIFICATION_ID, createServiceNotification())
+        startMonitoring()
+
+        return START_STICKY
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopMonitoring()
+        serviceScope.cancel()
+    }
+
+    private fun createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = getSystemService(NotificationManager::class.java)
+
+            // Service channel (low importance, silent)
+            val serviceChannel = NotificationChannel(
+                NOTIFICATION_CHANNEL_ID,
+                getString(R.string.monitor_channel_name),
+                NotificationManager.IMPORTANCE_LOW
+            ).apply {
+                description = getString(R.string.monitor_channel_description)
+                setShowBadge(false)
+            }
+            notificationManager.createNotificationChannel(serviceChannel)
+
+            // Audio detected channel (default importance with sound)
+            val audioDetectedChannel = NotificationChannel(
+                "audio_detected",
+                getString(R.string.audio_detected_channel_name),
+                NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = getString(R.string.audio_detected_channel_description)
+            }
+            notificationManager.createNotificationChannel(audioDetectedChannel)
+        }
+    }
+
+    private fun createServiceNotification(): Notification {
+        val stopIntent = Intent(this, AudioMonitorService::class.java).apply {
+            action = ACTION_STOP
+        }
+        val stopPendingIntent = PendingIntent.getService(
+            this, 0, stopIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_mic)
+            .setContentTitle(getString(R.string.monitor_notification_title))
+            .setContentText(getString(R.string.monitor_notification_text))
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setOngoing(true)
+            .addAction(
+                R.drawable.ic_mic,
+                getString(R.string.monitor_stop),
+                stopPendingIntent
+            )
+            .build()
+    }
+
+    private fun startMonitoring() {
+        serviceScope.launch {
+            val settings = VoiceKeyboardApp.instance.settingsRepository
+            val monitoredPaths = settings.monitoredFolders.first()
+                .ifEmpty { getDefaultMonitoredPaths() }
+
+            for (path in monitoredPaths) {
+                val directory = File(path)
+                if (directory.exists() && directory.isDirectory) {
+                    createFileObserver(directory)
+                }
+            }
+        }
+    }
+
+    private fun createFileObserver(directory: File) {
+        val observer = object : FileObserver(directory, CLOSE_WRITE or MOVED_TO) {
+            override fun onEvent(event: Int, path: String?) {
+                if (path == null) return
+
+                val file = File(directory, path)
+                if (isAudioFile(file)) {
+                    onAudioFileDetected(file)
+                }
+            }
+        }
+        observer.startWatching()
+        fileObservers.add(observer)
+    }
+
+    private fun stopMonitoring() {
+        for (observer in fileObservers) {
+            observer.stopWatching()
+        }
+        fileObservers.clear()
+    }
+
+    private fun isAudioFile(file: File): Boolean {
+        val extension = file.extension.lowercase()
+        return extension in AUDIO_EXTENSIONS
+    }
+
+    private fun onAudioFileDetected(file: File) {
+        // Debounce to avoid duplicate notifications
+        val filePath = file.absolutePath
+        if (filePath == lastNotifiedFile) return
+
+        debounceJob?.cancel()
+        debounceJob = serviceScope.launch {
+            delay(DEBOUNCE_MS)
+            lastNotifiedFile = filePath
+            showAudioDetectedNotification(file)
+        }
+    }
+
+    private fun showAudioDetectedNotification(file: File) {
+        val uri = FileProvider.getUriForFile(
+            this,
+            "${packageName}.fileprovider",
+            file
+        )
+
+        val transcribeIntent = Intent(this, TranscribeActivity::class.java).apply {
+            action = TranscribeActivity.ACTION_TRANSCRIBE
+            data = uri
+            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            this, file.hashCode(), transcribeIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(this, "audio_detected")
+            .setSmallIcon(R.drawable.ic_mic)
+            .setContentTitle(getString(R.string.audio_detected_title))
+            .setContentText(getString(R.string.audio_detected_text))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .addAction(
+                R.drawable.ic_mic,
+                getString(R.string.audio_detected_action),
+                pendingIntent
+            )
+            .build()
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(AUDIO_DETECTED_NOTIFICATION_ID, notification)
+    }
+}

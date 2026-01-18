@@ -71,4 +71,29 @@
     <string name="action_grant_permission">Grant Permission</string>
     <string name="action_download">Download</string>
     <string name="action_cancel">Cancel</string>
+
+    <!-- Transcription Activity -->
+    <string name="transcribe_title">Transcribe Audio</string>
+    <string name="transcribe_checking_model">Checking speech model…</string>
+    <string name="transcribe_decoding">Decoding audio: %1$d%%</string>
+    <string name="transcribe_transcribing">Transcribing…</string>
+    <string name="transcribe_copy">Copy</string>
+    <string name="transcribe_share">Share</string>
+    <string name="transcribe_share_title">Share transcription</string>
+    <string name="transcribe_close">Close</string>
+    <string name="transcribe_copied">Copied to clipboard</string>
+
+    <!-- Audio Monitor Service -->
+    <string name="monitor_channel_name">Audio Monitor</string>
+    <string name="monitor_channel_description">Background service monitoring for voice messages</string>
+    <string name="monitor_notification_title">Monitoring Downloads</string>
+    <string name="monitor_notification_text">Watching for voice messages</string>
+    <string name="monitor_stop">Stop</string>
+
+    <!-- Audio Detected Notification -->
+    <string name="audio_detected_channel_name">Voice Message Detection</string>
+    <string name="audio_detected_channel_description">Notifications when voice messages are detected</string>
+    <string name="audio_detected_title">Voice message detected</string>
+    <string name="audio_detected_text">Tap to transcribe</string>
+    <string name="audio_detected_action">Transcribe</string>
 </resources>

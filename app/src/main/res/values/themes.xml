@@ -17,4 +17,13 @@
     <style name="KeyboardTheme.Dark">
         <item name="android:background">@color/keyboard_bg_dark</item>
     </style>
+
+    <!-- Dialog theme for TranscribeActivity -->
+    <style name="Theme.VoiceKeyboard.Dialog" parent="android:Theme.Material.Light.Dialog">
+        <item name="android:windowMinWidthMajor">85%</item>
+        <item name="android:windowMinWidthMinor">85%</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
 </resources>

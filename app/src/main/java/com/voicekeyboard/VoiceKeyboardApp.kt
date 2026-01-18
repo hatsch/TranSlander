@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import android.util.Log
+import com.voicekeyboard.asr.DictionaryManager
 import com.voicekeyboard.asr.ModelManager
 import com.voicekeyboard.asr.RecognizerManager
 import com.voicekeyboard.settings.SettingsRepository
@@ -27,10 +28,14 @@ class VoiceKeyboardApp : Application() {
     lateinit var recognizerManager: RecognizerManager
         private set
 
+    lateinit var dictionaryManager: DictionaryManager
+        private set
+
     override fun onCreate() {
         super.onCreate()
         instance = this
         settingsRepository = SettingsRepository(this)
+        dictionaryManager = DictionaryManager(this)
         modelManager = ModelManager(this)
         recognizerManager = RecognizerManager(this, modelManager)
         createNotificationChannel()

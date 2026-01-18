@@ -255,13 +255,21 @@ class TextInjectionService : AccessibilityService() {
                 .toString()
         }
 
-        // Set the new text
+        // Try ACTION_SET_TEXT first
         val arguments = Bundle()
         arguments.putCharSequence(
             AccessibilityNodeInfo.ACTION_ARGUMENT_SET_TEXT_CHARSEQUENCE,
             newText
         )
-        node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
+        val setTextSuccess = node.performAction(AccessibilityNodeInfo.ACTION_SET_TEXT, arguments)
+        Log.d(TAG, "ACTION_SET_TEXT result: $setTextSuccess")
+
+        // If ACTION_SET_TEXT failed or isn't supported, try clipboard paste fallback
+        if (!setTextSuccess) {
+            Log.d(TAG, "ACTION_SET_TEXT failed, trying clipboard paste fallback")
+            tryClipboardPaste(node, text)
+            return
+        }
 
         // Move cursor to end of inserted text
         val newCursorPosition = if (currentText.isEmpty()) text.length else selectionStart + text.length
@@ -269,6 +277,31 @@ class TextInjectionService : AccessibilityService() {
         selectionArgs.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_START_INT, newCursorPosition)
         selectionArgs.putInt(AccessibilityNodeInfo.ACTION_ARGUMENT_SELECTION_END_INT, newCursorPosition)
         node.performAction(AccessibilityNodeInfo.ACTION_SET_SELECTION, selectionArgs)
+    }
+
+    private fun tryClipboardPaste(node: AccessibilityNodeInfo, text: String) {
+        // Save current clipboard content
+        val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
+        val oldClip = clipboard.primaryClip
+
+        // Set our text to clipboard
+        val clip = android.content.ClipData.newPlainText("Transcription", text)
+        clipboard.setPrimaryClip(clip)
+
+        // Try to paste
+        val pasteSuccess = node.performAction(AccessibilityNodeInfo.ACTION_PASTE)
+        Log.d(TAG, "ACTION_PASTE result: $pasteSuccess")
+
+        // Restore old clipboard after a short delay
+        if (oldClip != null) {
+            android.os.Handler(mainLooper).postDelayed({
+                clipboard.setPrimaryClip(oldClip)
+            }, 500)
+        }
+
+        if (!pasteSuccess) {
+            showToast("Copied to clipboard (paste manually)")
+        }
     }
 
     private fun copyToClipboard(text: String) {

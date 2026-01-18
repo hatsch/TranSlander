@@ -6,12 +6,22 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Environment
+import android.provider.DocumentsContract
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -27,9 +37,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.voicekeyboard.R
 import com.voicekeyboard.VoiceKeyboardApp
+import com.voicekeyboard.asr.DictionaryManager
 import com.voicekeyboard.asr.ModelManager
 import com.voicekeyboard.service.FloatingMicService
 import com.voicekeyboard.service.TextInjectionService
+import com.voicekeyboard.transcribe.TranscribeManager
 import com.voicekeyboard.ui.theme.VoiceKeyboardTheme
 import kotlinx.coroutines.launch
 
@@ -41,6 +53,51 @@ class SettingsActivity : ComponentActivity() {
         if (isGranted) {
             checkAndStartService()
         }
+    }
+
+    private var onFolderSelected: ((String) -> Unit)? = null
+
+    private val folderPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.let {
+            // Take persistable permission for the folder
+            contentResolver.takePersistableUriPermission(
+                it,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION
+            )
+            // Convert to a displayable path
+            val path = getPathFromUri(it)
+            if (path != null) {
+                onFolderSelected?.invoke(path)
+            }
+        }
+    }
+
+    private fun getPathFromUri(uri: Uri): String? {
+        val docId = DocumentsContract.getTreeDocumentId(uri)
+
+        // Handle primary storage paths
+        if (docId.startsWith("primary:")) {
+            val relativePath = docId.removePrefix("primary:")
+            return "${Environment.getExternalStorageDirectory().absolutePath}/$relativePath"
+        }
+
+        // For other storage (SD card, etc.), try to extract path
+        if (docId.contains(":")) {
+            val parts = docId.split(":")
+            if (parts.size == 2) {
+                return "/storage/${parts[0]}/${parts[1]}"
+            }
+        }
+
+        // Fallback to URI string
+        return uri.lastPathSegment ?: uri.toString()
+    }
+
+    private fun openFolderPicker(callback: (String) -> Unit) {
+        onFolderSelected = callback
+        folderPickerLauncher.launch(null)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,7 +123,8 @@ class SettingsActivity : ComponentActivity() {
                     onRequestOverlayPermission = { requestOverlayPermission() },
                     onOpenAccessibilitySettings = { openAccessibilitySettings() },
                     onStartService = { startFloatingService() },
-                    onStopService = { stopFloatingService() }
+                    onStopService = { stopFloatingService() },
+                    onPickFolder = { callback -> openFolderPicker(callback) }
                 )
             }
         }
@@ -140,7 +198,8 @@ fun SettingsScreen(
     onRequestOverlayPermission: () -> Unit,
     onOpenAccessibilitySettings: () -> Unit,
     onStartService: () -> Unit,
-    onStopService: () -> Unit
+    onStopService: () -> Unit,
+    onPickFolder: ((String) -> Unit) -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -155,6 +214,14 @@ fun SettingsScreen(
     val recognizerManager = VoiceKeyboardApp.instance.recognizerManager
     val isRecognizerReady by recognizerManager.isReady.collectAsStateWithLifecycle()
     val isRecognizerLoading by recognizerManager.isLoading.collectAsStateWithLifecycle()
+    val dictionaryManager = VoiceKeyboardApp.instance.dictionaryManager
+    val dictionaryEnabled by settingsRepository.dictionaryEnabled.collectAsStateWithLifecycle(initialValue = true)
+    val replacementRules by dictionaryManager.rules.collectAsStateWithLifecycle()
+    var showDictionaryDialog by remember { mutableStateOf(false) }
+
+    val audioMonitorEnabled by settingsRepository.audioMonitorEnabled.collectAsStateWithLifecycle(initialValue = false)
+    val monitoredFolders by settingsRepository.monitoredFolders.collectAsStateWithLifecycle(initialValue = emptySet())
+    val transcribeManager = remember { TranscribeManager(context) }
 
     val hasMicPermission = remember { mutableStateOf(false) }
     val hasOverlayPermission = remember { mutableStateOf(false) }
@@ -276,6 +343,134 @@ fun SettingsScreen(
                     onLanguageSelected = { lang ->
                         scope.launch {
                             settingsRepository.setPreferredLanguage(lang)
+                        }
+                    }
+                )
+            }
+
+            // Transcription Section
+            SettingsSection(title = "Voice Message Transcription") {
+                SwitchSettingItem(
+                    title = "Monitor Folders",
+                    subtitle = if (audioMonitorEnabled)
+                        "Watching ${monitoredFolders.size.takeIf { it > 0 } ?: "Downloads"} folder(s)"
+                    else
+                        "Notify when voice messages are downloaded",
+                    icon = Icons.Default.FolderOpen,
+                    checked = audioMonitorEnabled,
+                    onCheckedChange = { enabled ->
+                        scope.launch {
+                            settingsRepository.setAudioMonitorEnabled(enabled)
+                            transcribeManager.setAudioMonitorEnabled(enabled)
+                        }
+                    }
+                )
+
+                // Watched folders list
+                if (audioMonitorEnabled || monitoredFolders.isNotEmpty()) {
+                    val displayFolders = monitoredFolders.ifEmpty {
+                        setOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath)
+                    }
+
+                    displayFolders.forEach { folder ->
+                        val folderName = folder.substringAfterLast("/")
+                        val isDefault = monitoredFolders.isEmpty()
+                        ListItem(
+                            headlineContent = { Text(folderName) },
+                            supportingContent = { Text(folder) },
+                            leadingContent = {
+                                Icon(Icons.Default.Folder, contentDescription = null)
+                            },
+                            trailingContent = {
+                                if (!isDefault) {
+                                    IconButton(onClick = {
+                                        scope.launch {
+                                            val newFolders = monitoredFolders - folder
+                                            settingsRepository.setMonitoredFolders(newFolders)
+                                        }
+                                    }) {
+                                        Icon(
+                                            Icons.Default.Close,
+                                            contentDescription = "Remove",
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+                                    }
+                                } else {
+                                    Text(
+                                        "Default",
+                                        style = MaterialTheme.typography.labelSmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        )
+                    }
+
+                    // Add folder button
+                    ListItem(
+                        headlineContent = { Text("Add folder") },
+                        supportingContent = { Text("Watch additional folders for voice messages") },
+                        leadingContent = {
+                            Icon(Icons.Default.Add, contentDescription = null)
+                        },
+                        modifier = Modifier.clickable {
+                            onPickFolder { path ->
+                                scope.launch {
+                                    val newFolders = monitoredFolders + path
+                                    settingsRepository.setMonitoredFolders(newFolders)
+                                }
+                            }
+                        }
+                    )
+                }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
+
+                ListItem(
+                    headlineContent = { Text("Share or Open Audio") },
+                    supportingContent = { Text("Use Share or Open With from other apps") },
+                    leadingContent = { Icon(Icons.Default.Share, contentDescription = null) }
+                )
+            }
+
+            // Word Corrections Section
+            SettingsSection(title = "Word Corrections") {
+                SwitchSettingItem(
+                    title = "Enable Corrections",
+                    subtitle = if (dictionaryEnabled) "Auto-correct recognized words" else "Corrections disabled",
+                    icon = Icons.Default.Spellcheck,
+                    checked = dictionaryEnabled,
+                    onCheckedChange = { enabled ->
+                        scope.launch {
+                            settingsRepository.setDictionaryEnabled(enabled)
+                        }
+                    }
+                )
+
+                ListItem(
+                    headlineContent = { Text("Manage Corrections") },
+                    supportingContent = { Text("${replacementRules.size} replacement rule(s)") },
+                    leadingContent = { Icon(Icons.Default.EditNote, contentDescription = null) },
+                    trailingContent = {
+                        Icon(Icons.Default.ChevronRight, contentDescription = "Manage")
+                    },
+                    modifier = Modifier.clickable { showDictionaryDialog = true }
+                )
+            }
+
+            // Dictionary Dialog
+            if (showDictionaryDialog) {
+                DictionaryDialog(
+                    rules = replacementRules,
+                    onDismiss = { showDictionaryDialog = false },
+                    onAddRule = { from, to ->
+                        scope.launch {
+                            dictionaryManager.addRule(from, to)
+                        }
+                    },
+                    onRemoveRule = { from ->
+                        scope.launch {
+                            dictionaryManager.removeRule(from)
                         }
                     }
                 )
@@ -479,4 +674,119 @@ fun ThemeSettingItem(
             )
         }
     }
+}
+
+@Composable
+fun DictionaryDialog(
+    rules: List<DictionaryManager.ReplacementRule>,
+    onDismiss: () -> Unit,
+    onAddRule: (String, String) -> Unit,
+    onRemoveRule: (String) -> Unit
+) {
+    var fromText by remember { mutableStateOf("") }
+    var toText by remember { mutableStateOf("") }
+
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text("Word Corrections") },
+        text = {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(max = 400.dp)
+            ) {
+                // Add new rule form
+                Text(
+                    "Add new correction",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = fromText,
+                        onValueChange = { fromText = it },
+                        label = { Text("From") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f)
+                    )
+                    OutlinedTextField(
+                        value = toText,
+                        onValueChange = { toText = it },
+                        label = { Text("To") },
+                        singleLine = true,
+                        modifier = Modifier.weight(1f)
+                    )
+                    IconButton(
+                        onClick = {
+                            if (fromText.isNotBlank() && toText.isNotBlank()) {
+                                onAddRule(fromText.trim(), toText.trim())
+                                fromText = ""
+                                toText = ""
+                            }
+                        },
+                        enabled = fromText.isNotBlank() && toText.isNotBlank()
+                    ) {
+                        Icon(Icons.Default.Add, "Add")
+                    }
+                }
+
+                HorizontalDivider(modifier = Modifier.padding(vertical = 16.dp))
+
+                // Existing rules list
+                Text(
+                    "Current rules (${rules.size})",
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+
+                if (rules.isEmpty()) {
+                    Text(
+                        "No correction rules yet",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                } else {
+                    Column(
+                        modifier = Modifier.verticalScroll(rememberScrollState())
+                    ) {
+                        rules.forEach { rule ->
+                            ListItem(
+                                headlineContent = {
+                                    Row(verticalAlignment = Alignment.CenterVertically) {
+                                        Text(rule.from)
+                                        Icon(
+                                            Icons.Default.ArrowForward,
+                                            contentDescription = null,
+                                            modifier = Modifier
+                                                .padding(horizontal = 8.dp)
+                                                .size(16.dp)
+                                        )
+                                        Text(rule.to)
+                                    }
+                                },
+                                trailingContent = {
+                                    IconButton(onClick = { onRemoveRule(rule.from) }) {
+                                        Icon(
+                                            Icons.Default.Delete,
+                                            contentDescription = "Delete",
+                                            tint = MaterialTheme.colorScheme.error
+                                        )
+                                    }
+                                }
+                            )
+                        }
+                    }
+                }
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text("Done")
+            }
+        }
+    )
 }

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- External downloads directory for monitored voice messages -->
+    <external-path
+        name="downloads"
+        path="Download/" />
+
+    <!-- External storage root for other audio files -->
+    <external-path
+        name="external"
+        path="." />
+
+    <!-- App's internal files directory -->
+    <files-path
+        name="internal"
+        path="." />
+
+    <!-- App's cache directory -->
+    <cache-path
+        name="cache"
+        path="." />
+</paths>

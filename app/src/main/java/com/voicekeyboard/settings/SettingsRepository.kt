@@ -7,6 +7,7 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.stringSetPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -22,6 +23,9 @@ class SettingsRepository(private val context: Context) {
         private val BUTTON_X_KEY = intPreferencesKey("button_x")
         private val BUTTON_Y_KEY = intPreferencesKey("button_y")
         private val AUTO_LOAD_MODEL_KEY = booleanPreferencesKey("auto_load_model")
+        private val DICTIONARY_ENABLED_KEY = booleanPreferencesKey("dictionary_enabled")
+        private val AUDIO_MONITOR_ENABLED_KEY = booleanPreferencesKey("audio_monitor_enabled")
+        private val MONITORED_FOLDERS_KEY = stringSetPreferencesKey("monitored_folders")
 
         const val LANGUAGE_AUTO = "auto"
         const val THEME_SYSTEM = "system"
@@ -49,6 +53,36 @@ class SettingsRepository(private val context: Context) {
 
     val autoLoadModel: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[AUTO_LOAD_MODEL_KEY] ?: false
+    }
+
+    val dictionaryEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[DICTIONARY_ENABLED_KEY] ?: true
+    }
+
+    val audioMonitorEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
+        preferences[AUDIO_MONITOR_ENABLED_KEY] ?: false
+    }
+
+    val monitoredFolders: Flow<Set<String>> = context.dataStore.data.map { preferences ->
+        preferences[MONITORED_FOLDERS_KEY] ?: emptySet()
+    }
+
+    suspend fun setDictionaryEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[DICTIONARY_ENABLED_KEY] = enabled
+        }
+    }
+
+    suspend fun setAudioMonitorEnabled(enabled: Boolean) {
+        context.dataStore.edit { preferences ->
+            preferences[AUDIO_MONITOR_ENABLED_KEY] = enabled
+        }
+    }
+
+    suspend fun setMonitoredFolders(folders: Set<String>) {
+        context.dataStore.edit { preferences ->
+            preferences[MONITORED_FOLDERS_KEY] = folders
+        }
     }
 
     suspend fun setAutoLoadModel(enabled: Boolean) {
