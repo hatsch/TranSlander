@@ -758,6 +758,7 @@ fun DictionaryDialog(
                                 headlineContent = {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(rule.from)
+                                        @Suppress("DEPRECATION")
                                         Icon(
                                             Icons.Default.ArrowForward,
                                             contentDescription = null,

@@ -180,7 +180,6 @@ class TextInjectionService : AccessibilityService() {
         if (focusedNode != null) {
             Log.i(TAG, "Found focused node, injecting text")
             insertTextIntoNode(focusedNode, text)
-            focusedNode.recycle()
         } else {
             Log.w(TAG, "No focused text field found, copying to clipboard")
             showToast("No text field focused. Copied to clipboard.")
@@ -201,7 +200,6 @@ class TextInjectionService : AccessibilityService() {
             Log.i(TAG, "Found input-focused editable node")
             return inputFocused
         }
-        inputFocused?.recycle()
 
         // Fallback to searching the tree
         return findFocusedNode(rootNode)
@@ -210,19 +208,18 @@ class TextInjectionService : AccessibilityService() {
     private fun findFocusedNode(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
         if (node.isFocused && node.isEditable) {
             Log.i(TAG, "Found focused editable node: ${node.className}")
-            return AccessibilityNodeInfo.obtain(node)
+            return node
         }
 
         // Also check for isEditable without isFocused (some apps don't report focus correctly)
         if (node.isEditable && node.isFocusable) {
             Log.i(TAG, "Found editable focusable node: ${node.className}")
-            return AccessibilityNodeInfo.obtain(node)
+            return node
         }
 
         for (i in 0 until node.childCount) {
             val child = node.getChild(i) ?: continue
             val result = findFocusedNode(child)
-            child.recycle()
             if (result != null) {
                 return result
             }
