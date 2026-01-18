@@ -42,6 +42,12 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0.0"
+
+        // Only include arm64-v8a for modern phones (~50% smaller APK)
+        // Remove this filter if you need to support older 32-bit devices or emulators
+        ndk {
+            abiFilters += "arm64-v8a"
+        }
     }
 
     buildTypes {
