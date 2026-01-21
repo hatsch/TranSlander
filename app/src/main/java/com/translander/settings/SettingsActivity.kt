@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.Settings
+import android.view.inputmethod.InputMethodManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -132,7 +133,9 @@ class SettingsActivity : ComponentActivity() {
                     onStartService = { startFloatingService() },
                     onStopService = { stopFloatingService() },
                     onRestartService = { restartFloatingService() },
-                    onPickFolder = { callback -> openFolderPicker(callback) }
+                    onPickFolder = { callback -> openFolderPicker(callback) },
+                    isVoiceImeEnabled = { isVoiceImeEnabled() },
+                    onOpenInputMethodSettings = { openInputMethodSettings() }
                 )
             }
         }
@@ -247,6 +250,17 @@ class SettingsActivity : ComponentActivity() {
             true
         }
     }
+
+    private fun isVoiceImeEnabled(): Boolean {
+        val imm = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+        val enabledMethods = imm.enabledInputMethodList
+        return enabledMethods.any { it.packageName == packageName }
+    }
+
+    private fun openInputMethodSettings() {
+        val intent = Intent(Settings.ACTION_INPUT_METHOD_SETTINGS)
+        startActivity(intent)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -262,7 +276,9 @@ fun SettingsScreen(
     onStartService: () -> Unit,
     onStopService: () -> Unit,
     onRestartService: () -> Unit,
-    onPickFolder: ((String) -> Unit) -> Unit
+    onPickFolder: ((String) -> Unit) -> Unit,
+    isVoiceImeEnabled: () -> Boolean,
+    onOpenInputMethodSettings: () -> Unit
 ) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
@@ -291,6 +307,7 @@ fun SettingsScreen(
     val hasOverlayPermission = remember { mutableStateOf(false) }
     val hasAccessibilityEnabled = remember { mutableStateOf(false) }
     val hasAudioPermission = remember { mutableStateOf(false) }
+    val hasVoiceImeEnabled = remember { mutableStateOf(false) }
 
     // Check permissions - refresh on every onResume via refreshTrigger
     LaunchedEffect(refreshTrigger) {
@@ -305,6 +322,8 @@ fun SettingsScreen(
         hasAccessibilityEnabled.value = TextInjectionService.isEnabled()
 
         hasAudioPermission.value = hasAudioFilesPermission()
+
+        hasVoiceImeEnabled.value = isVoiceImeEnabled()
     }
 
     Scaffold(
@@ -389,6 +408,20 @@ fun SettingsScreen(
                             }
                         }
                     }
+                )
+            }
+
+            // Keyboard Integration Section
+            SettingsSection(title = "Keyboard Integration") {
+                PermissionItem(
+                    title = "Voice Input Method",
+                    subtitle = if (hasVoiceImeEnabled.value)
+                        "Enabled - Mic button appears on keyboard"
+                    else "Enable to use mic button on HeliBoard/AOSP keyboard",
+                    icon = Icons.Default.Keyboard,
+                    isGranted = hasVoiceImeEnabled.value,
+                    onClick = { onOpenInputMethodSettings() },
+                    onRevokeClick = { onOpenInputMethodSettings() }
                 )
             }
 
