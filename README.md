@@ -13,9 +13,10 @@ A fully offline voice typing app for Android. Speak into your phone and text app
 - Uses Android Accessibility API to inject text directly into any focused text field
 - Falls back to clipboard if no text field is focused
 
-### Two Input Methods
+### Multiple Input Methods
 - **Accessibility Button** — System navigation bar button, works system-wide
 - **Floating Mic Button** — Draggable overlay, always visible (optional)
+- **Keyboard Mic Button** — Integrates with keyboards like HeliBoard, AOSP Keyboard
 
 ### Voice Message Transcription
 - **Share** audio files from any app
@@ -34,6 +35,23 @@ A fully offline voice typing app for Android. Speak into your phone and text app
 - Material 3 design with Jetpack Compose
 - Dark and Light theme support
 - System theme auto-detection
+
+### Keyboard Integration
+Translander provides three APIs for voice input integration:
+
+| Component | API | Use Case |
+|-----------|-----|----------|
+| `VoiceInputMethodService` | InputMethodService (voice IME) | Keyboard mic buttons (HeliBoard, AOSP) |
+| `SpeechRecognitionService` | RecognitionService | Apps using SpeechRecognizer class |
+| `VoiceInputActivity` | RECOGNIZE_SPEECH intent | Apps launching voice input via intent |
+
+**Setup for keyboard mic button:**
+```bash
+# Enable Translander as input method
+adb shell ime enable com.translander/.ime.VoiceInputMethodService
+
+# Or manually: Settings → System → Languages & input → On-screen keyboard → Manage → Enable Translander
+```
 
 ## How It Works
 
@@ -105,6 +123,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 | `POST_NOTIFICATIONS` | Show recording status and voice message alerts |
 | `INTERNET` | Download speech model (one-time) |
 | `READ_MEDIA_AUDIO` | Access audio files for transcription |
+| `BIND_INPUT_METHOD` | Register as voice input method for keyboards |
 
 ## Project Structure
 
@@ -116,9 +135,13 @@ app/src/main/java/com/translander/
 │   ├── ParakeetRecognizer.kt # ONNX inference wrapper
 │   ├── RecognizerManager.kt  # Shared recognizer singleton
 │   └── DictionaryManager.kt  # Word correction rules
+├── ime/
+│   └── VoiceInputMethodService.kt # Voice IME for keyboard integration
 ├── service/
-│   ├── FloatingMicService.kt     # Draggable overlay button
-│   └── TextInjectionService.kt   # Accessibility service
+│   ├── FloatingMicService.kt      # Draggable overlay button
+│   ├── TextInjectionService.kt    # Accessibility service
+│   ├── SpeechRecognitionService.kt # System RecognitionService API
+│   └── VoiceInputActivity.kt      # RECOGNIZE_SPEECH intent handler
 ├── settings/
 │   ├── SettingsActivity.kt       # Jetpack Compose UI
 │   └── SettingsRepository.kt     # DataStore preferences
