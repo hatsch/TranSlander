@@ -16,7 +16,7 @@ A fully offline voice typing app for Android. Speak into your phone and text app
 ### Multiple Input Methods
 - **Accessibility Button** — System navigation bar button, works system-wide
 - **Floating Mic Button** — Draggable overlay, always visible (optional)
-- **Keyboard Mic Button** — Integrates with keyboards like HeliBoard, AOSP Keyboard
+- **Keyboard Mic Button** — Integrates with keyboards like HeliBoard
 
 ### Voice Message Transcription
 - **Share** audio files from any app
@@ -41,14 +41,14 @@ Translander provides three APIs for voice input integration:
 
 | Component | API | Use Case |
 |-----------|-----|----------|
-| `VoiceInputMethodService` | InputMethodService (voice IME) | Keyboard mic buttons (HeliBoard, AOSP) |
+| `VoiceInputMethodService` | InputMethodService (voice IME) | Keyboard mic buttons (HeliBoard) |
 | `SpeechRecognitionService` | RecognitionService | Apps using SpeechRecognizer class |
 | `VoiceInputActivity` | RECOGNIZE_SPEECH intent | Apps launching voice input via intent |
 
-**Setup for keyboard mic button:**
+**Setup for keyboard mic button (HeliBoard):**
 1. Open Translander → Keyboard Integration → Tap "Voice Input Method"
 2. Enable "Translander" in the system keyboard list
-3. Restart your keyboard (HeliBoard, AOSP, etc.)
+3. In HeliBoard settings, enable "Voice input key"
 4. Mic button should now appear on keyboard toolbar
 
 ## How It Works
