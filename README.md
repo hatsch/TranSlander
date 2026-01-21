@@ -46,12 +46,10 @@ Translander provides three APIs for voice input integration:
 | `VoiceInputActivity` | RECOGNIZE_SPEECH intent | Apps launching voice input via intent |
 
 **Setup for keyboard mic button:**
-```bash
-# Enable Translander as input method
-adb shell ime enable com.translander/.ime.VoiceInputMethodService
-
-# Or manually: Settings → System → Languages & input → On-screen keyboard → Manage → Enable Translander
-```
+1. Open Translander → Keyboard Integration → Tap "Voice Input Method"
+2. Enable "Translander" in the system keyboard list
+3. Restart your keyboard (HeliBoard, AOSP, etc.)
+4. Mic button should now appear on keyboard toolbar
 
 ## How It Works
 
