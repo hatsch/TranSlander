@@ -109,7 +109,7 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 ## Project Structure
 
 ```
-app/src/main/java/com/voicekeyboard/
+app/src/main/java/com/translander/
 ├── asr/                      # Speech recognition
 │   ├── AudioRecorder.kt      # 16kHz PCM recording
 │   ├── ModelManager.kt       # Model download from HuggingFace

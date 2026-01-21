@@ -10,6 +10,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
 import java.io.FileOutputStream
+import java.security.MessageDigest
 import java.util.concurrent.TimeUnit
 
 class ModelManager(private val context: Context) {
@@ -27,6 +28,15 @@ class ModelManager(private val context: Context) {
             "decoder.int8.onnx" to "decoder.onnx",
             "joiner.int8.onnx" to "joiner.onnx",
             "tokens.txt" to "tokens.txt"
+        )
+
+        // SHA256 checksums for integrity verification (from HuggingFace LFS pointer files)
+        // These are verified against the file content after download
+        private val FILE_CHECKSUMS = mapOf(
+            "encoder.int8.onnx" to "acfc2b4456377e15d04f0243af540b7fe7c992f8d898d751cf134c3a55fd2247",
+            "decoder.int8.onnx" to "179e50c43d1a9de79c8a24149a2f9bac6eb5981823f2a2ed88d655b24248db4e",
+            "joiner.int8.onnx" to "3164c13fc2821009440d20fcb5fdc78bff28b4db2f8d0f0b329101719c0948b3"
+            // tokens.txt is not LFS-tracked, verified by file existence only
         )
     }
 
@@ -97,6 +107,18 @@ class ModelManager(private val context: Context) {
                         _downloadState.value = DownloadState.Downloading(overallProgress)
                         onProgress(overallProgress)
                     }
+
+                    // Verify checksum
+                    val expectedChecksum = FILE_CHECKSUMS[remoteName]
+                    if (expectedChecksum != null) {
+                        val actualChecksum = calculateSha256(targetFile)
+                        if (actualChecksum != expectedChecksum) {
+                            throw SecurityException(
+                                "Checksum mismatch for $remoteName: expected $expectedChecksum, got $actualChecksum"
+                            )
+                        }
+                        Log.i(TAG, "Checksum verified for $remoteName")
+                    }
                 }
 
                 if (isModelReady()) {
@@ -143,6 +165,18 @@ class ModelManager(private val context: Context) {
                 }
             }
         }
+    }
+
+    private fun calculateSha256(file: File): String {
+        val digest = MessageDigest.getInstance("SHA-256")
+        file.inputStream().use { input ->
+            val buffer = ByteArray(8192)
+            var bytesRead: Int
+            while (input.read(buffer).also { bytesRead = it } != -1) {
+                digest.update(buffer, 0, bytesRead)
+            }
+        }
+        return digest.digest().joinToString("") { "%02x".format(it) }
     }
 
     suspend fun deleteModel() {

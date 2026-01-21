@@ -133,7 +133,7 @@ class AudioDecoder(private val context: Context) {
             if (!inputDone) {
                 val inputBufferIndex = codec.dequeueInputBuffer(TIMEOUT_US)
                 if (inputBufferIndex >= 0) {
-                    val inputBuffer = codec.getInputBuffer(inputBufferIndex)!!
+                    val inputBuffer = codec.getInputBuffer(inputBufferIndex) ?: continue
                     val sampleSize = extractor.readSampleData(inputBuffer, 0)
 
                     if (sampleSize < 0) {

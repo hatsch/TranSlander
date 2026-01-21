@@ -181,7 +181,7 @@ class FloatingMicService : Service() {
                 MotionEvent.ACTION_UP -> {
                     val deltaX = event.rawX - initialTouchX
                     val deltaY = event.rawY - initialTouchY
-                    if (Math.abs(deltaX) < 10 && Math.abs(deltaY) < 10) {
+                    if (kotlin.math.abs(deltaX) < 10 && kotlin.math.abs(deltaY) < 10) {
                         // This was a tap, not a drag
                         toggleRecording()
                     } else {

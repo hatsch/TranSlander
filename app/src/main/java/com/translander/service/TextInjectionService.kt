@@ -48,7 +48,9 @@ class TextInjectionService : AccessibilityService() {
                     Log.i(TAG, "Accessibility button availability: $available")
                 }
             }
-            accessibilityButtonController.registerAccessibilityButtonCallback(accessibilityButtonCallback!!)
+            accessibilityButtonCallback?.let { callback ->
+                accessibilityButtonController.registerAccessibilityButtonCallback(callback)
+            }
         }
     }
 
@@ -172,8 +174,10 @@ class TextInjectionService : AccessibilityService() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && accessibilityButtonCallback != null) {
-            accessibilityButtonController.unregisterAccessibilityButtonCallback(accessibilityButtonCallback!!)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            accessibilityButtonCallback?.let { callback ->
+                accessibilityButtonController.unregisterAccessibilityButtonCallback(callback)
+            }
         }
         recordingJob?.cancel()
         audioRecorder?.release()

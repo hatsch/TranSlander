@@ -8,8 +8,10 @@ import android.provider.Settings
 import android.util.Log
 import com.translander.TranslanderApp
 import com.translander.service.FloatingMicService
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.launch
 
 class BootReceiver : BroadcastReceiver() {
 
@@ -31,26 +33,29 @@ class BootReceiver : BroadcastReceiver() {
                 return
             }
 
-            // Check if service was enabled in settings
-            val wasEnabled = runBlocking {
+            // Use goAsync() to extend receiver lifetime beyond 10s limit
+            val pendingResult = goAsync()
+
+            CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    TranslanderApp.instance.settingsRepository.serviceEnabled.first()
+                    val wasEnabled = TranslanderApp.instance.settingsRepository.serviceEnabled.first()
+
+                    if (wasEnabled) {
+                        Log.i(TAG, "Service was enabled, starting FloatingMicService")
+                        val serviceIntent = Intent(context, FloatingMicService::class.java)
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            context.startForegroundService(serviceIntent)
+                        } else {
+                            context.startService(serviceIntent)
+                        }
+                    } else {
+                        Log.i(TAG, "Service was not enabled, not starting")
+                    }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to check service enabled state", e)
-                    false
+                } finally {
+                    pendingResult.finish()
                 }
-            }
-
-            if (wasEnabled) {
-                Log.i(TAG, "Service was enabled, starting FloatingMicService")
-                val serviceIntent = Intent(context, FloatingMicService::class.java)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(serviceIntent)
-                } else {
-                    context.startService(serviceIntent)
-                }
-            } else {
-                Log.i(TAG, "Service was not enabled, not starting")
             }
         }
     }

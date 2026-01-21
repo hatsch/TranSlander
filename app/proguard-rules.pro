@@ -4,6 +4,16 @@
 # sherpa-onnx
 -keep class com.k2fsa.sherpa.onnx.** { *; }
 
+# OkHttp
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
+-dontwarn okio.**
+
+# Kotlin Coroutines
+-keepclassmembers class kotlinx.coroutines.** { *; }
+-dontwarn kotlinx.coroutines.**
+
 # Keep native methods
 -keepclasseswithmembernames class * {
     native <methods>;

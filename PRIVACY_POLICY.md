@@ -31,13 +31,13 @@ The app requires the following permissions:
 
 ## Speech Recognition Model
 
-- The speech recognition model is downloaded once from HuggingFace (huggingface.co)
+- The speech recognition model (Parakeet TDT v3) is downloaded once from the official k2-fsa/sherpa-onnx GitHub releases
 - After download, all processing happens offline on your device
 - No audio or text is ever sent to any server
 
 ## Third-Party Services
 
-- **HuggingFace**: Used only for initial model download. See their privacy policy at https://huggingface.co/privacy
+- **GitHub**: Used only for initial model download from k2-fsa/sherpa-onnx releases
 - No other third-party services are used
 
 ## Data Storage
