@@ -100,6 +100,52 @@
             android:exported="false"
             android:foregroundServiceType="dataSync" />
 
+        <!-- Speech Recognition Service for system voice input integration -->
+        <service
+            android:name=".service.SpeechRecognitionService"
+            android:exported="true"
+            android:permission="android.permission.RECORD_AUDIO"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.speech.RecognitionService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.speech"
+                android:resource="@xml/speech_recognition_service" />
+        </service>
+
+        <!-- Voice Input Activity for keyboard integration -->
+        <activity
+            android:name=".service.VoiceInputActivity"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.speech.action.RECOGNIZE_SPEECH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.speech.action.WEB_SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
+        <!-- Voice Input Method Service (auxiliary IME for keyboard mic button) -->
+        <service
+            android:name=".ime.VoiceInputMethodService"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_INPUT_METHOD"
+            android:foregroundServiceType="microphone">
+            <intent-filter>
+                <action android:name="android.view.InputMethod" />
+            </intent-filter>
+            <meta-data
+                android:name="android.view.im"
+                android:resource="@xml/voice_input_method" />
+        </service>
+
         <!-- File Provider for sharing audio files -->
         <provider
             android:name="androidx.core.content.FileProvider"
