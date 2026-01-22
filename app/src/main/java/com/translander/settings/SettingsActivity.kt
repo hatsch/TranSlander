@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -343,89 +344,7 @@ fun SettingsScreen(
                 .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            // Accessibility Service (required)
-            SettingsSection(title = "Accessibility Service") {
-                PermissionItem(
-                    title = "Voice Keyboard Service",
-                    subtitle = if (hasAccessibilityEnabled.value)
-                        "Enabled - Use accessibility button to record"
-                        else "Enable in Settings to use voice input",
-                    icon = Icons.Default.Accessibility,
-                    isGranted = hasAccessibilityEnabled.value,
-                    onClick = { onOpenAccessibilitySettings() },
-                    onRevokeClick = { onOpenAccessibilitySettings() }
-                )
-
-                PermissionItem(
-                    title = stringResource(R.string.permission_mic_title),
-                    subtitle = if (hasMicPermission.value) "Granted - tap to manage" else "Required for voice input",
-                    icon = Icons.Default.Mic,
-                    isGranted = hasMicPermission.value,
-                    onClick = { if (hasMicPermission.value) onOpenAppSettings() else onRequestMicPermission() },
-                    onRevokeClick = { onOpenAppSettings() }
-                )
-            }
-
-            // Optional Floating Mic Button
-            SettingsSection(title = "Floating Mic Button (Optional)") {
-                SwitchSettingItem(
-                    title = "Enable Floating Button",
-                    subtitle = when {
-                        !hasMicPermission.value -> "Grant microphone permission first"
-                        !isRecognizerReady -> "Load model first"
-                        serviceEnabled -> "Shows red when recording"
-                        else -> "Additional mic button overlay"
-                    },
-                    icon = Icons.Default.RadioButtonChecked,
-                    checked = serviceEnabled,
-                    enabled = hasMicPermission.value && isRecognizerReady,
-                    onCheckedChange = { enabled ->
-                        scope.launch {
-                            settingsRepository.setServiceEnabled(enabled)
-                            if (enabled) onStartService() else onStopService()
-                        }
-                    }
-                )
-
-                if (!hasOverlayPermission.value) {
-                    PermissionItem(
-                        title = stringResource(R.string.setting_overlay),
-                        subtitle = "Required for floating button",
-                        icon = Icons.Default.Layers,
-                        isGranted = false,
-                        onClick = { onRequestOverlayPermission() }
-                    )
-                }
-
-                ButtonSizeSettingItem(
-                    selectedSize = floatingButtonSize,
-                    onSizeSelected = { size ->
-                        scope.launch {
-                            settingsRepository.setFloatingButtonSize(size)
-                            // Restart service to apply new size (without clearing preference)
-                            if (serviceEnabled) {
-                                onRestartService()
-                            }
-                        }
-                    }
-                )
-            }
-
-            // Keyboard Integration Section
-            SettingsSection(title = "Keyboard Integration") {
-                PermissionItem(
-                    title = "Voice Input Method",
-                    subtitle = if (hasVoiceImeEnabled.value)
-                        "Enabled - Mic button appears on keyboard"
-                    else "Enable to use mic button on HeliBoard/AOSP keyboard",
-                    icon = Icons.Default.Keyboard,
-                    isGranted = hasVoiceImeEnabled.value,
-                    onClick = { onOpenInputMethodSettings() },
-                    onRevokeClick = { onOpenInputMethodSettings() }
-                )
-            }
-
-            // Model Section
+            // Speech Model (required for all voice input)
             SettingsSection(title = "Speech Model") {
                 ModelSettingItem(
                     downloadState = downloadState,
@@ -464,16 +383,98 @@ fun SettingsScreen(
                         }
                     }
                 )
-            }
 
-            // Language Section
-            SettingsSection(title = "Recognition") {
                 LanguageSettingItem(
                     selectedLanguage = preferredLanguage,
                     languages = settingsRepository.getSupportedLanguages(),
                     onLanguageSelected = { lang ->
                         scope.launch {
                             settingsRepository.setPreferredLanguage(lang)
+                        }
+                    }
+                )
+            }
+
+            // Microphone Permission (required for all voice input)
+            SettingsSection(title = "Microphone") {
+                PermissionItem(
+                    title = stringResource(R.string.permission_mic_title),
+                    subtitle = if (hasMicPermission.value) "Granted - tap to manage" else "Required for voice input",
+                    icon = Icons.Default.Mic,
+                    isGranted = hasMicPermission.value,
+                    onClick = { if (hasMicPermission.value) onOpenAppSettings() else onRequestMicPermission() },
+                    onRevokeClick = { onOpenAppSettings() }
+                )
+            }
+
+            // Keyboard Integration Section
+            SettingsSection(title = "Keyboard Integration") {
+                PermissionItem(
+                    title = "Voice Input Method",
+                    subtitle = if (hasVoiceImeEnabled.value)
+                        "Enabled - Mic button appears on keyboard"
+                    else "Enable to use mic button on HeliBoard keyboard",
+                    icon = Icons.Default.Keyboard,
+                    isGranted = hasVoiceImeEnabled.value,
+                    onClick = { onOpenInputMethodSettings() },
+                    onRevokeClick = { onOpenInputMethodSettings() }
+                )
+            }
+
+            // Accessibility Service
+            SettingsSection(title = "Accessibility Service") {
+                PermissionItem(
+                    title = "Text Injection Service",
+                    subtitle = if (hasAccessibilityEnabled.value)
+                        "Enabled - Text injected into focused fields"
+                        else "Enable to inject text into any app",
+                    icon = Icons.Default.Accessibility,
+                    isGranted = hasAccessibilityEnabled.value,
+                    onClick = { onOpenAccessibilitySettings() },
+                    onRevokeClick = { onOpenAccessibilitySettings() }
+                )
+            }
+
+            // Optional Floating Mic Button
+            SettingsSection(title = "Floating Mic Button") {
+                SwitchSettingItem(
+                    title = "Enable Floating Button",
+                    subtitle = when {
+                        !hasMicPermission.value -> "Grant microphone permission first"
+                        !isRecognizerReady -> "Load model first"
+                        serviceEnabled -> "Shows red when recording"
+                        else -> "Additional mic button overlay"
+                    },
+                    icon = Icons.Default.RadioButtonChecked,
+                    checked = serviceEnabled,
+                    enabled = hasMicPermission.value && isRecognizerReady,
+                    onCheckedChange = { enabled ->
+                        scope.launch {
+                            settingsRepository.setServiceEnabled(enabled)
+                            if (enabled) onStartService() else onStopService()
+                        }
+                    }
+                )
+
+                if (!hasOverlayPermission.value) {
+                    PermissionItem(
+                        title = stringResource(R.string.setting_overlay),
+                        subtitle = "Required for floating button",
+                        icon = Icons.Default.Layers,
+                        isGranted = false,
+                        onClick = { onRequestOverlayPermission() }
+                    )
+                }
+
+                ButtonSizeSettingItem(
+                    selectedSize = floatingButtonSize,
+                    onSizeSelected = { size ->
+                        scope.launch {
+                            settingsRepository.setFloatingButtonSize(size)
+                            // Restart service to apply new size (without clearing preference)
+                            if (serviceEnabled) {
+                                onRestartService()
+                            }
                         }
                     }
                 )
@@ -951,9 +952,8 @@ fun DictionaryDialog(
                                 headlineContent = {
                                     Row(verticalAlignment = Alignment.CenterVertically) {
                                         Text(rule.from)
-                                        @Suppress("DEPRECATION")
                                         Icon(
-                                            Icons.Default.ArrowForward,
+                                            Icons.AutoMirrored.Filled.ArrowForward,
                                             contentDescription = null,
                                             modifier = Modifier
                                                 .padding(horizontal = 8.dp)
