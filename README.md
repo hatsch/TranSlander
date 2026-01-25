@@ -27,6 +27,13 @@ A fully offline voice typing app for Android. Speak into your phone and text app
 - Automatic notifications when voice messages are detected
 - Supports OPUS, AAC, OGG, M4A, MP3, WAV formats
 
+**Example: Signal voice messages**
+1. Open Translander Settings → Voice Message Transcription
+2. Add watch folder: `Music/Signal` (where Signal saves voice messages)
+3. Enable "Monitor Folders"
+4. In Signal, long-press a voice message → Save
+5. Transcription popup appears automatically
+
 ### Word Corrections
 - Custom dictionary to fix recurring recognition errors
 - Example: "Tamtam" → "Tamdam"

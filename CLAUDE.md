@@ -196,3 +196,14 @@ OfflineRecognizerConfig(
 5. Test open with: File manager → select audio → Open with Translander
 6. Test folder monitoring: Enable in Settings → new audio in Downloads → auto-transcription
 7. Test formats: OPUS, AAC, M4A, OGG, MP3
+
+## Open Tasks
+
+### F-Droid Publishing
+- [ ] Add app screenshots to `fastlane/metadata/android/en-US/images/phoneScreenshots/`
+- [ ] Create feature graphic (1024x500) at `fastlane/metadata/android/en-US/images/featureGraphic.png` (optional)
+- [ ] Submit to F-Droid via GitLab RFP at https://gitlab.com/fdroid/rfp
+
+### Known Issues
+- Vanadium browser doesn't handle voice input results (browser bug, not fixable on our side)
+- AOSP keyboard has no voice input support (use HeliBoard instead)
