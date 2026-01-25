@@ -3,6 +3,8 @@
     android:settingsActivity="com.translander.settings.SettingsActivity">
     <subtype
         android:imeSubtypeMode="voice"
+        android:imeSubtypeLocale="en_US"
         android:label="@string/app_name"
+        android:isAuxiliary="true"
         android:overridesImplicitlyEnabledSubtype="true" />
 </input-method>

@@ -1,0 +1,33 @@
+A fully offline voice typing app for Android. Speak into your phone and text appears in any app — no internet required, no cloud processing, your voice data never leaves your device.
+
+<b>Features</b>
+
+<b>Offline Speech Recognition</b>
+Uses the Parakeet TDT v3 neural model running locally via sherpa-onnx. Supports 26+ languages with auto-detection. No internet connection needed after the initial model download.
+
+<b>Works in Any App</b>
+Uses Android Accessibility API to inject text directly into any focused text field. Falls back to clipboard if no text field is focused.
+
+<b>Multiple Input Methods</b>
+• Accessibility Button — System navigation bar button, works system-wide
+• Floating Mic Button — Draggable overlay, always visible
+• Keyboard Integration — Works with keyboards like HeliBoard
+
+<b>Voice Message Transcription</b>
+Share or open audio files from any app to transcribe them. Supports OPUS, AAC, OGG, M4A, MP3, WAV formats. Optional folder monitoring watches your Downloads folder for new voice messages.
+
+<b>Word Corrections</b>
+Custom dictionary to fix recurring recognition errors. Define rules like "Tamtam" → "Tamdam" and they're applied automatically.
+
+<b>Privacy First</b>
+All speech processing happens locally on your device. No audio data is ever sent to any server. No analytics, no tracking.
+
+<b>Supported Languages</b>
+English, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Russian, Ukrainian, Czech, Slovak, Hungarian, Romanian, Bulgarian, Croatian, Slovenian, Greek, Danish, Swedish, Finnish, Estonian, Latvian, Lithuanian, Maltese, and more.
+
+<b>Permissions</b>
+• Microphone — to capture voice for transcription
+• Accessibility — to inject text into apps
+• Overlay — for floating mic button
+• Storage — to access audio files for transcription
+• Internet — one-time model download only

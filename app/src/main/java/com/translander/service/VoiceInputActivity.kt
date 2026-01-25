@@ -5,12 +5,15 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.Settings
 import android.speech.RecognizerIntent
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.translander.TranslanderApp
 import com.translander.asr.AudioRecorder
+import com.translander.ui.RecordingOverlay
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,25 +24,39 @@ import kotlinx.coroutines.withContext
 
 /**
  * Activity that handles voice input requests from keyboards and other apps.
- *
- * This is triggered when an app sends android.speech.action.RECOGNIZE_SPEECH intent.
- * Shows a minimal UI while recording, then returns the transcription result.
+ * Uses a system overlay for UI to avoid stealing focus from the calling app.
  */
 class VoiceInputActivity : Activity() {
 
     companion object {
         private const val TAG = "VoiceInputActivity"
-        private const val REQUEST_PERMISSION = 1
     }
 
     private val activityScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private var audioRecorder: AudioRecorder? = null
     private var recordingJob: Job? = null
     private var isRecording = false
+    private var recordingOverlay: RecordingOverlay? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "VoiceInputActivity created")
+
+        // Try to prevent focus stealing from browser
+        window.addFlags(
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
+            WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
+
+        // Check overlay permission
+        if (!Settings.canDrawOverlays(this)) {
+            Log.w(TAG, "No overlay permission")
+            Toast.makeText(this, "Overlay permission required. Enable in Translander settings.", Toast.LENGTH_LONG).show()
+            setResult(RESULT_CANCELED)
+            finish()
+            return
+        }
 
         // Check microphone permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
@@ -61,7 +78,25 @@ class VoiceInputActivity : Activity() {
             return
         }
 
-        // Start recording immediately
+        // Show overlay and start recording
+        showOverlayAndRecord()
+    }
+
+    private fun showOverlayAndRecord() {
+        recordingOverlay = RecordingOverlay(this).apply {
+            onDoneClick = {
+                if (isRecording) {
+                    stopRecordingAndTranscribe()
+                }
+            }
+            onCancelClick = {
+                cleanup()
+                setResult(RESULT_CANCELED)
+                finish()
+            }
+        }
+        recordingOverlay?.show()
+
         startRecording()
     }
 
@@ -71,6 +106,7 @@ class VoiceInputActivity : Activity() {
         activityScope.cancel()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (isRecording) {
             stopRecordingAndTranscribe()
@@ -84,7 +120,7 @@ class VoiceInputActivity : Activity() {
         Log.i(TAG, "Starting recording")
         isRecording = true
 
-        Toast.makeText(this, "Listening... Tap back to stop", Toast.LENGTH_SHORT).show()
+        recordingOverlay?.setStatus("Listening...")
 
         audioRecorder = AudioRecorder()
         recordingJob = activityScope.launch(Dispatchers.IO) {
@@ -100,9 +136,9 @@ class VoiceInputActivity : Activity() {
             }
         }
 
-        // Auto-stop after silence or timeout (simplified: just use a timeout)
+        // Auto-stop after timeout
         activityScope.launch {
-            kotlinx.coroutines.delay(10000) // 10 second max recording
+            kotlinx.coroutines.delay(10000)
             if (isRecording) {
                 stopRecordingAndTranscribe()
             }
@@ -116,7 +152,7 @@ class VoiceInputActivity : Activity() {
         isRecording = false
         recordingJob?.cancel()
 
-        Toast.makeText(this, "Processing...", Toast.LENGTH_SHORT).show()
+        recordingOverlay?.setStatus("Processing...")
 
         activityScope.launch(Dispatchers.IO) {
             try {
@@ -139,11 +175,15 @@ class VoiceInputActivity : Activity() {
 
                 withContext(Dispatchers.Main) {
                     if (!result.isNullOrBlank()) {
-                        Log.i(TAG, "Result: $result")
+                        Log.i(TAG, "Transcription result: '$result'")
 
                         val resultIntent = Intent().apply {
                             putStringArrayListExtra(
                                 RecognizerIntent.EXTRA_RESULTS,
+                                arrayListOf(result)
+                            )
+                            putStringArrayListExtra(
+                                "android.speech.extra.RESULTS",
                                 arrayListOf(result)
                             )
                         }
@@ -165,6 +205,8 @@ class VoiceInputActivity : Activity() {
     }
 
     private fun cleanup() {
+        recordingOverlay?.hide()
+        recordingOverlay = null
         recordingJob?.cancel()
         audioRecorder?.release()
         audioRecorder = null

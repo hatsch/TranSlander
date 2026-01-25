@@ -1,0 +1,8 @@
+Initial release:
+• Offline speech recognition with Parakeet TDT v3 model
+• Floating mic button and accessibility button
+• Voice message transcription (share audio from any app)
+• Word corrections for fixing recognition errors
+• Keyboard integration for HeliBoard and others
+• 26+ languages with auto-detection
+• Material 3 UI with dark/light themes

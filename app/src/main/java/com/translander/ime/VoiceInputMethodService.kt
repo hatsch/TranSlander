@@ -2,15 +2,13 @@ package com.translander.ime
 
 import android.inputmethodservice.InputMethodService
 import android.util.Log
-import android.view.Gravity
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import com.translander.TranslanderApp
 import com.translander.asr.AudioRecorder
+import com.translander.ui.RecordingUIBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,12 +19,7 @@ import kotlinx.coroutines.withContext
 
 /**
  * Voice Input Method Service - registers as an auxiliary/voice IME.
- *
- * This allows keyboards like HeliBoard/AOSP to detect Translander as a voice
- * input method via getShortcutInputMethodsAndSubtypes().
- *
- * When user taps mic button on their keyboard, this IME is activated,
- * records speech, transcribes it, and commits the text to the input field.
+ * Uses the same UI as VoiceInputActivity via RecordingUIBuilder.
  */
 class VoiceInputMethodService : InputMethodService() {
 
@@ -38,7 +31,7 @@ class VoiceInputMethodService : InputMethodService() {
     private var audioRecorder: AudioRecorder? = null
     private var recordingJob: Job? = null
     private var isRecording = false
-    private var statusView: TextView? = null
+    private var statusText: TextView? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -55,43 +48,24 @@ class VoiceInputMethodService : InputMethodService() {
     override fun onCreateInputView(): View {
         Log.i(TAG, "onCreateInputView")
 
-        val layout = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            setPadding(24, 24, 24, 24)
-            setBackgroundColor(0xFF2D2D2D.toInt())
-            gravity = Gravity.CENTER_VERTICAL
-        }
-
-        statusView = TextView(this).apply {
-            text = "Initializing..."
-            textSize = 16f
-            setTextColor(0xFFFFFFFF.toInt())
-            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-        }
-        layout.addView(statusView)
-
-        val stopButton = Button(this).apply {
-            text = "Done"
-            setOnClickListener {
+        // Use shared UI builder - identical to VoiceInputActivity
+        val ui = RecordingUIBuilder.createRecordingBar(
+            context = this,
+            onDoneClick = {
                 if (isRecording) {
                     stopRecordingAndTranscribe()
                 } else {
                     switchBackToPreviousKeyboard()
                 }
-            }
-        }
-        layout.addView(stopButton)
-
-        val cancelButton = Button(this).apply {
-            text = "Cancel"
-            setOnClickListener {
+            },
+            onCancelClick = {
                 cleanup()
                 switchBackToPreviousKeyboard()
             }
-        }
-        layout.addView(cancelButton)
+        )
 
-        return layout
+        statusText = ui.statusText
+        return ui.view
     }
 
     override fun onStartInputView(info: EditorInfo?, restarting: Boolean) {
@@ -117,9 +91,8 @@ class VoiceInputMethodService : InputMethodService() {
 
         if (!recognizerManager.isInitialized()) {
             Log.w(TAG, "Recognizer not initialized")
-            statusView?.text = "Model not loaded.\nOpen Translander app first."
+            statusText?.text = "Model not loaded.\nOpen Translander app first."
 
-            // Try to initialize
             serviceScope.launch(Dispatchers.IO) {
                 val modelManager = TranslanderApp.instance.modelManager
                 if (modelManager.isModelReady()) {
@@ -136,7 +109,7 @@ class VoiceInputMethodService : InputMethodService() {
 
         Log.i(TAG, "Starting recording")
         isRecording = true
-        statusView?.text = "Listening..."
+        statusText?.text = "Listening..."
 
         audioRecorder = AudioRecorder()
         recordingJob = serviceScope.launch(Dispatchers.IO) {
@@ -145,7 +118,7 @@ class VoiceInputMethodService : InputMethodService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Recording error", e)
                 withContext(Dispatchers.Main) {
-                    statusView?.text = "Recording error"
+                    statusText?.text = "Recording error"
                     switchBackToPreviousKeyboard()
                 }
             }
@@ -158,7 +131,7 @@ class VoiceInputMethodService : InputMethodService() {
         Log.i(TAG, "Stopping recording")
         isRecording = false
         recordingJob?.cancel()
-        statusView?.text = "Processing..."
+        statusText?.text = "Processing..."
 
         serviceScope.launch(Dispatchers.IO) {
             try {
