@@ -2,6 +2,8 @@
 
 A fully offline voice typing app for Android. Speak into your phone and text appears in any app — no internet required, no cloud processing, your voice data never leaves your device.
 
+> **Note:** This started as a fun project. I really hate typing on touch screens and I hate voice messages even more. Then I got to know Parakeet and found it quite handy. As I am not an Android developer, I played around with Claude Code and came to the point where I thought it might be useful for others as well. So here we are.
+
 ## Features
 
 ### Offline Speech Recognition
@@ -175,4 +177,4 @@ This app is provided as-is for personal use. Speech recognition accuracy depends
 
 ---
 
-*This project was developed with the assistance of [Claude](https://claude.ai), an AI assistant by Anthropic.*
+*This project was developed with the assistance of [Claude Code](https://claude.ai/claude-code), an AI coding assistant by Anthropic.*
