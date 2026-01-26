@@ -22,6 +22,9 @@ Custom dictionary to fix recurring recognition errors. Define rules like "Tamtam
 <b>Privacy First</b>
 All speech processing happens locally on your device. No audio data is ever sent to any server. No analytics, no tracking.
 
+<b>Accessibility</b>
+This app uses Android's Accessibility Service to help users who have difficulty typing on touchscreens. Voice input is directly inserted into any text field, making the device more accessible for users with motor impairments or other conditions that make typing challenging.
+
 <b>Supported Languages</b>
 English, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Russian, Ukrainian, Czech, Slovak, Hungarian, Romanian, Bulgarian, Croatian, Slovenian, Greek, Danish, Swedish, Finnish, Estonian, Latvian, Lithuanian, Maltese, and more.
 
