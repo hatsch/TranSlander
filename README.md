@@ -180,7 +180,7 @@ app/src/main/java/com/translander/
 
 This app is provided as-is for personal use. Speech recognition accuracy depends on audio quality, accent, and background noise. The Parakeet model is provided by NVIDIA and distributed via HuggingFace under their respective licenses.
 
-**Privacy:** All speech processing happens locally on your device. No audio data is ever sent to any server.
+**Privacy:** All speech processing happens locally on your device. No audio data is ever sent to any server. After the [speech model](https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8) is downloaded, you can revoke the Network permission in Android Settings to ensure the app can never access the internet.
 
 ---
 
