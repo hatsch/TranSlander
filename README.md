@@ -140,28 +140,33 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 ```
 app/src/main/java/com/translander/
+├── TranslanderApp.kt         # Application class, dependency injection
 ├── asr/                      # Speech recognition
 │   ├── AudioRecorder.kt      # 16kHz PCM recording
+│   ├── DictionaryManager.kt  # Word correction rules
 │   ├── ModelManager.kt       # Model download from HuggingFace
 │   ├── ParakeetRecognizer.kt # ONNX inference wrapper
-│   ├── RecognizerManager.kt  # Shared recognizer singleton
-│   └── DictionaryManager.kt  # Word correction rules
+│   └── RecognizerManager.kt  # Shared recognizer singleton
 ├── ime/
 │   └── VoiceInputMethodService.kt # Voice IME for keyboard integration
+├── receiver/
+│   └── BootReceiver.kt       # Auto-restart service after reboot
 ├── service/
 │   ├── FloatingMicService.kt      # Draggable overlay button
-│   ├── TextInjectionService.kt    # Accessibility service
 │   ├── SpeechRecognitionService.kt # System RecognitionService API
+│   ├── TextInjectionService.kt    # Accessibility service
 │   └── VoiceInputActivity.kt      # RECOGNIZE_SPEECH intent handler
 ├── settings/
-│   ├── SettingsActivity.kt       # Jetpack Compose UI
-│   └── SettingsRepository.kt     # DataStore preferences
+│   ├── SettingsActivity.kt   # Jetpack Compose UI
+│   └── SettingsRepository.kt # DataStore preferences
 ├── transcribe/               # Voice message transcription
 │   ├── AudioDecoder.kt       # Decode audio to 16kHz PCM
-│   ├── AudioMonitorService.kt# Folder watching service
+│   ├── AudioMonitorService.kt # Folder watching service
 │   ├── TranscribeActivity.kt # Transcription UI
 │   └── TranscribeManager.kt  # Extensible trigger system
-└── k2fsa/sherpa/onnx/        # Native ONNX bindings
+└── ui/                       # UI components
+    ├── RecordingOverlay.kt   # Recording state overlay
+    └── theme/                # Material 3 theming
 ```
 
 ## Tech Stack
