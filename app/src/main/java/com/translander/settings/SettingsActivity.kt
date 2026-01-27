@@ -559,7 +559,11 @@ fun SettingsScreen(
                         modifier = Modifier.clickable {
                             onPickFolder { path ->
                                 scope.launch {
-                                    val newFolders = monitoredFolders + path
+                                    // If adding first custom folder, include default Downloads
+                                    val baseFolders = monitoredFolders.ifEmpty {
+                                        setOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).absolutePath)
+                                    }
+                                    val newFolders = baseFolders + path
                                     settingsRepository.setMonitoredFolders(newFolders)
                                 }
                             }
