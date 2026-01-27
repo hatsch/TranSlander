@@ -69,15 +69,17 @@ Translander provides three APIs for voice input integration:
 │                     Voice Input Flow                         │
 ├─────────────────────────────────────────────────────────────┤
 │                                                              │
-│  Tap mic button                                              │
-│       ↓                                                      │
-│  AudioRecorder (16kHz PCM)                                   │
-│       ↓                                                      │
-│  Parakeet ONNX Model (offline inference)                     │
-│       ↓                                                      │
-│  Word Corrections (optional post-processing)                 │
-│       ↓                                                      │
-│  Accessibility API → Text appears in focused field           │
+│  Floating Mic ─┐                                             │
+│                ├─→ AudioRecorder (16kHz PCM)                 │
+│  Accessibility ┤          ↓                                  │
+│  Button       ─┤   Parakeet ONNX Model (offline)             │
+│                │          ↓                                  │
+│  Keyboard Mic ─┘   Word Corrections (optional)               │
+│                           ↓                                  │
+│                ┌──────────┴──────────┐                       │
+│                ↓                     ↓                       │
+│         Accessibility API      Keyboard IME                  │
+│         (inject into apps)     (direct input)                │
 │                                                              │
 └─────────────────────────────────────────────────────────────┘
 
