@@ -2,6 +2,8 @@
 
 A fully offline voice typing app for Android. Speak into your phone and text appears in any app — no internet required, no cloud processing, your voice data never leaves your device.
 
+[<img src="assets/get-it-on-github.svg" alt="Get it on GitHub" height="60">](https://github.com/hatsch/translander/releases/latest)
+
 > **Note:** This started as a fun project. I really hate typing on touch screens and I hate voice messages even more. Then I got to know Parakeet and found it quite handy. As I am not an Android developer, I played around with Claude Code and came to the point where I thought it might be useful for others as well. So here we are.
 
 ## Features
@@ -129,7 +131,9 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 | `BIND_ACCESSIBILITY_SERVICE` | Inject text into apps |
 | `POST_NOTIFICATIONS` | Show recording status and voice message alerts |
 | `INTERNET` | Download speech model (one-time) |
-| `READ_MEDIA_AUDIO` | Access audio files for transcription |
+| `READ_MEDIA_AUDIO` | Access audio files for transcription (Android 13+) |
+| `READ_EXTERNAL_STORAGE` | Access audio files for transcription (Android ≤12) |
+| `RECEIVE_BOOT_COMPLETED` | Auto-restart floating mic after device reboot |
 | `BIND_INPUT_METHOD` | Register as voice input method for keyboards |
 
 ## Project Structure
