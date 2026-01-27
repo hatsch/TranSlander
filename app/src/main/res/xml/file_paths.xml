@@ -5,17 +5,23 @@
         name="downloads"
         path="Download/" />
 
-    <!-- External storage root for other audio files -->
+    <!-- Common locations for voice messages from messaging apps -->
     <external-path
-        name="external"
-        path="." />
+        name="whatsapp_voice"
+        path="Android/media/com.whatsapp/WhatsApp/Media/WhatsApp Voice Notes/" />
+    <external-path
+        name="telegram"
+        path="Telegram/" />
+    <external-path
+        name="signal"
+        path="Signal/" />
 
-    <!-- App's internal files directory -->
+    <!-- App's internal files directory (for model storage) -->
     <files-path
         name="internal"
         path="." />
 
-    <!-- App's cache directory -->
+    <!-- App's cache directory (for temporary audio processing) -->
     <cache-path
         name="cache"
         path="." />
