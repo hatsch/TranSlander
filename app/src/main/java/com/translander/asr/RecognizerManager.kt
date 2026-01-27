@@ -33,17 +33,26 @@ class RecognizerManager(private val context: Context, private val modelManager: 
     /**
      * Initialize the recognizer if model is ready.
      * Safe to call multiple times - will only initialize once.
+     * If already loading, waits for completion.
      */
-    suspend fun initialize(): Boolean = mutex.withLock {
-        if (recognizer != null) {
-            Log.i(TAG, "Recognizer already initialized")
-            return true
+    suspend fun initialize(): Boolean {
+        // If already loading, wait for it to complete
+        if (_isLoading.value) {
+            Log.i(TAG, "Already loading, waiting for completion")
+            return waitForInitialization()
         }
 
-        if (_isLoading.value) {
-            Log.i(TAG, "Already loading")
-            return false
-        }
+        return mutex.withLock {
+            if (recognizer != null) {
+                Log.i(TAG, "Recognizer already initialized")
+                return true
+            }
+
+            if (_isLoading.value) {
+                // Another coroutine started loading while we waited for lock
+                Log.i(TAG, "Loading started by another coroutine")
+                return@withLock false
+            }
 
         if (!modelManager.isModelReady()) {
             Log.i(TAG, "Model not ready")
@@ -65,6 +74,29 @@ class RecognizerManager(private val context: Context, private val modelManager: 
         } finally {
             _isLoading.value = false
         }
+        }
+    }
+
+    /**
+     * Wait for an ongoing initialization to complete.
+     * Returns true if model is ready after waiting.
+     */
+    private suspend fun waitForInitialization(timeoutMs: Long = 30000): Boolean {
+        val startTime = System.currentTimeMillis()
+        while (_isLoading.value && System.currentTimeMillis() - startTime < timeoutMs) {
+            kotlinx.coroutines.delay(100)
+        }
+        return recognizer != null
+    }
+
+    /**
+     * Ensure recognizer is initialized, waiting if necessary.
+     * Use this from external integrations that need the model ready.
+     */
+    suspend fun ensureInitialized(): Boolean {
+        if (recognizer != null) return true
+        if (_isLoading.value) return waitForInitialization()
+        return initialize()
     }
 
     /**

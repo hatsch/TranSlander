@@ -90,18 +90,26 @@ class VoiceInputMethodService : InputMethodService() {
         val recognizerManager = TranslanderApp.instance.recognizerManager
 
         if (!recognizerManager.isInitialized()) {
-            Log.w(TAG, "Recognizer not initialized")
-            statusText?.text = "Model not loaded.\nOpen Translander app first."
+            Log.i(TAG, "Recognizer not initialized, attempting to initialize")
+            statusText?.text = "Loading model..."
 
-            serviceScope.launch(Dispatchers.IO) {
-                val modelManager = TranslanderApp.instance.modelManager
-                if (modelManager.isModelReady()) {
-                    val success = recognizerManager.initialize()
+            serviceScope.launch {
+                try {
+                    val success = recognizerManager.ensureInitialized()
                     if (success) {
-                        withContext(Dispatchers.Main) {
-                            startRecording()
-                        }
+                        Log.i(TAG, "Model initialized successfully")
+                        startRecording()
+                    } else {
+                        Log.w(TAG, "Failed to initialize model")
+                        statusText?.text = "Model not available"
+                        kotlinx.coroutines.delay(1500)
+                        switchBackToPreviousKeyboard()
                     }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error initializing model", e)
+                    statusText?.text = "Error loading model"
+                    kotlinx.coroutines.delay(1500)
+                    switchBackToPreviousKeyboard()
                 }
             }
             return

@@ -58,25 +58,32 @@ class SpeechRecognitionService : RecognitionService() {
 
         currentCallback = listener
 
-        // Check if recognizer is ready
+        // Extract language hint from intent if provided
+        val languageHint = recognizerIntent?.getStringExtra(RecognizerIntent.EXTRA_LANGUAGE)
+        Log.i(TAG, "Language hint: $languageHint")
+
+        // Check if recognizer is ready, or wait for it to initialize
         val recognizerManager = TranslanderApp.instance.recognizerManager
         if (!recognizerManager.isInitialized()) {
-            Log.w(TAG, "Recognizer not initialized")
-            listener.error(SpeechRecognizer.ERROR_SERVER)
+            Log.i(TAG, "Recognizer not initialized, attempting to initialize")
 
-            // Try to initialize in background
-            serviceScope.launch(Dispatchers.IO) {
-                val modelManager = TranslanderApp.instance.modelManager
-                if (modelManager.isModelReady()) {
-                    recognizerManager.initialize()
+            serviceScope.launch {
+                try {
+                    val success = recognizerManager.ensureInitialized()
+                    if (success) {
+                        Log.i(TAG, "Model initialized successfully")
+                        startRecording(listener, languageHint)
+                    } else {
+                        Log.w(TAG, "Failed to initialize model")
+                        listener.error(SpeechRecognizer.ERROR_SERVER)
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error initializing model", e)
+                    listener.error(SpeechRecognizer.ERROR_SERVER)
                 }
             }
             return
         }
-
-        // Extract language hint from intent if provided
-        val languageHint = recognizerIntent?.getStringExtra(RecognizerIntent.EXTRA_LANGUAGE)
-        Log.i(TAG, "Language hint: $languageHint")
 
         // Start recording
         startRecording(listener, languageHint)

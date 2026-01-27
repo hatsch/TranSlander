@@ -68,13 +68,41 @@ class VoiceInputActivity : Activity() {
             return
         }
 
-        // Check if recognizer is ready
+        // Check if recognizer is ready, or wait for it to initialize
         val recognizerManager = TranslanderApp.instance.recognizerManager
         if (!recognizerManager.isInitialized()) {
-            Log.w(TAG, "Recognizer not initialized")
-            Toast.makeText(this, "Voice model not loaded. Open Translander app first.", Toast.LENGTH_LONG).show()
-            setResult(RESULT_CANCELED)
-            finish()
+            Log.i(TAG, "Recognizer not initialized, attempting to initialize")
+            // Show overlay with loading state while we wait
+            recordingOverlay = RecordingOverlay(this).apply {
+                onDoneClick = { /* ignore while loading */ }
+                onCancelClick = {
+                    cleanup()
+                    setResult(RESULT_CANCELED)
+                    finish()
+                }
+            }
+            recordingOverlay?.show()
+            recordingOverlay?.setStatus("Loading model...")
+
+            activityScope.launch {
+                try {
+                    val success = recognizerManager.ensureInitialized()
+                    if (success) {
+                        Log.i(TAG, "Model initialized successfully")
+                        startRecording()
+                    } else {
+                        Log.w(TAG, "Failed to initialize model")
+                        Toast.makeText(this@VoiceInputActivity, "Voice model not available", Toast.LENGTH_SHORT).show()
+                        setResult(RESULT_CANCELED)
+                        finish()
+                    }
+                } catch (e: Exception) {
+                    Log.e(TAG, "Error initializing model", e)
+                    Toast.makeText(this@VoiceInputActivity, "Error loading voice model", Toast.LENGTH_SHORT).show()
+                    setResult(RESULT_CANCELED)
+                    finish()
+                }
+            }
             return
         }
 
