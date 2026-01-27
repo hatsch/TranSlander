@@ -37,7 +37,7 @@ import kotlinx.coroutines.withContext
 class TranscribeActivity : ComponentActivity() {
 
     companion object {
-        const val ACTION_TRANSCRIBE = "com.translander.action.TRANSCRIBE"
+        const val ACTION_TRANSCRIBE = "at.webformat.translander.action.TRANSCRIBE"
         const val EXTRA_AUDIO_URI = "audio_uri"
     }
 

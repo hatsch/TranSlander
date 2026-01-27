@@ -41,7 +41,7 @@ class FloatingMicService : Service() {
 
     companion object {
         private const val TAG = "FloatingMicService"
-        const val ACTION_STOP = "com.translander.STOP_SERVICE"
+        const val ACTION_STOP = "at.webformat.translander.STOP_SERVICE"
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)

@@ -29,7 +29,7 @@ class AudioMonitorService : Service() {
     private val TAG = "AudioMonitorService"
 
     companion object {
-        const val ACTION_STOP = "com.translander.action.STOP_MONITOR"
+        const val ACTION_STOP = "at.webformat.translander.action.STOP_MONITOR"
 
         const val NOTIFICATION_CHANNEL_ID = "audio_monitor"
         const val SERVICE_NOTIFICATION_ID = 2001

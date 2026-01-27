@@ -88,7 +88,7 @@
 
             <!-- Custom transcribe action -->
             <intent-filter>
-                <action android:name="com.translander.action.TRANSCRIBE" />
+                <action android:name="at.webformat.translander.action.TRANSCRIBE" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="audio/*" />
             </intent-filter>
