@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
-import java.nio.ByteBuffer
-import java.nio.ByteOrder
+import android.util.Log
 
 class AudioRecorder {
 
     companion object {
+        private const val TAG = "AudioRecorder"
         const val SAMPLE_RATE = 16000
         private const val CHANNEL_CONFIG = AudioFormat.CHANNEL_IN_MONO
         private const val AUDIO_FORMAT = AudioFormat.ENCODING_PCM_16BIT
@@ -31,41 +31,65 @@ class AudioRecorder {
 
         audioBuffer.clear()
 
-        audioRecord = AudioRecord(
-            MediaRecorder.AudioSource.MIC,
-            SAMPLE_RATE,
-            CHANNEL_CONFIG,
-            AUDIO_FORMAT,
-            bufferSize
-        )
+        try {
+            audioRecord = AudioRecord(
+                MediaRecorder.AudioSource.MIC,
+                SAMPLE_RATE,
+                CHANNEL_CONFIG,
+                AUDIO_FORMAT,
+                bufferSize
+            )
 
-        if (audioRecord?.state != AudioRecord.STATE_INITIALIZED) {
-            audioRecord?.release()
-            audioRecord = null
-            return
-        }
+            if (audioRecord?.state != AudioRecord.STATE_INITIALIZED) {
+                Log.e(TAG, "AudioRecord failed to initialize")
+                audioRecord?.release()
+                audioRecord = null
+                return
+            }
 
-        isRecording = true
-        audioRecord?.startRecording()
+            isRecording = true
+            audioRecord?.startRecording()
 
-        val buffer = ShortArray(bufferSize / 2)
+            val buffer = ShortArray(bufferSize / 2)
 
-        while (isRecording) {
-            val readCount = audioRecord?.read(buffer, 0, buffer.size) ?: 0
-            if (readCount > 0) {
-                synchronized(audioBuffer) {
-                    for (i in 0 until readCount) {
-                        audioBuffer.add(buffer[i])
+            while (isRecording) {
+                val readCount = audioRecord?.read(buffer, 0, buffer.size) ?: 0
+                if (readCount > 0) {
+                    synchronized(audioBuffer) {
+                        for (i in 0 until readCount) {
+                            audioBuffer.add(buffer[i])
+                        }
                     }
+                } else if (readCount < 0) {
+                    Log.e(TAG, "AudioRecord read error: $readCount")
+                    break
                 }
             }
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "Failed to create AudioRecord", e)
+            audioRecord?.release()
+            audioRecord = null
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "AudioRecord illegal state", e)
+            audioRecord?.release()
+            audioRecord = null
+        } catch (e: SecurityException) {
+            Log.e(TAG, "AudioRecord permission denied", e)
+            audioRecord?.release()
+            audioRecord = null
+        } finally {
+            isRecording = false
         }
     }
 
     fun stopRecording(): ShortArray {
         isRecording = false
 
-        audioRecord?.stop()
+        try {
+            audioRecord?.stop()
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "Error stopping AudioRecord", e)
+        }
         audioRecord?.release()
         audioRecord = null
 
@@ -76,7 +100,11 @@ class AudioRecorder {
 
     fun release() {
         isRecording = false
-        audioRecord?.stop()
+        try {
+            audioRecord?.stop()
+        } catch (e: IllegalStateException) {
+            Log.e(TAG, "Error stopping AudioRecord in release", e)
+        }
         audioRecord?.release()
         audioRecord = null
         audioBuffer.clear()

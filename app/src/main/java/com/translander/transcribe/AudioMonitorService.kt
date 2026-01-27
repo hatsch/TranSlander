@@ -147,12 +147,20 @@ class AudioMonitorService : Service() {
 
     private fun createFileObserver(directory: File) {
         Log.i(TAG, "Creating FileObserver for: ${directory.absolutePath}")
+        val canonicalDir = directory.canonicalPath
         val observer = object : FileObserver(directory, CLOSE_WRITE or MOVED_TO) {
             override fun onEvent(event: Int, path: String?) {
                 Log.d(TAG, "FileObserver event: $event, path: $path")
                 if (path == null) return
 
                 val file = File(directory, path)
+
+                // Path traversal protection: ensure file is within monitored directory
+                if (!file.canonicalPath.startsWith(canonicalDir)) {
+                    Log.w(TAG, "Path traversal attempt blocked: $path")
+                    return
+                }
+
                 Log.d(TAG, "File: ${file.absolutePath}, isAudio=${isAudioFile(file)}")
                 if (isAudioFile(file)) {
                     onAudioFileDetected(file)
@@ -203,6 +211,30 @@ class AudioMonitorService : Service() {
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 
+        // Show notification about detected audio
+        showAudioDetectedNotification(file.name, transcribeIntent)
+
         startActivity(transcribeIntent)
+    }
+
+    private fun showAudioDetectedNotification(fileName: String, transcribeIntent: Intent) {
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            AUDIO_DETECTED_NOTIFICATION_ID,
+            transcribeIntent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(this, "audio_detected")
+            .setSmallIcon(R.drawable.ic_mic)
+            .setContentTitle(getString(R.string.audio_detected_title))
+            .setContentText(fileName)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setContentIntent(pendingIntent)
+            .setAutoCancel(true)
+            .build()
+
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.notify(AUDIO_DETECTED_NOTIFICATION_ID, notification)
     }
 }

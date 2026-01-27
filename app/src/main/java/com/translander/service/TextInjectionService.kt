@@ -20,11 +20,14 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 class TextInjectionService : AccessibilityService() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val recorderMutex = Mutex()
     private var audioRecorder: AudioRecorder? = null
     private var recordingJob: Job? = null
     private var isRecording = false
@@ -111,8 +114,10 @@ class TextInjectionService : AccessibilityService() {
         isRecording = true
         showToast("Recording...")
 
-        audioRecorder = AudioRecorder()
         recordingJob = serviceScope.launch(Dispatchers.IO) {
+            recorderMutex.withLock {
+                audioRecorder = AudioRecorder()
+            }
             Log.i(TAG, "Starting audio recording")
             audioRecorder?.startRecording()
         }
@@ -126,13 +131,20 @@ class TextInjectionService : AccessibilityService() {
         recordingJob?.cancel()
 
         serviceScope.launch(Dispatchers.IO) {
-            val audioData = audioRecorder?.stopRecording()
-            audioRecorder?.release()
-            audioRecorder = null
+            val audioData = recorderMutex.withLock {
+                val data = audioRecorder?.stopRecording()
+                audioRecorder?.release()
+                audioRecorder = null
+                data
+            }
 
             Log.i(TAG, "Audio data size: ${audioData?.size ?: 0}")
             if (audioData != null && audioData.isNotEmpty()) {
                 transcribeAudio(audioData)
+            } else {
+                withContext(Dispatchers.Main) {
+                    showToast("No speech detected")
+                }
             }
         }
     }
@@ -180,7 +192,9 @@ class TextInjectionService : AccessibilityService() {
             }
         }
         recordingJob?.cancel()
+        // Note: Not using mutex here since we're shutting down and coroutine scope is being cancelled
         audioRecorder?.release()
+        audioRecorder = null
         serviceScope.cancel()
         instance = null
     }
@@ -190,7 +204,11 @@ class TextInjectionService : AccessibilityService() {
         val focusedNode = findFocusedEditText()
         if (focusedNode != null) {
             Log.i(TAG, "Found focused node, injecting text")
-            insertTextIntoNode(focusedNode, text)
+            try {
+                insertTextIntoNode(focusedNode, text)
+            } finally {
+                focusedNode.recycle()
+            }
         } else {
             Log.w(TAG, "No focused text field found, copying to clipboard")
             showToast("No text field focused. Copied to clipboard.")
@@ -209,31 +227,40 @@ class TextInjectionService : AccessibilityService() {
         val inputFocused = rootNode.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
         if (inputFocused != null && inputFocused.isEditable) {
             Log.i(TAG, "Found input-focused editable node")
+            rootNode.recycle()
             return inputFocused
         }
 
+        // Recycle inputFocused if it wasn't editable
+        inputFocused?.recycle()
+
         // Fallback to searching the tree
-        return findFocusedNode(rootNode)
+        val result = findFocusedNode(rootNode)
+        rootNode.recycle()
+        return result
     }
 
     private fun findFocusedNode(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
         if (node.isFocused && node.isEditable) {
             Log.i(TAG, "Found focused editable node: ${node.className}")
-            return node
+            // Return a copy so caller owns it, original will be recycled by caller of this function
+            return AccessibilityNodeInfo.obtain(node)
         }
 
         // Also check for isEditable without isFocused (some apps don't report focus correctly)
         if (node.isEditable && node.isFocusable) {
             Log.i(TAG, "Found editable focusable node: ${node.className}")
-            return node
+            return AccessibilityNodeInfo.obtain(node)
         }
 
         for (i in 0 until node.childCount) {
             val child = node.getChild(i) ?: continue
             val result = findFocusedNode(child)
             if (result != null) {
+                child.recycle()
                 return result
             }
+            child.recycle()
         }
         return null
     }

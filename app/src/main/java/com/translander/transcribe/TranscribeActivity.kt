@@ -29,8 +29,10 @@ import com.translander.R
 import com.translander.TranslanderApp
 import com.translander.settings.SettingsRepository
 import com.translander.ui.theme.TranslanderTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class TranscribeActivity : ComponentActivity() {
 
@@ -147,18 +149,25 @@ fun TranscribeScreen(
             return@LaunchedEffect
         }
 
-        // Initialize recognizer if needed
-        if (!recognizerManager.isReady.first()) {
+        // Initialize recognizer if needed (run blocking operations off main thread)
+        val isReady = withContext(Dispatchers.IO) {
+            recognizerManager.isReady.first()
+        }
+        if (!isReady) {
             recognizerManager.initialize()
             // Wait for initialization
-            recognizerManager.isReady.first { it }
+            withContext(Dispatchers.IO) {
+                recognizerManager.isReady.first { it }
+            }
         }
 
         // Decode audio
         state = TranscribeState.Decoding(0)
         val decoder = AudioDecoder(app)
-        val decodeResult = decoder.decode(audioUri) { progress ->
-            state = TranscribeState.Decoding(progress)
+        val decodeResult = withContext(Dispatchers.IO) {
+            decoder.decode(audioUri) { progress ->
+                state = TranscribeState.Decoding(progress)
+            }
         }
 
         when (decodeResult) {
@@ -169,10 +178,14 @@ fun TranscribeScreen(
             is AudioDecoder.DecodingState.Success -> {
                 // Transcribe audio
                 state = TranscribeState.Transcribing
-                val language = settingsRepository.preferredLanguage.first()
-                    .takeIf { it != SettingsRepository.LANGUAGE_AUTO }
+                val language = withContext(Dispatchers.IO) {
+                    settingsRepository.preferredLanguage.first()
+                        .takeIf { it != SettingsRepository.LANGUAGE_AUTO }
+                }
 
-                val result = recognizerManager.transcribe(decodeResult.audioData, language)
+                val result = withContext(Dispatchers.IO) {
+                    recognizerManager.transcribe(decodeResult.audioData, language)
+                }
                 if (result != null) {
                     state = TranscribeState.Success(result)
                 } else {

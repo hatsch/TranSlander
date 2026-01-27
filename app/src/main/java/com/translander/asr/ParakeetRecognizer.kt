@@ -79,25 +79,26 @@ class ParakeetRecognizer(
             return null
         }
 
+        var stream: com.k2fsa.sherpa.onnx.OfflineStream? = null
         return try {
             // Convert ShortArray to FloatArray (normalized to -1.0 to 1.0)
             val floatSamples = FloatArray(audioData.size) { i ->
                 audioData[i] / 32768.0f
             }
 
-            val stream = rec.createStream()
+            stream = rec.createStream()
             stream.acceptWaveform(floatSamples, AudioRecorder.SAMPLE_RATE)
 
             rec.decode(stream)
 
             val result = rec.getResult(stream)
-            stream.release()
-
             result.text.trim().ifEmpty { null }
 
         } catch (e: Exception) {
             Log.e(TAG, "Transcription failed", e)
             null
+        } finally {
+            stream?.release()
         }
     }
 

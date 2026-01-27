@@ -31,6 +31,9 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import com.translander.settings.SettingsRepository
 
@@ -42,6 +45,7 @@ class FloatingMicService : Service() {
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
+    private val recorderMutex = Mutex()
 
     private lateinit var windowManager: WindowManager
     private lateinit var floatingView: View
@@ -102,7 +106,9 @@ class FloatingMicService : Service() {
             }
         }
         recordingJob?.cancel()
+        // Note: Not using mutex here since we're shutting down and coroutine scope is being cancelled
         audioRecorder?.release()
+        audioRecorder = null
         if (::floatingView.isInitialized) {
             windowManager.removeView(floatingView)
         }
@@ -134,6 +140,11 @@ class FloatingMicService : Service() {
 
         val layoutFlag = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 
+        // Get saved position synchronously before adding view to prevent flicker
+        val (savedX, savedY) = runBlocking {
+            TranslanderApp.instance.settingsRepository.buttonPosition.first()
+        }
+
         layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -142,18 +153,8 @@ class FloatingMicService : Service() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = 100
-            y = 300
-        }
-
-        // Restore saved position
-        serviceScope.launch {
-            val (savedX, savedY) = TranslanderApp.instance.settingsRepository.buttonPosition.first()
-            if (savedX >= 0 && savedY >= 0) {
-                layoutParams.x = savedX
-                layoutParams.y = savedY
-                windowManager.updateViewLayout(floatingView, layoutParams)
-            }
+            x = if (savedX >= 0) savedX else 100
+            y = if (savedY >= 0) savedY else 300
         }
 
         windowManager.addView(floatingView, layoutParams)
@@ -240,8 +241,10 @@ class FloatingMicService : Service() {
         isRecording = true
         updateMicButtonState()
 
-        audioRecorder = AudioRecorder()
         recordingJob = serviceScope.launch(Dispatchers.IO) {
+            recorderMutex.withLock {
+                audioRecorder = AudioRecorder()
+            }
             Log.i(TAG, "Starting audio recording")
             audioRecorder?.startRecording()
         }
@@ -255,13 +258,20 @@ class FloatingMicService : Service() {
         recordingJob?.cancel()
 
         serviceScope.launch(Dispatchers.IO) {
-            val audioData = audioRecorder?.stopRecording()
-            audioRecorder?.release()
-            audioRecorder = null
+            val audioData = recorderMutex.withLock {
+                val data = audioRecorder?.stopRecording()
+                audioRecorder?.release()
+                audioRecorder = null
+                data
+            }
 
             Log.i(TAG, "Audio data size: ${audioData?.size ?: 0}")
             if (audioData != null && audioData.isNotEmpty()) {
                 transcribeAudio(audioData)
+            } else {
+                withContext(Dispatchers.Main) {
+                    showToast("No speech detected")
+                }
             }
         }
     }
@@ -274,9 +284,11 @@ class FloatingMicService : Service() {
         val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, langCode)
         Log.i(TAG, "Transcription result: '$result'")
 
-        if (!result.isNullOrBlank()) {
-            kotlinx.coroutines.withContext(Dispatchers.Main) {
+        withContext(Dispatchers.Main) {
+            if (!result.isNullOrBlank()) {
                 injectText(result)
+            } else {
+                showToast("No speech detected")
             }
         }
     }
@@ -333,5 +345,9 @@ class FloatingMicService : Service() {
             .addAction(R.drawable.ic_close, "Stop", stopPendingIntent)
             .setOngoing(true)
             .build()
+    }
+
+    private fun showToast(message: String) {
+        android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()
     }
 }
