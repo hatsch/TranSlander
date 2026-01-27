@@ -11,7 +11,6 @@ import android.os.Environment
 import android.os.FileObserver
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import androidx.core.content.FileProvider
 import com.translander.R
 import com.translander.TranslanderApp
 import kotlinx.coroutines.CoroutineScope
@@ -198,16 +197,9 @@ class AudioMonitorService : Service() {
     }
 
     private fun launchTranscription(file: File) {
-        val uri = FileProvider.getUriForFile(
-            this,
-            "${packageName}.fileprovider",
-            file
-        )
-
         val transcribeIntent = Intent(this, TranscribeActivity::class.java).apply {
             action = TranscribeActivity.ACTION_TRANSCRIBE
-            data = uri
-            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            putExtra(TranscribeActivity.EXTRA_FILE_PATH, file.absolutePath)
             addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         }
 

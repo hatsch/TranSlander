@@ -39,12 +39,14 @@ class TranscribeActivity : ComponentActivity() {
     companion object {
         const val ACTION_TRANSCRIBE = "at.webformat.translander.action.TRANSCRIBE"
         const val EXTRA_AUDIO_URI = "audio_uri"
+        const val EXTRA_FILE_PATH = "file_path"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val audioUri = extractAudioUri(intent)
+        val filePath = intent.getStringExtra(EXTRA_FILE_PATH)
 
         setContent {
             val settingsRepository = TranslanderApp.instance.settingsRepository
@@ -63,6 +65,7 @@ class TranscribeActivity : ComponentActivity() {
             ) {
                 TranscribeScreen(
                     audioUri = audioUri,
+                    filePath = filePath,
                     onDismiss = { finish() },
                     onCopy = { text -> copyToClipboard(text) },
                     onShare = { text -> shareText(text) }
@@ -123,6 +126,7 @@ sealed class TranscribeState {
 @Composable
 fun TranscribeScreen(
     audioUri: Uri?,
+    filePath: String? = null,
     onDismiss: () -> Unit,
     onCopy: (String) -> Unit,
     onShare: (String) -> Unit
@@ -135,9 +139,9 @@ fun TranscribeScreen(
     val modelManager = app.modelManager
     val settingsRepository = app.settingsRepository
 
-    // Start transcription when URI is available
-    LaunchedEffect(audioUri) {
-        if (audioUri == null) {
+    // Start transcription when URI or file path is available
+    LaunchedEffect(audioUri, filePath) {
+        if (audioUri == null && filePath == null) {
             state = TranscribeState.Error("No audio file provided")
             return@LaunchedEffect
         }
@@ -161,12 +165,18 @@ fun TranscribeScreen(
             }
         }
 
-        // Decode audio
+        // Decode audio - prefer file path if available (from folder monitor)
         state = TranscribeState.Decoding(0)
         val decoder = AudioDecoder(app)
         val decodeResult = withContext(Dispatchers.IO) {
-            decoder.decode(audioUri) { progress ->
-                state = TranscribeState.Decoding(progress)
+            if (filePath != null) {
+                decoder.decode(filePath) { progress ->
+                    state = TranscribeState.Decoding(progress)
+                }
+            } else {
+                decoder.decode(audioUri!!) { progress ->
+                    state = TranscribeState.Decoding(progress)
+                }
             }
         }
 

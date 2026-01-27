@@ -47,6 +47,46 @@ class AudioDecoder(private val context: Context) {
                 extractor.setDataSource(pfd.fileDescriptor)
             } ?: return@withContext DecodingState.Error("Cannot open audio file")
 
+            decodeWithExtractor(extractor, onProgress)
+        } catch (e: Exception) {
+            DecodingState.Error(e.message ?: "Unknown decoding error")
+        } finally {
+            codec?.stop()
+            codec?.release()
+            extractor.release()
+        }
+    }
+
+    /**
+     * Decodes audio from a file path to 16kHz mono PCM.
+     * Used for folder monitoring where we have direct file access.
+     */
+    suspend fun decode(
+        filePath: String,
+        onProgress: (Int) -> Unit = {}
+    ): DecodingState = withContext(Dispatchers.IO) {
+        val extractor = MediaExtractor()
+        var codec: MediaCodec? = null
+
+        try {
+            extractor.setDataSource(filePath)
+            decodeWithExtractor(extractor, onProgress)
+        } catch (e: Exception) {
+            DecodingState.Error(e.message ?: "Unknown decoding error")
+        } finally {
+            codec?.stop()
+            codec?.release()
+            extractor.release()
+        }
+    }
+
+    private suspend fun decodeWithExtractor(
+        extractor: MediaExtractor,
+        onProgress: (Int) -> Unit
+    ): DecodingState = withContext(Dispatchers.IO) {
+        var codec: MediaCodec? = null
+
+        try {
             // Find audio track
             val audioTrackIndex = findAudioTrack(extractor)
             if (audioTrackIndex < 0) {
@@ -97,12 +137,10 @@ class AudioDecoder(private val context: Context) {
             onProgress(100)
             DecodingState.Success(resampledData)
 
-        } catch (e: Exception) {
-            DecodingState.Error(e.message ?: "Unknown decoding error")
         } finally {
             codec?.stop()
             codec?.release()
-            extractor.release()
+            // Note: extractor is not released here - caller is responsible
         }
     }
 
