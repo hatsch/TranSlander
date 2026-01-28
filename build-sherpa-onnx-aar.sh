@@ -8,14 +8,15 @@ set -euo pipefail
 #   ./build-sherpa-onnx-aar.sh /path/to/sherpa-onnx  # uses existing checkout
 
 SHERPA_ONNX_VERSION="1.12.23"
-AAR_OUTPUT="app/build/tmp/sherpa-onnx-${SHERPA_ONNX_VERSION}.aar"
+REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
+AAR_OUTPUT="${REPO_ROOT}/app/build/tmp/sherpa-onnx-${SHERPA_ONNX_VERSION}.aar"
 
 # Determine sherpa-onnx source directory
 if [ -n "${1:-}" ]; then
     SHERPA_DIR="$(cd "$1" && pwd)"
     echo "Using existing sherpa-onnx at: $SHERPA_DIR"
 else
-    SHERPA_DIR="${PWD}/sherpa-onnx-src"
+    SHERPA_DIR="${REPO_ROOT}/sherpa-onnx-src"
     if [ ! -d "$SHERPA_DIR" ]; then
         echo "Cloning sherpa-onnx v${SHERPA_ONNX_VERSION}..."
         git clone --depth 1 --branch "v${SHERPA_ONNX_VERSION}" \
@@ -62,8 +63,6 @@ chmod +x gradlew
 ./gradlew :sherpa_onnx:assembleRelease
 
 # Step 4: Copy AAR to output location
-cd "$OLDPWD"
-cd "$(dirname "$0")"  # back to translander repo root
 mkdir -p "$(dirname "$AAR_OUTPUT")"
 cp "${SHERPA_DIR}/android/SherpaOnnxAar/sherpa_onnx/build/outputs/aar/sherpa_onnx-release.aar" \
    "$AAR_OUTPUT"
