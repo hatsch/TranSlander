@@ -25,6 +25,27 @@ jobs:
         distribution: 'temurin'
         cache: gradle
 
+    - name: Setup Android NDK
+      uses: nttld/setup-ndk@v1
+      id: setup-ndk
+      with:
+        ndk-version: r27c
+
+    - name: Cache sherpa-onnx AAR
+      id: cache-aar
+      uses: actions/cache@v4
+      with:
+        path: app/build/tmp/sherpa-onnx-*.aar
+        key: sherpa-onnx-aar-1.12.23-arm64-v8a
+
+    - name: Build sherpa-onnx AAR from source
+      if: steps.cache-aar.outputs.cache-hit != 'true'
+      run: |
+        chmod +x build-sherpa-onnx-aar.sh
+        ./build-sherpa-onnx-aar.sh
+      env:
+        ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
 
@@ -54,6 +75,27 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         cache: gradle
+
+    - name: Setup Android NDK
+      uses: nttld/setup-ndk@v1
+      id: setup-ndk
+      with:
+        ndk-version: r27c
+
+    - name: Cache sherpa-onnx AAR
+      id: cache-aar
+      uses: actions/cache@v4
+      with:
+        path: app/build/tmp/sherpa-onnx-*.aar
+        key: sherpa-onnx-aar-1.12.23-arm64-v8a
+
+    - name: Build sherpa-onnx AAR from source
+      if: steps.cache-aar.outputs.cache-hit != 'true'
+      run: |
+        chmod +x build-sherpa-onnx-aar.sh
+        ./build-sherpa-onnx-aar.sh
+      env:
+        ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew

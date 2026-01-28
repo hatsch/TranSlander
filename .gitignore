@@ -12,8 +12,11 @@ local.properties
 *.apk
 *.ap_
 
-# Native libs (downloaded during build)
+# Native libs
 app/src/main/jniLibs/
+
+# sherpa-onnx source (cloned by build-sherpa-onnx-aar.sh)
+sherpa-onnx-src/
 
 # OS files
 .DS_Store

@@ -1,35 +1,24 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("de.undercouch.download") version "5.6.0"
 }
 
 val sherpaOnnxVersion = "1.12.23"
 val aarFile = layout.buildDirectory.file("tmp/sherpa-onnx-$sherpaOnnxVersion.aar").get().asFile
 
-tasks.register("downloadSherpaOnnxAar") {
-    val markerFile = layout.buildDirectory.file("tmp/.aar-version-$sherpaOnnxVersion").get().asFile
-
-    onlyIf { !markerFile.exists() }
-
+tasks.register("checkSherpaOnnxAar") {
     doLast {
-        aarFile.parentFile.mkdirs()
-
-        // Download AAR
-        ant.withGroovyBuilder {
-            "get"(
-                "src" to "https://github.com/k2-fsa/sherpa-onnx/releases/download/v$sherpaOnnxVersion/sherpa-onnx-$sherpaOnnxVersion.aar",
-                "dest" to aarFile,
-                "skipexisting" to "false"
+        if (!aarFile.exists()) {
+            throw GradleException(
+                "sherpa-onnx AAR not found at: $aarFile\n" +
+                "Run ./build-sherpa-onnx-aar.sh first to build it from source."
             )
         }
-
-        markerFile.writeText(sherpaOnnxVersion)
     }
 }
 
 tasks.named("preBuild") {
-    dependsOn("downloadSherpaOnnxAar")
+    dependsOn("checkSherpaOnnxAar")
 }
 
 android {
@@ -89,7 +78,7 @@ android {
 }
 
 dependencies {
-    // sherpa-onnx AAR (downloaded during build)
+    // sherpa-onnx AAR (built from source via build-sherpa-onnx-aar.sh)
     implementation(files(aarFile))
 
     // AndroidX Core
