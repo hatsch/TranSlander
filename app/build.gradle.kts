@@ -5,7 +5,7 @@ plugins {
 }
 
 val sherpaOnnxVersion = "1.12.23"
-val aarFile = layout.buildDirectory.file("tmp/sherpa-onnx-$sherpaOnnxVersion.aar").get().asFile
+val aarFile = layout.projectDirectory.file("libs/sherpa-onnx-$sherpaOnnxVersion.aar").asFile
 
 tasks.register("checkSherpaOnnxAar") {
     doLast {

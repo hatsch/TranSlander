@@ -9,7 +9,7 @@ set -euo pipefail
 
 SHERPA_ONNX_VERSION="1.12.23"
 REPO_ROOT="$(cd "$(dirname "$0")" && pwd)"
-AAR_OUTPUT="${REPO_ROOT}/app/build/tmp/sherpa-onnx-${SHERPA_ONNX_VERSION}.aar"
+AAR_OUTPUT="${REPO_ROOT}/app/libs/sherpa-onnx-${SHERPA_ONNX_VERSION}.aar"
 
 # Determine sherpa-onnx source directory
 if [ -n "${1:-}" ]; then
