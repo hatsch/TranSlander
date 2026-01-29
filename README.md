@@ -106,7 +106,7 @@ Auto-detect, English, German, French, Spanish, Italian, Portuguese, Dutch, Polis
 
 ### Prerequisites
 - Android Studio (or standalone Android SDK)
-- JDK 17+
+- JDK 21+
 
 ### Commands
 ```bash
@@ -178,7 +178,7 @@ app/src/main/java/com/translander/
 - **Speech Recognition:** sherpa-onnx (Parakeet TDT v3)
 - **Audio Processing:** Android MediaCodec, AudioRecord
 - **Persistence:** DataStore Preferences
-- **Build:** Gradle 8.9, AGP 8.7.2
+- **Build:** Gradle 8.12.1, AGP 8.7.2, Kotlin 2.0.21, Java 21
 
 ## Roadmap
 

@@ -24,6 +24,11 @@ An Android voice typing app that works **completely offline**. Speak into your p
 6. Falls back to clipboard if no field focused
 
 ## Build
+
+**Requirements:** JDK 21+, Android SDK, Gradle 8.12.1 (via wrapper)
+
+**Build stack:** Kotlin 2.0.21, AGP 8.7.2, Compose compiler plugin (Kotlin 2.0+)
+
 ```bash
 # IMPORTANT: Use absolute paths, not ~ (tilde doesn't expand in all contexts)
 export ANDROID_HOME=/home/hatsch/Android/Sdk
@@ -37,6 +42,18 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 # If signature mismatch error, uninstall first:
 adb uninstall com.translander && adb install app/build/outputs/apk/debug/app-debug.apk
 ```
+
+### Gradle Daemon Issues
+Stale Gradle daemons and corrupt cache cause `For input string: ""` errors. Clean before F-Droid builds:
+```bash
+rm -rf ~/.gradle/daemon
+rm -rf /path/to/fdroiddata/build/at.webformat.translander/.gradle
+```
+
+### sherpa-onnx AAR
+The sherpa-onnx native library is built from source and placed at `app/libs/sherpa-onnx-<version>.aar`.
+Run `./build-sherpa-onnx-aar.sh` to build it. This location is outside the gradle `build/` directory
+so it survives `gradle clean` (required for F-Droid builds).
 
 ## Architecture
 
@@ -200,8 +217,10 @@ OfflineRecognizerConfig(
 ## Open Tasks
 
 ### F-Droid Publishing
-- [ ] Add app screenshots to `fastlane/metadata/android/en-US/images/phoneScreenshots/`
-- [ ] Create feature graphic (1024x500) at `fastlane/metadata/android/en-US/images/featureGraphic.png` (optional)
+- [x] F-Droid metadata created (`fdroiddata/metadata/at.webformat.translander.yml`)
+- [x] F-Droid local build verified with `fdroid build`
+- [x] Add app screenshots to `fastlane/metadata/android/en-US/images/phoneScreenshots/`
+- [x] Create feature graphic at `fastlane/metadata/android/en-US/images/featureGraphic.png`
 - [ ] Submit to F-Droid via GitLab RFP at https://gitlab.com/fdroid/rfp
 
 ### Known Issues
