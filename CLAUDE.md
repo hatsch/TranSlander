@@ -222,6 +222,15 @@ OfflineRecognizerConfig(
 - [x] Add app screenshots to `fastlane/metadata/android/en-US/images/phoneScreenshots/`
 - [x] Create feature graphic at `fastlane/metadata/android/en-US/images/featureGraphic.png`
 - [ ] Submit to F-Droid via GitLab RFP at https://gitlab.com/fdroid/rfp
+- [ ] Consider using git submodules instead of srclibs for external repos (sherpa-onnx) — submodules can be updated without an MR to fdroiddata and are covered by the scanner
+- [ ] Enable [Reproducible Builds](https://f-droid.org/docs/Reproducible_Builds) — allows users to switch between GitHub and F-Droid channels using the same signature
+- [ ] Consider multiple APKs for native code — currently arm64-v8a only (36MB), could add armeabi-v7a/x86_64 as separate APKs
+
+**Note:** F-Droid uses fast-forward merges. Always rebase the fdroiddata branch, never merge:
+```bash
+cd fdroiddata && git fetch origin master && git rebase origin/master && git push --force myfork add-translander
+```
+See [Git guide for fdroiddata contributors](https://gitlab.com/fdroid/wiki/-/wikis/Tips-for-fdroiddata-contributors/Git-Usage).
 
 ### Known Issues
 - Vanadium browser doesn't handle voice input results (browser bug, not fixable on our side)
