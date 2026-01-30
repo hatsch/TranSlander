@@ -298,6 +298,7 @@ fun SettingsScreen(
     val dictionaryEnabled by settingsRepository.dictionaryEnabled.collectAsStateWithLifecycle(initialValue = true)
     val replacementRules by dictionaryManager.rules.collectAsStateWithLifecycle()
     var showDictionaryDialog by remember { mutableStateOf(false) }
+    var showAccessibilityDisclosure by remember { mutableStateOf(false) }
 
     val audioMonitorEnabled by settingsRepository.audioMonitorEnabled.collectAsStateWithLifecycle(initialValue = false)
     val monitoredFolders by settingsRepository.monitoredFolders.collectAsStateWithLifecycle(initialValue = emptySet())
@@ -430,8 +431,45 @@ fun SettingsScreen(
                         else "Enable to inject text into any app",
                     icon = Icons.Default.Accessibility,
                     isGranted = hasAccessibilityEnabled.value,
-                    onClick = { onOpenAccessibilitySettings() },
+                    onClick = {
+                        if (hasAccessibilityEnabled.value) {
+                            onOpenAccessibilitySettings()
+                        } else {
+                            showAccessibilityDisclosure = true
+                        }
+                    },
                     onRevokeClick = { onOpenAccessibilitySettings() }
+                )
+            }
+
+            // Accessibility Disclosure Dialog
+            if (showAccessibilityDisclosure) {
+                AlertDialog(
+                    onDismissRequest = { showAccessibilityDisclosure = false },
+                    icon = { Icon(Icons.Default.Accessibility, contentDescription = null) },
+                    title = { Text(stringResource(R.string.accessibility_disclosure_title)) },
+                    text = {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            Text(stringResource(R.string.accessibility_disclosure_body))
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = {
+                            showAccessibilityDisclosure = false
+                            onOpenAccessibilitySettings()
+                        }) {
+                            Text(stringResource(R.string.accessibility_disclosure_agree))
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showAccessibilityDisclosure = false }) {
+                            Text(stringResource(R.string.accessibility_disclosure_decline))
+                        }
+                    }
                 )
             }
 

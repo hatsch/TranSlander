@@ -67,6 +67,12 @@
     <string name="lang_lt">Lithuanian</string>
     <string name="lang_mt">Maltese</string>
 
+    <!-- Accessibility Disclosure -->
+    <string name="accessibility_disclosure_title">Accessibility Service Disclosure</string>
+    <string name="accessibility_disclosure_body">This app uses Android\'s Accessibility Service to insert transcribed speech into text fields.\n\nWhat the service does:\n• Finds the currently focused text field\n• Reads existing text and cursor position\n• Inserts your transcribed speech at the cursor\n\nWhat it does NOT do:\n• Does not collect, store, or transmit any data\n• Does not read content from other apps\n• All processing happens entirely on your device\n\nIf you decline, the app will still work by copying text to your clipboard instead.</string>
+    <string name="accessibility_disclosure_agree">Agree &amp; Continue</string>
+    <string name="accessibility_disclosure_decline">Decline</string>
+
     <!-- Actions -->
     <string name="action_grant_permission">Grant Permission</string>
     <string name="action_download">Download</string>
