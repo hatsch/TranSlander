@@ -479,13 +479,14 @@ fun SettingsScreen(
                     title = "Enable Floating Button",
                     subtitle = when {
                         !hasMicPermission.value -> "Grant microphone permission first"
+                        !hasOverlayPermission.value -> "Grant overlay permission first"
                         !isRecognizerReady -> "Load model first"
                         serviceEnabled -> "Shows red when recording"
                         else -> "Additional mic button overlay"
                     },
                     icon = Icons.Default.RadioButtonChecked,
                     checked = serviceEnabled,
-                    enabled = hasMicPermission.value && isRecognizerReady,
+                    enabled = hasMicPermission.value && hasOverlayPermission.value && isRecognizerReady,
                     onCheckedChange = { enabled ->
                         scope.launch {
                             settingsRepository.setServiceEnabled(enabled)
@@ -494,15 +495,14 @@ fun SettingsScreen(
                     }
                 )
 
-                if (!hasOverlayPermission.value) {
-                    PermissionItem(
-                        title = stringResource(R.string.setting_overlay),
-                        subtitle = "Required for floating button",
-                        icon = Icons.Default.Layers,
-                        isGranted = false,
-                        onClick = { onRequestOverlayPermission() }
-                    )
-                }
+                PermissionItem(
+                    title = stringResource(R.string.setting_overlay),
+                    subtitle = if (hasOverlayPermission.value) "Granted - tap to manage" else "Required for floating button",
+                    icon = Icons.Default.Layers,
+                    isGranted = hasOverlayPermission.value,
+                    onClick = { onRequestOverlayPermission() },
+                    onRevokeClick = { onRequestOverlayPermission() }
+                )
 
                 ButtonSizeSettingItem(
                     selectedSize = floatingButtonSize,
@@ -568,6 +568,11 @@ fun SettingsScreen(
                                         scope.launch {
                                             val newFolders = monitoredFolders - folder
                                             settingsRepository.setMonitoredFolders(newFolders)
+                                            // Restart service to stop watching removed folder
+                                            if (audioMonitorEnabled) {
+                                                transcribeManager.setAudioMonitorEnabled(false)
+                                                transcribeManager.setAudioMonitorEnabled(true)
+                                            }
                                         }
                                     }) {
                                         Icon(
@@ -603,6 +608,11 @@ fun SettingsScreen(
                                     }
                                     val newFolders = baseFolders + path
                                     settingsRepository.setMonitoredFolders(newFolders)
+                                    // Restart service to pick up new folder
+                                    if (audioMonitorEnabled) {
+                                        transcribeManager.setAudioMonitorEnabled(false)
+                                        transcribeManager.setAudioMonitorEnabled(true)
+                                    }
                                 }
                             }
                         }
