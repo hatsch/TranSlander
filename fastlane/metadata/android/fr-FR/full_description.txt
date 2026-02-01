@@ -3,7 +3,7 @@ Une appli de saisie vocale entièrement hors ligne pour Android. Parle dans ton 
 <b>Fonctionnalités</b>
 
 <b>Reconnaissance vocale hors ligne</b>
-Utilise le modèle neuronal Parakeet TDT v3 qui tourne localement via sherpa-onnx. Plus de 26 langues prises en charge avec détection automatique. Aucune connexion internet après le téléchargement initial du modèle.
+Utilise le modèle neuronal Parakeet TDT v3 qui tourne localement via sherpa-onnx. 25 langues prises en charge avec détection automatique. Aucune connexion internet après le téléchargement initial du modèle.
 
 <b>Compatible avec toutes les applis</b>
 Insère le texte directement dans le champ actif grâce à l'API d'accessibilité Android. S'il n'y a pas de champ de texte actif, le presse-papiers est utilisé.
@@ -26,7 +26,7 @@ Tout le traitement vocal se fait localement sur ton appareil. Aucune donnée aud
 Cette appli utilise le service d'accessibilité d'Android pour faciliter la saisie de texte sur écran tactile. La saisie vocale est insérée directement dans n'importe quel champ de texte, ce qui rend l'appareil plus accessible aux personnes ayant des difficultés motrices ou d'autres limitations.
 
 <b>Langues prises en charge</b>
-Anglais, allemand, français, espagnol, italien, portugais, néerlandais, polonais, russe, ukrainien, tchèque, slovaque, hongrois, roumain, bulgare, croate, slovène, grec, danois, suédois, finnois, estonien, letton, lituanien, maltais et d'autres.
+Anglais, allemand, français, espagnol, italien, portugais, néerlandais, polonais, russe, ukrainien, tchèque, slovaque, hongrois, roumain, bulgare, croate, slovène, grec, danois, suédois, finnois, estonien, letton, lituanien, maltais.
 
 <b>Autorisations</b>
 • Microphone — capture vocale pour la transcription

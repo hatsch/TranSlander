@@ -10,7 +10,7 @@ A fully offline voice typing app for Android. Speak into your phone and text app
 
 ### Offline Speech Recognition
 - Uses [Parakeet TDT v3](https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8) neural model (~600MB) running locally via [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)
-- Supports 26+ languages with auto-detection
+- Supports 25 languages with auto-detection
 - No internet connection needed after model download
 
 ### Works in Any App

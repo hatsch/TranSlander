@@ -3,7 +3,7 @@ Un'app di dettatura vocale completamente offline per Android. Parla nel tuo tele
 <b>Funzionalità</b>
 
 <b>Riconoscimento vocale offline</b>
-Usa il modello neurale Parakeet TDT v3, che gira localmente tramite sherpa-onnx. Supporta oltre 26 lingue con rilevamento automatico. Dopo il download iniziale del modello non serve connessione internet.
+Usa il modello neurale Parakeet TDT v3, che gira localmente tramite sherpa-onnx. Supporta 25 lingue con rilevamento automatico. Dopo il download iniziale del modello non serve connessione internet.
 
 <b>Funziona in qualsiasi app</b>
 Inserisce il testo direttamente nel campo attivo tramite l'API di accessibilità Android. Se non c'è un campo di testo attivo, usa gli appunti.
@@ -26,7 +26,7 @@ Tutta l'elaborazione vocale avviene localmente sul tuo dispositivo. Nessun dato 
 Questa app usa il servizio di accessibilità di Android per facilitare l'immissione di testo su schermi touch. L'input vocale viene inserito direttamente in qualsiasi campo di testo, rendendo il dispositivo più accessibile a chi ha difficoltà motorie o altre limitazioni.
 
 <b>Lingue supportate</b>
-Inglese, tedesco, francese, spagnolo, italiano, portoghese, olandese, polacco, russo, ucraino, ceco, slovacco, ungherese, rumeno, bulgaro, croato, sloveno, greco, danese, svedese, finlandese, estone, lettone, lituano, maltese e altre.
+Inglese, tedesco, francese, spagnolo, italiano, portoghese, olandese, polacco, russo, ucraino, ceco, slovacco, ungherese, rumeno, bulgaro, croato, sloveno, greco, danese, svedese, finlandese, estone, lettone, lituano, maltese.
 
 <b>Autorizzazioni</b>
 • Microfono — cattura vocale per la trascrizione

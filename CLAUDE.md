@@ -12,7 +12,7 @@ An Android voice typing app that works **completely offline**. Speak into your p
   - Floating mic button (draggable overlay) - optional, always visible
 - **Word corrections** - Custom dictionary to fix recurring recognition errors (e.g., "Tamtam" → "Tamdam")
 - **Voice message transcription** - Share or open audio files (OPUS, AAC, OGG, M4A, MP3) to transcribe them
-- **Multi-language** - Supports 26+ languages with auto-detection
+- **Multi-language** - Supports 25 languages with auto-detection
 - **Material 3 UI** - Modern settings with dark/light theme support
 
 ### How It Works
@@ -43,17 +43,51 @@ adb install -r app/build/outputs/apk/debug/app-debug.apk
 adb uninstall com.translander && adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
+### Build Verification After Changes
+
+Always run `./gradlew assembleDebug` after significant changes (localization, resource files, manifest edits). The F-Droid build only runs against tagged releases, so `fdroid build` is only needed before tagging a new version — not for every feature branch change.
+
+**When to run F-Droid build:**
+- Before tagging a new release (e.g., v1.0.3)
+- After changing build config, NDK version, or sherpa-onnx srclib version
+- NOT needed for resource-only changes on feature branches
+
+**F-Droid build skips if APK exists:** fdroid checks `unsigned/at.webformat.translander_{versionCode}.apk`. Remove it to force a rebuild:
+```bash
+rm fdroiddata/unsigned/at.webformat.translander_3.apk
+rm fdroiddata/unsigned/at.webformat.translander_3_src.tar.gz
+```
+
 ### Gradle Daemon Issues
 Stale Gradle daemons and corrupt cache cause `For input string: ""` errors. Clean before F-Droid builds:
 ```bash
 rm -rf ~/.gradle/daemon
-rm -rf /path/to/fdroiddata/build/at.webformat.translander/.gradle
+rm -rf /home/hatsch/claude/transcript/fdroiddata/build/at.webformat.translander/.gradle
 ```
 
 ### sherpa-onnx AAR
 The sherpa-onnx native library is built from source and placed at `app/libs/sherpa-onnx-<version>.aar`.
 Run `./build-sherpa-onnx-aar.sh` to build it. This location is outside the gradle `build/` directory
 so it survives `gradle clean` (required for F-Droid builds).
+
+### NDK
+F-Droid build requires NDK. Currently using `27.0.12077973` (set in fdroiddata YAML `ndk:` field). Available locally:
+- `27.0.12077973`
+- `28.2.13676358`
+
+The NDK version must match between the fdroiddata YAML and the local SDK. `ANDROID_HOME` must be set for fdroid to find it.
+
+### Common Build Errors
+
+| Error | Cause | Fix |
+|-------|-------|-----|
+| `For input string: ""` | Stale Gradle daemon cache | `rm -rf ~/.gradle/daemon` |
+| `No app metadata found` | Running `fdroid build` from wrong directory | Must run from fdroiddata root, not the app repo |
+| fdroid build skips silently | APK already exists in `unsigned/` | Remove existing APK and src tarball |
+| `Environment variable {env: serverwebroot}` | Missing fdroid config (warning, not fatal) | Ignore — only needed for `fdroid publish` |
+| Lint `MissingTranslation` | New string added to `values/strings.xml` without translations | Add to all `values-{locale}/strings.xml` files |
+| Lint `ExtraTranslation` | String in translation file not in default `strings.xml` | Remove from translation files |
+| XML apostrophe crash | Unescaped `'` in strings.xml | Use `\'` — e.g., `there\'s` not `there's` |
 
 ## Architecture
 
@@ -238,11 +272,20 @@ See [Git guide for fdroiddata contributors](https://gitlab.com/fdroid/wiki/-/wik
 
 **Git push:** Only use `--force` when history was actually rewritten (e.g., after rebase). A regular `git push` is sufficient for fast-forward updates.
 
-**Local fdroid build:** Requires `ANDROID_HOME` to find the NDK:
+**Local fdroid build:** Must run from fdroiddata root. Requires `ANDROID_HOME` for NDK:
 ```bash
 rm -rf ~/.gradle/daemon
+cd /home/hatsch/claude/transcript/fdroiddata
 ANDROID_HOME=/home/hatsch/Android/Sdk fdroid build at.webformat.translander
 ```
+
+**Testing unreleased commits (LOCAL ONLY — never commit this change):**
+To test an F-Droid build before tagging a release, temporarily change `commit:` in the fdroiddata YAML to a branch name or commit hash:
+```yaml
+# Temporary — revert before committing!
+commit: feature/localization   # or a specific commit hash
+```
+Then remove the existing APK from `unsigned/` and run `fdroid build`. Always revert the YAML change afterward.
 
 ### Google Play Publishing
 - [x] Developer account created

@@ -3,7 +3,7 @@ Eine vollständig offline arbeitende Spracheingabe-App für Android. Einfach ins
 <b>Funktionen</b>
 
 <b>Offline-Spracherkennung</b>
-Verwendet das neuronale Modell Parakeet TDT v3, das lokal über sherpa-onnx läuft. Unterstützt über 26 Sprachen mit automatischer Erkennung. Nach dem erstmaligen Download des Modells ist keine Internetverbindung mehr nötig.
+Verwendet das neuronale Modell Parakeet TDT v3, das lokal über sherpa-onnx läuft. Unterstützt 25 Sprachen mit automatischer Erkennung. Nach dem erstmaligen Download des Modells ist keine Internetverbindung mehr nötig.
 
 <b>Funktioniert in jeder App</b>
 Verwendet die Android Accessibility API, um Text direkt in jedes fokussierte Textfeld einzufügen. Wenn kein Textfeld fokussiert ist, wird die Zwischenablage verwendet.
@@ -26,7 +26,7 @@ Die gesamte Sprachverarbeitung erfolgt lokal auf dem Gerät. Es werden niemals A
 Diese App verwendet den Bedienungshilfe-Dienst von Android, um Spracheingabe direkt in jedes Textfeld einzufügen. Damit wird das Gerät auch für Personen mit motorischen Einschränkungen oder anderen Bedingungen, die das Tippen erschweren, besser nutzbar.
 
 <b>Unterstützte Sprachen</b>
-Englisch, Deutsch, Französisch, Spanisch, Italienisch, Portugiesisch, Niederländisch, Polnisch, Russisch, Ukrainisch, Tschechisch, Slowakisch, Ungarisch, Rumänisch, Bulgarisch, Kroatisch, Slowenisch, Griechisch, Dänisch, Schwedisch, Finnisch, Estnisch, Lettisch, Litauisch, Maltesisch und weitere.
+Englisch, Deutsch, Französisch, Spanisch, Italienisch, Portugiesisch, Niederländisch, Polnisch, Russisch, Ukrainisch, Tschechisch, Slowakisch, Ungarisch, Rumänisch, Bulgarisch, Kroatisch, Slowenisch, Griechisch, Dänisch, Schwedisch, Finnisch, Estnisch, Lettisch, Litauisch, Maltesisch.
 
 <b>Berechtigungen</b>
 • Mikrofon — zur Sprachaufnahme für die Transkription

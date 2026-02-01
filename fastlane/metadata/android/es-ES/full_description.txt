@@ -3,7 +3,7 @@ Una app de dictado por voz completamente sin conexión para Android. Habla a tu 
 <b>Características</b>
 
 <b>Reconocimiento de voz sin conexión</b>
-Usa el modelo neuronal Parakeet TDT v3, que se ejecuta localmente a través de sherpa-onnx. Compatible con más de 26 idiomas con detección automática. Tras la descarga inicial del modelo no se necesita conexión a internet.
+Usa el modelo neuronal Parakeet TDT v3, que se ejecuta localmente a través de sherpa-onnx. Compatible con 25 idiomas con detección automática. Tras la descarga inicial del modelo no se necesita conexión a internet.
 
 <b>Funciona en cualquier app</b>
 Inserta el texto directamente en el campo activo mediante la API de Accesibilidad de Android. Si no hay ningún campo de texto activo, se usa el portapapeles.
@@ -26,7 +26,7 @@ Todo el procesamiento de voz ocurre localmente en tu dispositivo. Ningún dato d
 Esta app usa el Servicio de Accesibilidad de Android para facilitar la entrada de texto en pantallas táctiles. La voz se inserta directamente en cualquier campo de texto, haciendo el dispositivo más accesible para personas con dificultades motoras u otras limitaciones.
 
 <b>Idiomas compatibles</b>
-Inglés, alemán, francés, español, italiano, portugués, neerlandés, polaco, ruso, ucraniano, checo, eslovaco, húngaro, rumano, búlgaro, croata, esloveno, griego, danés, sueco, finlandés, estonio, letón, lituano, maltés y más.
+Inglés, alemán, francés, español, italiano, portugués, neerlandés, polaco, ruso, ucraniano, checo, eslovaco, húngaro, rumano, búlgaro, croata, esloveno, griego, danés, sueco, finlandés, estonio, letón, lituano, maltés.
 
 <b>Permisos</b>
 • Micrófono — captura de voz para la transcripción

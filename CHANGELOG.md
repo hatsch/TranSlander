@@ -33,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Word corrections feature - fix recurring recognition errors with custom rules
 - Audio monitor - watches Downloads folder for new voice messages
 - Support for OPUS, AAC, OGG, M4A, MP3 audio formats
-- Multi-language support (26+ languages with auto-detection)
+- Multi-language support (25 languages with auto-detection)
 - Material 3 UI with dark/light theme support
 - GitHub Actions CI/CD workflow
 

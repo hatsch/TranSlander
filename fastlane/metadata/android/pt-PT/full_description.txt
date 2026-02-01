@@ -3,7 +3,7 @@ Uma aplicação de ditado por voz totalmente offline para Android. Fale para o s
 <b>Funcionalidades</b>
 
 <b>Reconhecimento de voz offline</b>
-Utiliza o modelo neural Parakeet TDT v3 a funcionar localmente através do sherpa-onnx. Suporta mais de 26 idiomas com deteção automática. Não é necessária ligação à internet após o download inicial do modelo.
+Utiliza o modelo neural Parakeet TDT v3 a funcionar localmente através do sherpa-onnx. Suporta 25 idiomas com deteção automática. Não é necessária ligação à internet após o download inicial do modelo.
 
 <b>Funciona em qualquer aplicação</b>
 Utiliza a API de Acessibilidade do Android para inserir texto diretamente em qualquer campo de texto ativo. Recorre à área de transferência se nenhum campo de texto estiver ativo.
@@ -26,7 +26,7 @@ Todo o processamento de voz acontece localmente no seu dispositivo. Nenhum dado 
 Esta aplicação utiliza o Serviço de Acessibilidade do Android para ajudar utilizadores que têm dificuldade em escrever em ecrãs táteis. A entrada de voz é inserida diretamente em qualquer campo de texto, tornando o dispositivo mais acessível para utilizadores com deficiências motoras ou outras condições que dificultam a escrita.
 
 <b>Idiomas suportados</b>
-Inglês, alemão, francês, espanhol, italiano, português, neerlandês, polaco, russo, ucraniano, checo, eslovaco, húngaro, romeno, búlgaro, croata, esloveno, grego, dinamarquês, sueco, finlandês, estónio, letão, lituano, maltês e outros.
+Inglês, alemão, francês, espanhol, italiano, português, neerlandês, polaco, russo, ucraniano, checo, eslovaco, húngaro, romeno, búlgaro, croata, esloveno, grego, dinamarquês, sueco, finlandês, estónio, letão, lituano, maltês.
 
 <b>Permissões</b>
 • Microfone — para captar voz para transcrição

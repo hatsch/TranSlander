@@ -3,7 +3,7 @@ A fully offline voice typing app for Android. Speak into your phone and text app
 <b>Features</b>
 
 <b>Offline Speech Recognition</b>
-Uses the Parakeet TDT v3 neural model running locally via sherpa-onnx. Supports 26+ languages with auto-detection. No internet connection needed after the initial model download.
+Uses the Parakeet TDT v3 neural model running locally via sherpa-onnx. Supports 25 languages with auto-detection. No internet connection needed after the initial model download.
 
 <b>Works in Any App</b>
 Uses Android Accessibility API to inject text directly into any focused text field. Falls back to clipboard if no text field is focused.
@@ -26,7 +26,7 @@ All speech processing happens locally on your device. No audio data is ever sent
 This app uses Android's Accessibility Service to help users who have difficulty typing on touchscreens. Voice input is directly inserted into any text field, making the device more accessible for users with motor impairments or other conditions that make typing challenging.
 
 <b>Supported Languages</b>
-English, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Russian, Ukrainian, Czech, Slovak, Hungarian, Romanian, Bulgarian, Croatian, Slovenian, Greek, Danish, Swedish, Finnish, Estonian, Latvian, Lithuanian, Maltese, and more.
+English, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Russian, Ukrainian, Czech, Slovak, Hungarian, Romanian, Bulgarian, Croatian, Slovenian, Greek, Danish, Swedish, Finnish, Estonian, Latvian, Lithuanian, Maltese.
 
 <b>Permissions</b>
 • Microphone — to capture voice for transcription

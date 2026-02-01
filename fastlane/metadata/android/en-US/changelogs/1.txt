@@ -4,5 +4,5 @@ Initial release:
 • Voice message transcription (share audio from any app)
 • Word corrections for fixing recognition errors
 • Keyboard integration for HeliBoard and others
-• 26+ languages with auto-detection
+• 25 languages with auto-detection
 • Material 3 UI with dark/light themes
