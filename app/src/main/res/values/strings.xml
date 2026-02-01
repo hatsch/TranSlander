@@ -9,9 +9,19 @@
     <string name="accessibility_service_label">TranSlander Text Input</string>
     <string name="accessibility_service_description">Allows TranSlander to insert transcribed text directly into text fields. Enable this for seamless voice-to-text input.</string>
 
-    <!-- Settings -->
+    <!-- Settings Sections -->
+    <string name="section_speech_model">Speech Model</string>
+    <string name="section_microphone">Microphone</string>
+    <string name="section_keyboard">Keyboard Integration</string>
+    <string name="section_accessibility">Accessibility Service</string>
+    <string name="section_floating_mic">Floating Mic Button</string>
+    <string name="section_transcription">Voice Message Transcription</string>
+    <string name="section_word_corrections">Word Corrections</string>
+    <string name="section_appearance">Appearance</string>
+
+    <!-- Settings Items -->
     <string name="setting_service_enabled">Enable Service</string>
-    <string name="setting_language">Preferred Language</string>
+    <string name="setting_language">Spoken Language</string>
     <string name="setting_language_auto">Auto-detect</string>
     <string name="setting_theme">Theme</string>
     <string name="setting_theme_system">System</string>
@@ -27,11 +37,81 @@
     <string name="setting_overlay">Overlay Permission</string>
     <string name="setting_overlay_desc">Required to show floating mic button</string>
 
+    <!-- Model states -->
+    <string name="model_not_downloaded">Not downloaded (~600 MB)</string>
+    <string name="model_downloading">Downloading: %d%%</string>
+    <string name="model_extracting">Extracting…</string>
+    <string name="model_error">Error: %s</string>
+    <string name="model_loading">Loading model…</string>
+    <string name="model_loaded">Loaded and ready</string>
+    <string name="model_downloaded">Downloaded — tap Load to activate</string>
+    <string name="model_load">Load</string>
+    <string name="model_unload">Unload</string>
+    <string name="model_auto_load_title">Auto-load on startup</string>
+    <string name="model_auto_load_on">Model loads when app starts</string>
+    <string name="model_auto_load_off">Load model manually</string>
+
+    <!-- Floating Button -->
+    <string name="floating_enable">Enable Floating Button</string>
+    <string name="floating_grant_mic_first">Grant microphone permission first</string>
+    <string name="floating_grant_overlay_first">Grant overlay permission first</string>
+    <string name="floating_load_model_first">Load model first</string>
+    <string name="floating_shows_red">Shows red when recording</string>
+    <string name="floating_additional">Additional mic button overlay</string>
+    <string name="floating_button_size">Button Size</string>
+    <string name="floating_size_small">Small</string>
+    <string name="floating_size_medium">Medium</string>
+    <string name="floating_size_large">Large</string>
+
+    <!-- Keyboard Integration -->
+    <string name="keyboard_voice_ime">Voice Input Method</string>
+    <string name="keyboard_ime_enabled">Enabled — Mic button appears on keyboard</string>
+    <string name="keyboard_ime_disabled">Enable to use mic button on HeliBoard keyboard</string>
+
+    <!-- Accessibility Service Settings -->
+    <string name="accessibility_text_injection">Text Injection Service</string>
+    <string name="accessibility_enabled">Enabled — Text injected into focused fields</string>
+    <string name="accessibility_disabled">Enable to inject text into any app</string>
+
+    <!-- Permission states -->
+    <string name="permission_granted_manage">Granted — tap to manage</string>
+    <string name="permission_required_voice">Required for voice input</string>
+    <string name="permission_required_overlay">Required for floating button</string>
+    <string name="permission_required_audio">Required to read audio files</string>
+
+    <!-- Transcription Settings -->
+    <string name="transcription_audio_access">Audio Files Access</string>
+    <string name="transcription_monitor_folders">Monitor Folders</string>
+    <string name="transcription_grant_audio_first">Grant audio files permission first</string>
+    <string name="transcription_watching_folders">Watching %d folder(s)</string>
+    <string name="transcription_watching_downloads">Watching Downloads folder</string>
+    <string name="transcription_notify_downloaded">Notify when voice messages are downloaded</string>
+    <string name="transcription_add_folder">Add folder</string>
+    <string name="transcription_add_folder_desc">Watch additional folders for voice messages</string>
+    <string name="transcription_default_folder">Default</string>
+    <string name="transcription_share_open">Share or Open Audio</string>
+    <string name="transcription_share_open_desc">Use Share or Open With from other apps</string>
+
+    <!-- Word Corrections -->
+    <string name="corrections_enable">Enable Corrections</string>
+    <string name="corrections_enabled_desc">Auto-correct recognized words</string>
+    <string name="corrections_disabled_desc">Corrections disabled</string>
+    <string name="corrections_manage">Manage Corrections</string>
+    <string name="corrections_count">%d replacement rule(s)</string>
+    <string name="corrections_dialog_title">Word Corrections</string>
+    <string name="corrections_add_new">Add new correction</string>
+    <string name="corrections_from">From</string>
+    <string name="corrections_to">To</string>
+    <string name="corrections_current_rules">Current rules (%d)</string>
+    <string name="corrections_no_rules">No correction rules yet</string>
+    <string name="corrections_done">Done</string>
+
     <!-- Recording states -->
     <string name="state_idle">Tap to speak</string>
     <string name="state_recording">Recording…</string>
     <string name="state_processing">Processing…</string>
     <string name="state_error">Error occurred</string>
+    <string name="state_listening">Listening…</string>
 
     <!-- Permissions -->
     <string name="permission_mic_title">Microphone Permission</string>
@@ -39,7 +119,7 @@
     <string name="permission_overlay_title">Overlay Permission</string>
     <string name="permission_overlay_message">Required to show the floating microphone button.</string>
 
-    <!-- Languages -->
+    <!-- Languages - NOT translated, these are native names -->
     <string name="lang_auto">Auto-detect</string>
     <string name="lang_en">English</string>
     <string name="lang_de">German</string>
@@ -77,6 +157,33 @@
     <string name="action_grant_permission">Grant Permission</string>
     <string name="action_download">Download</string>
     <string name="action_cancel">Cancel</string>
+    <string name="action_stop">Stop</string>
+    <string name="action_remove">Remove</string>
+    <string name="action_add">Add</string>
+
+    <!-- Toast messages -->
+    <string name="toast_model_not_downloaded">Model not downloaded. Open app to download.</string>
+    <string name="toast_voice_ready">Voice recognition ready</string>
+    <string name="toast_model_load_failed">Failed to load model</string>
+    <string name="toast_mic_required">Microphone permission required</string>
+    <string name="toast_mic_required_open_app">Microphone permission required. Open app to grant.</string>
+    <string name="toast_loading_model">Loading model, please wait…</string>
+    <string name="toast_no_speech">No speech detected</string>
+    <string name="toast_no_field_clipboard">No text field focused. Copied to clipboard.</string>
+    <string name="toast_copied_clipboard_paste">Copied to clipboard (paste manually)</string>
+    <string name="toast_copied">Copied: %s</string>
+    <string name="toast_overlay_required">Overlay permission required. Enable in TranSlander settings.</string>
+    <string name="toast_voice_model_unavailable">Voice model not available</string>
+    <string name="toast_error_loading_model">Error loading voice model</string>
+    <string name="toast_recording_error">Recording error</string>
+
+    <!-- IME states -->
+    <string name="ime_model_not_available">Model not available</string>
+    <string name="ime_error_loading">Error loading model</string>
+
+    <!-- Recording Overlay -->
+    <string name="overlay_done">Done</string>
+    <string name="overlay_cancel">Cancel</string>
 
     <!-- Transcription Activity -->
     <string name="transcribe_title">Transcribe Audio</string>

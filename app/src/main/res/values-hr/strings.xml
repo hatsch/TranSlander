@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Postavke</string>
+
+    <!-- Service -->
+    <string name="service_notification_title">TranSlander je aktivan</string>
+    <string name="service_notification_text">Dodirnite plutajući mikrofon za transkripciju govora</string>
+    <string name="accessibility_service_label">TranSlander Unos teksta</string>
+    <string name="accessibility_service_description">Omogućuje TranSlander umetanje transkribiranog teksta izravno u tekstualna polja. Omogućite za besprijekoran glasovni unos teksta.</string>
+
+    <!-- Settings Sections -->
+    <string name="section_speech_model">Model za prepoznavanje govora</string>
+    <string name="section_microphone">Mikrofon</string>
+    <string name="section_keyboard">Integracija tipkovnice</string>
+    <string name="section_accessibility">Usluga pristupačnosti</string>
+    <string name="section_floating_mic">Plutajući gumb mikrofona</string>
+    <string name="section_transcription">Transkripcija glasovnih poruka</string>
+    <string name="section_word_corrections">Ispravci riječi</string>
+    <string name="section_appearance">Izgled</string>
+
+    <!-- Settings Items -->
+    <string name="setting_service_enabled">Omogući uslugu</string>
+    <string name="setting_language">Govorni jezik</string>
+    <string name="setting_language_auto">Automatsko prepoznavanje</string>
+    <string name="setting_theme">Tema</string>
+    <string name="setting_theme_system">Sistemska</string>
+    <string name="setting_theme_light">Svijetla</string>
+    <string name="setting_theme_dark">Tamna</string>
+    <string name="setting_model">Model za prepoznavanje govora</string>
+    <string name="setting_model_download">Preuzmi model</string>
+    <string name="setting_model_ready">Model spreman</string>
+    <string name="setting_model_downloading">Preuzimanje…</string>
+    <string name="setting_model_size">~600 MB</string>
+    <string name="setting_accessibility">Dozvola za unos teksta</string>
+    <string name="setting_accessibility_desc">Omogućite uslugu pristupačnosti za izravan unos teksta</string>
+    <string name="setting_overlay">Dozvola za preklapanje</string>
+    <string name="setting_overlay_desc">Potrebno za prikaz plutajućeg gumba mikrofona</string>
+
+    <!-- Model states -->
+    <string name="model_not_downloaded">Nije preuzeto (~600 MB)</string>
+    <string name="model_downloading">Preuzimanje: %d%%</string>
+    <string name="model_extracting">Raspakiravanje…</string>
+    <string name="model_error">Greška: %s</string>
+    <string name="model_loading">Učitavanje modela…</string>
+    <string name="model_loaded">Učitano i spremno</string>
+    <string name="model_downloaded">Preuzeto — dodirnite Učitaj za aktivaciju</string>
+    <string name="model_load">Učitaj</string>
+    <string name="model_unload">Oslobodi</string>
+    <string name="model_auto_load_title">Automatsko učitavanje pri pokretanju</string>
+    <string name="model_auto_load_on">Model se učitava pri pokretanju aplikacije</string>
+    <string name="model_auto_load_off">Ručno učitavanje modela</string>
+
+    <!-- Floating Button -->
+    <string name="floating_enable">Omogući plutajući gumb</string>
+    <string name="floating_grant_mic_first">Prvo odobrite dozvolu za mikrofon</string>
+    <string name="floating_grant_overlay_first">Prvo odobrite dozvolu za preklapanje</string>
+    <string name="floating_load_model_first">Prvo učitajte model</string>
+    <string name="floating_shows_red">Svijetli crveno tijekom snimanja</string>
+    <string name="floating_additional">Dodatni plutajući gumb mikrofona</string>
+    <string name="floating_button_size">Veličina gumba</string>
+    <string name="floating_size_small">Mali</string>
+    <string name="floating_size_medium">Srednji</string>
+    <string name="floating_size_large">Veliki</string>
+
+    <!-- Keyboard Integration -->
+    <string name="keyboard_voice_ime">Glasovni način unosa</string>
+    <string name="keyboard_ime_enabled">Omogućeno — Gumb mikrofona se prikazuje na tipkovnici</string>
+    <string name="keyboard_ime_disabled">Omogućite za korištenje gumba mikrofona na tipkovnici HeliBoard</string>
+
+    <!-- Accessibility Service Settings -->
+    <string name="accessibility_text_injection">Usluga umetanja teksta</string>
+    <string name="accessibility_enabled">Omogućeno — Tekst se umeće u aktivna polja</string>
+    <string name="accessibility_disabled">Omogućite za umetanje teksta u bilo koju aplikaciju</string>
+
+    <!-- Permission states -->
+    <string name="permission_granted_manage">Odobreno — dodirnite za upravljanje</string>
+    <string name="permission_required_voice">Potrebno za glasovni unos</string>
+    <string name="permission_required_overlay">Potrebno za plutajući gumb</string>
+    <string name="permission_required_audio">Potrebno za čitanje audio datoteka</string>
+
+    <!-- Transcription Settings -->
+    <string name="transcription_audio_access">Pristup audio datotekama</string>
+    <string name="transcription_monitor_folders">Praćenje mapa</string>
+    <string name="transcription_grant_audio_first">Prvo odobrite dozvolu za audio datoteke</string>
+    <string name="transcription_watching_folders">Praćenje %d mapa</string>
+    <string name="transcription_watching_downloads">Praćenje mape Preuzimanja</string>
+    <string name="transcription_notify_downloaded">Obavijesti kada se preuzmu glasovne poruke</string>
+    <string name="transcription_add_folder">Dodaj mapu</string>
+    <string name="transcription_add_folder_desc">Praćenje dodatnih mapa za glasovne poruke</string>
+    <string name="transcription_default_folder">Zadano</string>
+    <string name="transcription_share_open">Podijeli ili otvori audio</string>
+    <string name="transcription_share_open_desc">Koristite Podijeli ili Otvori s iz drugih aplikacija</string>
+
+    <!-- Word Corrections -->
+    <string name="corrections_enable">Omogući ispravke</string>
+    <string name="corrections_enabled_desc">Automatsko ispravljanje prepoznatih riječi</string>
+    <string name="corrections_disabled_desc">Ispravci isključeni</string>
+    <string name="corrections_manage">Upravljanje ispravcima</string>
+    <string name="corrections_count">%d pravila zamjene</string>
+    <string name="corrections_dialog_title">Ispravci riječi</string>
+    <string name="corrections_add_new">Dodaj novi ispravak</string>
+    <string name="corrections_from">Iz</string>
+    <string name="corrections_to">U</string>
+    <string name="corrections_current_rules">Trenutna pravila (%d)</string>
+    <string name="corrections_no_rules">Još nema pravila ispravaka</string>
+    <string name="corrections_done">Gotovo</string>
+
+    <!-- Recording states -->
+    <string name="state_idle">Dodirnite za govor</string>
+    <string name="state_recording">Snimanje…</string>
+    <string name="state_processing">Obrada…</string>
+    <string name="state_error">Došlo je do greške</string>
+    <string name="state_listening">Slušanje…</string>
+
+    <!-- Permissions -->
+    <string name="permission_mic_title">Dozvola za mikrofon</string>
+    <string name="permission_mic_message">Potrebno za snimanje glasa za transkripciju.</string>
+    <string name="permission_overlay_title">Dozvola za preklapanje</string>
+    <string name="permission_overlay_message">Potrebno za prikaz plutajućeg gumba mikrofona.</string>
+
+    <!-- Accessibility Disclosure -->
+    <string name="accessibility_disclosure_title">Informacije o usluzi pristupačnosti</string>
+    <string name="accessibility_disclosure_body">Ova aplikacija koristi uslugu pristupačnosti sustava Android za umetanje transkribiranog govora u tekstualna polja.\n\nŠto usluga radi:\n• Pronalazi trenutno aktivno tekstualno polje\n• Čita postojeći tekst i položaj kursora\n• Umeće transkribiran govor na položaj kursora\n\nŠto usluga NE radi:\n• Ne prikuplja, ne pohranjuje niti ne prenosi nikakve podatke\n• Ne čita sadržaj iz drugih aplikacija\n• Sva obrada odvija se isključivo na vašem uređaju\n\nAko odbijete, aplikacija će i dalje raditi kopiranjem teksta u međuspremnik.</string>
+    <string name="accessibility_disclosure_agree">Slažem se &amp; Nastavi</string>
+    <string name="accessibility_disclosure_decline">Odbij</string>
+
+    <!-- Actions -->
+    <string name="action_grant_permission">Odobri dozvolu</string>
+    <string name="action_download">Preuzmi</string>
+    <string name="action_cancel">Odustani</string>
+    <string name="action_stop">Zaustavi</string>
+    <string name="action_remove">Ukloni</string>
+    <string name="action_add">Dodaj</string>
+
+    <!-- Toast messages -->
+    <string name="toast_model_not_downloaded">Model nije preuzet. Otvorite aplikaciju za preuzimanje.</string>
+    <string name="toast_voice_ready">Prepoznavanje govora spremno</string>
+    <string name="toast_model_load_failed">Učitavanje modela nije uspjelo</string>
+    <string name="toast_mic_required">Potrebna dozvola za mikrofon</string>
+    <string name="toast_mic_required_open_app">Potrebna dozvola za mikrofon. Otvorite aplikaciju za odobrenje.</string>
+    <string name="toast_loading_model">Učitavanje modela, molimo pričekajte…</string>
+    <string name="toast_no_speech">Govor nije prepoznat</string>
+    <string name="toast_no_field_clipboard">Nema aktivnog tekstualnog polja. Kopirano u međuspremnik.</string>
+    <string name="toast_copied_clipboard_paste">Kopirano u međuspremnik (zalijepite ručno)</string>
+    <string name="toast_copied">Kopirano: %s</string>
+    <string name="toast_overlay_required">Potrebna dozvola za preklapanje. Omogućite u postavkama TranSlander.</string>
+    <string name="toast_voice_model_unavailable">Glasovni model nije dostupan</string>
+    <string name="toast_error_loading_model">Greška pri učitavanju glasovnog modela</string>
+    <string name="toast_recording_error">Greška snimanja</string>
+
+    <!-- IME states -->
+    <string name="ime_model_not_available">Model nije dostupan</string>
+    <string name="ime_error_loading">Greška pri učitavanju modela</string>
+
+    <!-- Recording Overlay -->
+    <string name="overlay_done">Gotovo</string>
+    <string name="overlay_cancel">Odustani</string>
+
+    <!-- Transcription Activity -->
+    <string name="transcribe_title">Transkribiraj audio</string>
+    <string name="transcribe_checking_model">Provjera modela za prepoznavanje govora…</string>
+    <string name="transcribe_decoding">Dekodiranje audia: %1$d%%</string>
+    <string name="transcribe_transcribing">Transkribiranje…</string>
+    <string name="transcribe_copy">Kopiraj</string>
+    <string name="transcribe_share">Podijeli</string>
+    <string name="transcribe_share_title">Podijeli transkripciju</string>
+    <string name="transcribe_close">Zatvori</string>
+    <string name="transcribe_copied">Kopirano u međuspremnik</string>
+
+    <!-- Audio Monitor Service -->
+    <string name="monitor_channel_name">Monitor audia</string>
+    <string name="monitor_channel_description">Pozadinska usluga praćenja glasovnih poruka</string>
+    <string name="monitor_notification_title">Praćenje preuzimanja</string>
+    <string name="monitor_notification_text">Praćenje glasovnih poruka</string>
+    <string name="monitor_stop">Zaustavi</string>
+
+    <!-- Audio Detected Notification -->
+    <string name="audio_detected_channel_name">Otkrivanje glasovnih poruka</string>
+    <string name="audio_detected_channel_description">Obavijesti pri otkrivanju glasovnih poruka</string>
+    <string name="audio_detected_title">Otkrivena glasovna poruka</string>
+    <string name="audio_detected_text">Dodirnite za transkripciju</string>
+    <string name="audio_detected_action">Transkribiraj</string>
+</resources>

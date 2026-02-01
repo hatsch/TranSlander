@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Nastavenia</string>
+
+    <!-- Service -->
+    <string name="service_notification_title">TranSlander je aktívny</string>
+    <string name="service_notification_text">Klepnite na plávajúci mikrofón pre prepis reči</string>
+    <string name="accessibility_service_label">TranSlander Textový vstup</string>
+    <string name="accessibility_service_description">Umožňuje TranSlander vkladať prepísaný text priamo do textových polí. Povoľte pre plynulý hlasový vstup.</string>
+
+    <!-- Settings Sections -->
+    <string name="section_speech_model">Rozpoznávací model</string>
+    <string name="section_microphone">Mikrofón</string>
+    <string name="section_keyboard">Integrácia klávesnice</string>
+    <string name="section_accessibility">Služba prístupnosti</string>
+    <string name="section_floating_mic">Plávajúce tlačidlo mikrofónu</string>
+    <string name="section_transcription">Prepis hlasových správ</string>
+    <string name="section_word_corrections">Opravy slov</string>
+    <string name="section_appearance">Vzhľad</string>
+
+    <!-- Settings Items -->
+    <string name="setting_service_enabled">Povoliť službu</string>
+    <string name="setting_language">Hovorený jazyk</string>
+    <string name="setting_language_auto">Automatická detekcia</string>
+    <string name="setting_theme">Motív</string>
+    <string name="setting_theme_system">Systémový</string>
+    <string name="setting_theme_light">Svetlý</string>
+    <string name="setting_theme_dark">Tmavý</string>
+    <string name="setting_model">Rozpoznávací model</string>
+    <string name="setting_model_download">Stiahnuť model</string>
+    <string name="setting_model_ready">Model pripravený</string>
+    <string name="setting_model_downloading">Sťahovanie…</string>
+    <string name="setting_model_size">~600 MB</string>
+    <string name="setting_accessibility">Oprávnenie na textový vstup</string>
+    <string name="setting_accessibility_desc">Povoľte službu prístupnosti pre priamy textový vstup</string>
+    <string name="setting_overlay">Oprávnenie na prekrytie</string>
+    <string name="setting_overlay_desc">Vyžadované na zobrazenie plávajúceho tlačidla mikrofónu</string>
+
+    <!-- Model states -->
+    <string name="model_not_downloaded">Nestiahnuté (~600 MB)</string>
+    <string name="model_downloading">Sťahovanie: %d%%</string>
+    <string name="model_extracting">Rozbaľovanie…</string>
+    <string name="model_error">Chyba: %s</string>
+    <string name="model_loading">Načítavanie modelu…</string>
+    <string name="model_loaded">Načítané a pripravené</string>
+    <string name="model_downloaded">Stiahnuté — klepnite na Načítať pre aktiváciu</string>
+    <string name="model_load">Načítať</string>
+    <string name="model_unload">Uvoľniť</string>
+    <string name="model_auto_load_title">Automatické načítanie pri spustení</string>
+    <string name="model_auto_load_on">Model sa načíta pri spustení aplikácie</string>
+    <string name="model_auto_load_off">Načítať model ručne</string>
+
+    <!-- Floating Button -->
+    <string name="floating_enable">Povoliť plávajúce tlačidlo</string>
+    <string name="floating_grant_mic_first">Najprv udeľte oprávnenie na mikrofón</string>
+    <string name="floating_grant_overlay_first">Najprv udeľte oprávnenie na prekrytie</string>
+    <string name="floating_load_model_first">Najprv načítajte model</string>
+    <string name="floating_shows_red">Pri nahrávaní svieti červeno</string>
+    <string name="floating_additional">Ďalšie plávajúce tlačidlo mikrofónu</string>
+    <string name="floating_button_size">Veľkosť tlačidla</string>
+    <string name="floating_size_small">Malé</string>
+    <string name="floating_size_medium">Stredné</string>
+    <string name="floating_size_large">Veľké</string>
+
+    <!-- Keyboard Integration -->
+    <string name="keyboard_voice_ime">Hlasový vstup</string>
+    <string name="keyboard_ime_enabled">Povolené — Tlačidlo mikrofónu sa zobrazí na klávesnici</string>
+    <string name="keyboard_ime_disabled">Povoľte pre použitie tlačidla mikrofónu na klávesnici HeliBoard</string>
+
+    <!-- Accessibility Service Settings -->
+    <string name="accessibility_text_injection">Služba vkladania textu</string>
+    <string name="accessibility_enabled">Povolené — Text sa vkladá do aktívnych polí</string>
+    <string name="accessibility_disabled">Povoľte pre vkladanie textu do ľubovoľnej aplikácie</string>
+
+    <!-- Permission states -->
+    <string name="permission_granted_manage">Udelené — klepnite pre správu</string>
+    <string name="permission_required_voice">Vyžadované pre hlasový vstup</string>
+    <string name="permission_required_overlay">Vyžadované pre plávajúce tlačidlo</string>
+    <string name="permission_required_audio">Vyžadované na čítanie zvukových súborov</string>
+
+    <!-- Transcription Settings -->
+    <string name="transcription_audio_access">Prístup k zvukovým súborom</string>
+    <string name="transcription_monitor_folders">Sledovať priečinky</string>
+    <string name="transcription_grant_audio_first">Najprv udeľte oprávnenie na zvukové súbory</string>
+    <string name="transcription_watching_folders">Sleduje %d priečinkov</string>
+    <string name="transcription_watching_downloads">Sleduje priečinok Stiahnuté</string>
+    <string name="transcription_notify_downloaded">Upozorniť pri stiahnutí hlasových správ</string>
+    <string name="transcription_add_folder">Pridať priečinok</string>
+    <string name="transcription_add_folder_desc">Sledovať ďalšie priečinky pre hlasové správy</string>
+    <string name="transcription_default_folder">Predvolený</string>
+    <string name="transcription_share_open">Zdieľať alebo otvoriť zvuk</string>
+    <string name="transcription_share_open_desc">Použite Zdieľať alebo Otvoriť v z iných aplikácií</string>
+
+    <!-- Word Corrections -->
+    <string name="corrections_enable">Povoliť opravy</string>
+    <string name="corrections_enabled_desc">Automaticky opravovať rozpoznané slová</string>
+    <string name="corrections_disabled_desc">Opravy vypnuté</string>
+    <string name="corrections_manage">Spravovať opravy</string>
+    <string name="corrections_count">%d pravidiel nahradenia</string>
+    <string name="corrections_dialog_title">Opravy slov</string>
+    <string name="corrections_add_new">Pridať novú opravu</string>
+    <string name="corrections_from">Z</string>
+    <string name="corrections_to">Na</string>
+    <string name="corrections_current_rules">Aktuálne pravidlá (%d)</string>
+    <string name="corrections_no_rules">Zatiaľ žiadne pravidlá opráv</string>
+    <string name="corrections_done">Hotovo</string>
+
+    <!-- Recording states -->
+    <string name="state_idle">Klepnite pre hovorenie</string>
+    <string name="state_recording">Nahrávanie…</string>
+    <string name="state_processing">Spracovanie…</string>
+    <string name="state_error">Vyskytla sa chyba</string>
+    <string name="state_listening">Počúvanie…</string>
+
+    <!-- Permissions -->
+    <string name="permission_mic_title">Oprávnenie na mikrofón</string>
+    <string name="permission_mic_message">Vyžadované na nahrávanie hlasu pre prepis.</string>
+    <string name="permission_overlay_title">Oprávnenie na prekrytie</string>
+    <string name="permission_overlay_message">Vyžadované na zobrazenie plávajúceho tlačidla mikrofónu.</string>
+
+    <!-- Accessibility Disclosure -->
+    <string name="accessibility_disclosure_title">Informácie o službe prístupnosti</string>
+    <string name="accessibility_disclosure_body">Táto aplikácia používa službu prístupnosti systému Android na vkladanie prepísanej reči do textových polí.\n\nČo služba robí:\n• Nájde aktuálne aktívne textové pole\n• Prečíta existujúci text a pozíciu kurzora\n• Vloží prepísanú reč na pozíciu kurzora\n\nČo služba NEROBÍ:\n• Nezhromažďuje, neukladá ani neodosiela žiadne údaje\n• Nečíta obsah z iných aplikácií\n• Všetko spracovanie prebieha výhradne na vašom zariadení\n\nAk odmietnete, aplikácia bude stále fungovať kopírovaním textu do schránky.</string>
+    <string name="accessibility_disclosure_agree">Súhlasím &amp; Pokračovať</string>
+    <string name="accessibility_disclosure_decline">Odmietnuť</string>
+
+    <!-- Actions -->
+    <string name="action_grant_permission">Udeliť oprávnenie</string>
+    <string name="action_download">Stiahnuť</string>
+    <string name="action_cancel">Zrušiť</string>
+    <string name="action_stop">Zastaviť</string>
+    <string name="action_remove">Odstrániť</string>
+    <string name="action_add">Pridať</string>
+
+    <!-- Toast messages -->
+    <string name="toast_model_not_downloaded">Model nie je stiahnutý. Otvorte aplikáciu pre stiahnutie.</string>
+    <string name="toast_voice_ready">Rozpoznávanie hlasu pripravené</string>
+    <string name="toast_model_load_failed">Načítanie modelu zlyhalo</string>
+    <string name="toast_mic_required">Vyžadované oprávnenie na mikrofón</string>
+    <string name="toast_mic_required_open_app">Vyžadované oprávnenie na mikrofón. Otvorte aplikáciu pre udelenie.</string>
+    <string name="toast_loading_model">Načítavanie modelu, prosím čakajte…</string>
+    <string name="toast_no_speech">Nebola rozpoznaná reč</string>
+    <string name="toast_no_field_clipboard">Žiadne textové pole nie je aktívne. Skopírované do schránky.</string>
+    <string name="toast_copied_clipboard_paste">Skopírované do schránky (vložte ručne)</string>
+    <string name="toast_copied">Skopírované: %s</string>
+    <string name="toast_overlay_required">Vyžadované oprávnenie na prekrytie. Povoľte v nastaveniach TranSlander.</string>
+    <string name="toast_voice_model_unavailable">Hlasový model nie je dostupný</string>
+    <string name="toast_error_loading_model">Chyba pri načítavaní hlasového modelu</string>
+    <string name="toast_recording_error">Chyba nahrávania</string>
+
+    <!-- IME states -->
+    <string name="ime_model_not_available">Model nie je dostupný</string>
+    <string name="ime_error_loading">Chyba pri načítavaní modelu</string>
+
+    <!-- Recording Overlay -->
+    <string name="overlay_done">Hotovo</string>
+    <string name="overlay_cancel">Zrušiť</string>
+
+    <!-- Transcription Activity -->
+    <string name="transcribe_title">Prepis zvuku</string>
+    <string name="transcribe_checking_model">Kontrola rozpoznávacieho modelu…</string>
+    <string name="transcribe_decoding">Dekódovanie zvuku: %1$d%%</string>
+    <string name="transcribe_transcribing">Prepisovanie…</string>
+    <string name="transcribe_copy">Kopírovať</string>
+    <string name="transcribe_share">Zdieľať</string>
+    <string name="transcribe_share_title">Zdieľať prepis</string>
+    <string name="transcribe_close">Zavrieť</string>
+    <string name="transcribe_copied">Skopírované do schránky</string>
+
+    <!-- Audio Monitor Service -->
+    <string name="monitor_channel_name">Monitor zvuku</string>
+    <string name="monitor_channel_description">Služba na pozadí sledujúca hlasové správy</string>
+    <string name="monitor_notification_title">Sledovanie stiahnutých súborov</string>
+    <string name="monitor_notification_text">Sledovanie hlasových správ</string>
+    <string name="monitor_stop">Zastaviť</string>
+
+    <!-- Audio Detected Notification -->
+    <string name="audio_detected_channel_name">Detekcia hlasových správ</string>
+    <string name="audio_detected_channel_description">Oznámenia pri detekcii hlasových správ</string>
+    <string name="audio_detected_title">Zistená hlasová správa</string>
+    <string name="audio_detected_text">Klepnite pre prepis</string>
+    <string name="audio_detected_action">Prepísať</string>
+</resources>

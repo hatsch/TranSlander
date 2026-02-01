@@ -1,0 +1,36 @@
+Una aplicación de dictado por voz completamente sin conexión para Android. Habla a tu teléfono y el texto aparece en cualquier aplicación — no se necesita internet, sin procesamiento en la nube, tus datos de voz nunca abandonan tu dispositivo.
+
+<b>Características</b>
+
+<b>Reconocimiento de voz sin conexión</b>
+Utiliza el modelo neural Parakeet TDT v3 ejecutándose localmente a través de sherpa-onnx. Admite más de 26 idiomas con detección automática. No se necesita conexión a internet después de la descarga inicial del modelo.
+
+<b>Funciona en cualquier aplicación</b>
+Utiliza la API de Accesibilidad de Android para insertar texto directamente en cualquier campo de texto activo. Recurre al portapapeles si no hay ningún campo de texto activo.
+
+<b>Múltiples métodos de entrada</b>
+• Botón de accesibilidad — Botón en la barra de navegación del sistema, funciona en todo el sistema
+• Botón de micrófono flotante — Superposición arrastrable, siempre visible
+• Integración con teclado — Funciona con teclados como HeliBoard
+
+<b>Transcripción de mensajes de voz</b>
+Comparte o abre archivos de audio desde cualquier aplicación para transcribirlos. Admite formatos OPUS, AAC, OGG, M4A, MP3, WAV. La monitorización opcional de carpetas vigila tu carpeta de Descargas en busca de nuevos mensajes de voz.
+
+<b>Correcciones de palabras</b>
+Diccionario personalizado para corregir errores de reconocimiento recurrentes. Define reglas como "Tamtam" → "Tamdam" y se aplican automáticamente.
+
+<b>Privacidad ante todo</b>
+Todo el procesamiento de voz ocurre localmente en tu dispositivo. Ningún dato de audio se envía jamás a ningún servidor. Sin análisis, sin rastreo.
+
+<b>Accesibilidad</b>
+Esta aplicación utiliza el Servicio de Accesibilidad de Android para ayudar a usuarios que tienen dificultades para escribir en pantallas táctiles. La entrada de voz se inserta directamente en cualquier campo de texto, haciendo el dispositivo más accesible para usuarios con discapacidades motoras u otras condiciones que dificultan la escritura.
+
+<b>Idiomas admitidos</b>
+Inglés, alemán, francés, español, italiano, portugués, neerlandés, polaco, ruso, ucraniano, checo, eslovaco, húngaro, rumano, búlgaro, croata, esloveno, griego, danés, sueco, finlandés, estonio, letón, lituano, maltés y más.
+
+<b>Permisos</b>
+• Micrófono — para capturar voz para la transcripción
+• Accesibilidad — para insertar texto en aplicaciones
+• Superposición — para el botón de micrófono flotante
+• Almacenamiento — para acceder a archivos de audio para transcripción
+• Internet — solo para la descarga única del modelo

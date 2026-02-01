@@ -1,0 +1,36 @@
+Eine vollständig offline arbeitende Spracheingabe-App für Android. Einfach ins Telefon sprechen und der Text erscheint in jeder App — kein Internet erforderlich, keine Cloud-Verarbeitung, Sprachdaten verlassen niemals das Gerät.
+
+<b>Funktionen</b>
+
+<b>Offline-Spracherkennung</b>
+Verwendet das neuronale Modell Parakeet TDT v3, das lokal über sherpa-onnx läuft. Unterstützt über 26 Sprachen mit automatischer Erkennung. Nach dem erstmaligen Download des Modells ist keine Internetverbindung mehr nötig.
+
+<b>Funktioniert in jeder App</b>
+Verwendet die Android Accessibility API, um Text direkt in jedes fokussierte Textfeld einzufügen. Wenn kein Textfeld fokussiert ist, wird die Zwischenablage verwendet.
+
+<b>Mehrere Eingabemethoden</b>
+• Bedienungshilfe-Taste — Taste in der System-Navigationsleiste, funktioniert systemweit
+• Schwebendes Mikrofon — Verschiebbares Overlay, immer sichtbar
+• Tastatur-Integration — Funktioniert mit Tastaturen wie HeliBoard
+
+<b>Sprachnachrichten-Transkription</b>
+Audiodateien aus jeder App teilen oder öffnen, um sie zu transkribieren. Unterstützt OPUS, AAC, OGG, M4A, MP3, WAV-Formate. Optionale Ordnerüberwachung beobachtet den Downloads-Ordner auf neue Sprachnachrichten.
+
+<b>Wortkorrekturen</b>
+Benutzerdefiniertes Wörterbuch zur Korrektur wiederkehrender Erkennungsfehler. Regeln wie "Tamtam" → "Tamdam" werden automatisch angewendet.
+
+<b>Datenschutz</b>
+Die gesamte Sprachverarbeitung erfolgt lokal auf dem Gerät. Es werden niemals Audiodaten an einen Server gesendet. Keine Analysen, kein Tracking.
+
+<b>Bedienungshilfe</b>
+Diese App verwendet den Bedienungshilfe-Dienst von Android, um Spracheingabe direkt in jedes Textfeld einzufügen. Damit wird das Gerät auch für Personen mit motorischen Einschränkungen oder anderen Bedingungen, die das Tippen erschweren, besser nutzbar.
+
+<b>Unterstützte Sprachen</b>
+Englisch, Deutsch, Französisch, Spanisch, Italienisch, Portugiesisch, Niederländisch, Polnisch, Russisch, Ukrainisch, Tschechisch, Slowakisch, Ungarisch, Rumänisch, Bulgarisch, Kroatisch, Slowenisch, Griechisch, Dänisch, Schwedisch, Finnisch, Estnisch, Lettisch, Litauisch, Maltesisch und weitere.
+
+<b>Berechtigungen</b>
+• Mikrofon — zur Sprachaufnahme für die Transkription
+• Bedienungshilfe — zum Einfügen von Text in Apps
+• Overlay — für das schwebende Mikrofon
+• Speicher — für den Zugriff auf Audiodateien zur Transkription
+• Internet — nur für den einmaligen Modell-Download

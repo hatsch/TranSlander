@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Einstellungen</string>
+
+    <!-- Service -->
+    <string name="service_notification_title">TranSlander aktiv</string>
+    <string name="service_notification_text">Auf das schwebende Mikrofon tippen, um Sprache zu transkribieren</string>
+    <string name="accessibility_service_label">TranSlander Texteingabe</string>
+    <string name="accessibility_service_description">Ermöglicht TranSlander, transkribierten Text direkt in Textfelder einzufügen. Für nahtlose Spracheingabe aktivieren.</string>
+
+    <!-- Settings Sections -->
+    <string name="section_speech_model">Sprachmodell</string>
+    <string name="section_microphone">Mikrofon</string>
+    <string name="section_keyboard">Tastatur-Integration</string>
+    <string name="section_accessibility">Bedienungshilfe</string>
+    <string name="section_floating_mic">Schwebendes Mikrofon</string>
+    <string name="section_transcription">Sprachnachrichten-Transkription</string>
+    <string name="section_word_corrections">Wortkorrekturen</string>
+    <string name="section_appearance">Darstellung</string>
+
+    <!-- Settings Items -->
+    <string name="setting_service_enabled">Dienst aktivieren</string>
+    <string name="setting_language">Gesprochene Sprache</string>
+    <string name="setting_language_auto">Automatisch erkennen</string>
+    <string name="setting_theme">Design</string>
+    <string name="setting_theme_system">System</string>
+    <string name="setting_theme_light">Hell</string>
+    <string name="setting_theme_dark">Dunkel</string>
+    <string name="setting_model">Sprachmodell</string>
+    <string name="setting_model_download">Modell herunterladen</string>
+    <string name="setting_model_ready">Modell bereit</string>
+    <string name="setting_model_downloading">Wird heruntergeladen…</string>
+    <string name="setting_model_size">~600 MB</string>
+    <string name="setting_accessibility">Texteingabe-Berechtigung</string>
+    <string name="setting_accessibility_desc">Bedienungshilfe für direkte Texteingabe aktivieren</string>
+    <string name="setting_overlay">Overlay-Berechtigung</string>
+    <string name="setting_overlay_desc">Erforderlich für das schwebende Mikrofon</string>
+
+    <!-- Model states -->
+    <string name="model_not_downloaded">Nicht heruntergeladen (~600 MB)</string>
+    <string name="model_downloading">Herunterladen: %d%%</string>
+    <string name="model_extracting">Wird entpackt…</string>
+    <string name="model_error">Fehler: %s</string>
+    <string name="model_loading">Modell wird geladen…</string>
+    <string name="model_loaded">Geladen und bereit</string>
+    <string name="model_downloaded">Heruntergeladen — zum Aktivieren auf Laden tippen</string>
+    <string name="model_load">Laden</string>
+    <string name="model_unload">Entladen</string>
+    <string name="model_auto_load_title">Automatisch beim Start laden</string>
+    <string name="model_auto_load_on">Modell wird beim Start geladen</string>
+    <string name="model_auto_load_off">Modell manuell laden</string>
+
+    <!-- Floating Button -->
+    <string name="floating_enable">Schwebende Taste aktivieren</string>
+    <string name="floating_grant_mic_first">Zuerst Mikrofon-Berechtigung erteilen</string>
+    <string name="floating_grant_overlay_first">Zuerst Overlay-Berechtigung erteilen</string>
+    <string name="floating_load_model_first">Zuerst Modell laden</string>
+    <string name="floating_shows_red">Leuchtet rot bei Aufnahme</string>
+    <string name="floating_additional">Zusätzliches schwebendes Mikrofon</string>
+    <string name="floating_button_size">Tastengröße</string>
+    <string name="floating_size_small">Klein</string>
+    <string name="floating_size_medium">Mittel</string>
+    <string name="floating_size_large">Groß</string>
+
+    <!-- Keyboard Integration -->
+    <string name="keyboard_voice_ime">Spracheingabemethode</string>
+    <string name="keyboard_ime_enabled">Aktiviert — Mikrofon-Taste erscheint auf der Tastatur</string>
+    <string name="keyboard_ime_disabled">Aktivieren für Mikrofon-Taste auf HeliBoard-Tastatur</string>
+
+    <!-- Accessibility Service Settings -->
+    <string name="accessibility_text_injection">Textinjektionsdienst</string>
+    <string name="accessibility_enabled">Aktiviert — Text wird in fokussierte Felder eingefügt</string>
+    <string name="accessibility_disabled">Aktivieren, um Text in jede App einzufügen</string>
+
+    <!-- Permission states -->
+    <string name="permission_granted_manage">Erteilt — tippen zum Verwalten</string>
+    <string name="permission_required_voice">Erforderlich für Spracheingabe</string>
+    <string name="permission_required_overlay">Erforderlich für schwebendes Mikrofon</string>
+    <string name="permission_required_audio">Erforderlich zum Lesen von Audiodateien</string>
+
+    <!-- Transcription Settings -->
+    <string name="transcription_audio_access">Zugriff auf Audiodateien</string>
+    <string name="transcription_monitor_folders">Ordner überwachen</string>
+    <string name="transcription_grant_audio_first">Zuerst Audiodateien-Berechtigung erteilen</string>
+    <string name="transcription_watching_folders">%d Ordner werden überwacht</string>
+    <string name="transcription_watching_downloads">Downloads-Ordner wird überwacht</string>
+    <string name="transcription_notify_downloaded">Benachrichtigen, wenn Sprachnachrichten heruntergeladen werden</string>
+    <string name="transcription_add_folder">Ordner hinzufügen</string>
+    <string name="transcription_add_folder_desc">Weitere Ordner auf Sprachnachrichten überwachen</string>
+    <string name="transcription_default_folder">Standard</string>
+    <string name="transcription_share_open">Audio teilen oder öffnen</string>
+    <string name="transcription_share_open_desc">Per Teilen oder Öffnen mit aus anderen Apps verwenden</string>
+
+    <!-- Word Corrections -->
+    <string name="corrections_enable">Korrekturen aktivieren</string>
+    <string name="corrections_enabled_desc">Erkannte Wörter automatisch korrigieren</string>
+    <string name="corrections_disabled_desc">Korrekturen deaktiviert</string>
+    <string name="corrections_manage">Korrekturen verwalten</string>
+    <string name="corrections_count">%d Ersetzungsregel(n)</string>
+    <string name="corrections_dialog_title">Wortkorrekturen</string>
+    <string name="corrections_add_new">Neue Korrektur hinzufügen</string>
+    <string name="corrections_from">Von</string>
+    <string name="corrections_to">Nach</string>
+    <string name="corrections_current_rules">Aktuelle Regeln (%d)</string>
+    <string name="corrections_no_rules">Noch keine Korrekturregeln</string>
+    <string name="corrections_done">Fertig</string>
+
+    <!-- Recording states -->
+    <string name="state_idle">Tippen zum Sprechen</string>
+    <string name="state_recording">Aufnahme…</string>
+    <string name="state_processing">Verarbeitung…</string>
+    <string name="state_error">Fehler aufgetreten</string>
+    <string name="state_listening">Zuhören…</string>
+
+    <!-- Permissions -->
+    <string name="permission_mic_title">Mikrofon-Berechtigung</string>
+    <string name="permission_mic_message">Erforderlich für die Aufnahme von Sprache zur Transkription.</string>
+    <string name="permission_overlay_title">Overlay-Berechtigung</string>
+    <string name="permission_overlay_message">Erforderlich, um das schwebende Mikrofon anzuzeigen.</string>
+
+    <!-- Accessibility Disclosure -->
+    <string name="accessibility_disclosure_title">Offenlegung Bedienungshilfe</string>
+    <string name="accessibility_disclosure_body">Diese App nutzt die Android-Bedienungshilfe, um transkribierte Sprache in Textfelder einzufügen.\n\nWas der Dienst macht:\n• Findet das aktuell fokussierte Textfeld\n• Liest vorhandenen Text und Cursorposition\n• Fügt die transkribierte Sprache an der Cursorposition ein\n\nWas er NICHT macht:\n• Sammelt, speichert oder überträgt keine Daten\n• Liest keine Inhalte aus anderen Apps\n• Alle Verarbeitung findet ausschließlich auf dem Gerät statt\n\nBei Ablehnung funktioniert die App weiterhin, indem der Text in die Zwischenablage kopiert wird.</string>
+    <string name="accessibility_disclosure_agree">Zustimmen &amp; Fortfahren</string>
+    <string name="accessibility_disclosure_decline">Ablehnen</string>
+
+    <!-- Actions -->
+    <string name="action_grant_permission">Berechtigung erteilen</string>
+    <string name="action_download">Herunterladen</string>
+    <string name="action_cancel">Abbrechen</string>
+    <string name="action_stop">Stopp</string>
+    <string name="action_remove">Entfernen</string>
+    <string name="action_add">Hinzufügen</string>
+
+    <!-- Toast messages -->
+    <string name="toast_model_not_downloaded">Modell nicht heruntergeladen. App öffnen zum Herunterladen.</string>
+    <string name="toast_voice_ready">Spracherkennung bereit</string>
+    <string name="toast_model_load_failed">Modell konnte nicht geladen werden</string>
+    <string name="toast_mic_required">Mikrofon-Berechtigung erforderlich</string>
+    <string name="toast_mic_required_open_app">Mikrofon-Berechtigung erforderlich. App öffnen zum Erteilen.</string>
+    <string name="toast_loading_model">Modell wird geladen, bitte warten…</string>
+    <string name="toast_no_speech">Keine Sprache erkannt</string>
+    <string name="toast_no_field_clipboard">Kein Textfeld fokussiert. In Zwischenablage kopiert.</string>
+    <string name="toast_copied_clipboard_paste">In Zwischenablage kopiert (manuell einfügen)</string>
+    <string name="toast_copied">Kopiert: %s</string>
+    <string name="toast_overlay_required">Overlay-Berechtigung erforderlich. In TranSlander-Einstellungen aktivieren.</string>
+    <string name="toast_voice_model_unavailable">Sprachmodell nicht verfügbar</string>
+    <string name="toast_error_loading_model">Fehler beim Laden des Sprachmodells</string>
+    <string name="toast_recording_error">Aufnahmefehler</string>
+
+    <!-- IME states -->
+    <string name="ime_model_not_available">Modell nicht verfügbar</string>
+    <string name="ime_error_loading">Fehler beim Laden des Modells</string>
+
+    <!-- Recording Overlay -->
+    <string name="overlay_done">Fertig</string>
+    <string name="overlay_cancel">Abbrechen</string>
+
+    <!-- Transcription Activity -->
+    <string name="transcribe_title">Audio transkribieren</string>
+    <string name="transcribe_checking_model">Sprachmodell wird geprüft…</string>
+    <string name="transcribe_decoding">Audio dekodieren: %1$d%%</string>
+    <string name="transcribe_transcribing">Transkribiere…</string>
+    <string name="transcribe_copy">Kopieren</string>
+    <string name="transcribe_share">Teilen</string>
+    <string name="transcribe_share_title">Transkription teilen</string>
+    <string name="transcribe_close">Schließen</string>
+    <string name="transcribe_copied">In Zwischenablage kopiert</string>
+
+    <!-- Audio Monitor Service -->
+    <string name="monitor_channel_name">Audio-Überwachung</string>
+    <string name="monitor_channel_description">Hintergrunddienst zur Überwachung von Sprachnachrichten</string>
+    <string name="monitor_notification_title">Downloads werden überwacht</string>
+    <string name="monitor_notification_text">Auf Sprachnachrichten warten</string>
+    <string name="monitor_stop">Stopp</string>
+
+    <!-- Audio Detected Notification -->
+    <string name="audio_detected_channel_name">Sprachnachrichten-Erkennung</string>
+    <string name="audio_detected_channel_description">Benachrichtigungen bei erkannten Sprachnachrichten</string>
+    <string name="audio_detected_title">Sprachnachricht erkannt</string>
+    <string name="audio_detected_text">Tippen zum Transkribieren</string>
+    <string name="audio_detected_action">Transkribieren</string>
+</resources>

@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import com.translander.R
 
 /**
  * Shared recording UI builder - creates identical UI for both VoiceInputActivity
@@ -37,7 +38,7 @@ object RecordingUIBuilder {
         }
 
         statusText = TextView(context).apply {
-            text = "Listening..."
+            text = context.getString(R.string.state_listening)
             textSize = 16f
             setTextColor(Color.WHITE)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
@@ -45,13 +46,13 @@ object RecordingUIBuilder {
         layout.addView(statusText)
 
         val doneButton = Button(context).apply {
-            text = "Done"
+            text = context.getString(R.string.overlay_done)
             setOnClickListener { onDoneClick() }
         }
         layout.addView(doneButton)
 
         val cancelButton = Button(context).apply {
-            text = "Cancel"
+            text = context.getString(R.string.overlay_cancel)
             setOnClickListener { onCancelClick() }
         }
         layout.addView(cancelButton)

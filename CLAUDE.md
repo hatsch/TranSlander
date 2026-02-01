@@ -232,6 +232,33 @@ cd fdroiddata && git fetch origin master && git rebase origin/master && git push
 ```
 See [Git guide for fdroiddata contributors](https://gitlab.com/fdroid/wiki/-/wikis/Tips-for-fdroiddata-contributors/Git-Usage).
 
+**F-Droid build order:** `prebuild` → scanner → `build` → gradle. The scanner runs between `prebuild` and `build`. Anything compiled in `prebuild` (like AAR files) will be flagged by the scanner as binary artifacts. Use `build:` instead of `prebuild:` for compiling native code from srclibs — this way the scanner never sees the built artifacts and `scanignore` is not needed. See `com.github.xiaoshihou.jiyi` and `de.schliweb.makeacopy` in fdroiddata for reference.
+
+**Metadata descriptions:** Don't put `Description:` in the fdroiddata YAML. F-Droid pulls it automatically from `fastlane/metadata/android/en-US/full_description.txt` in the source repo. About 53% of F-Droid apps use this approach.
+
+**Git push:** Only use `--force` when history was actually rewritten (e.g., after rebase). A regular `git push` is sufficient for fast-forward updates.
+
+**Local fdroid build:** Requires `ANDROID_HOME` to find the NDK:
+```bash
+rm -rf ~/.gradle/daemon
+ANDROID_HOME=/home/hatsch/Android/Sdk fdroid build at.webformat.translander
+```
+
+### Google Play Publishing
+- [x] Developer account created
+- [x] App listing created with screenshots, descriptions, privacy policy
+- [x] Accessibility service disclosure dialog added (required for permission approval)
+- [x] 3 demo videos provided showing permission usage
+- [x] Closed test release published (v1.0.2)
+- [ ] Get 12 testers opted-in to closed test (required since late 2023 for new accounts)
+- [ ] Run closed test for 14 days with 12+ testers
+- [ ] Apply for production access and permission review
+
+**Status:** On hold. Production requires 12 testers for 14 days before you can even apply. Closed test release is published and ready. Low priority — F-Droid + GitHub releases cover distribution for now.
+
 ### Known Issues
 - Vanadium browser doesn't handle voice input results (browser bug, not fixable on our side)
 - AOSP keyboard has no voice input support (use HeliBoard instead)
+
+### Localization
+The user interface has been machine-translated into 23 languages. If you spot translation errors or awkward phrasing, please open a pull request.

@@ -223,7 +223,7 @@ class FloatingMicService : Service() {
         // Check mic permission first
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "Microphone permission not granted")
-            android.widget.Toast.makeText(this, "Microphone permission required", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(this, getString(R.string.toast_mic_required), android.widget.Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -232,8 +232,8 @@ class FloatingMicService : Service() {
 
         if (!recognizerManager.isInitialized()) {
             Log.w(TAG, "Recognizer not initialized, trying to load")
-            TextInjectionService.instance?.showToast("Loading model, please wait...")
-                ?: android.widget.Toast.makeText(this, "Loading model, please wait...", android.widget.Toast.LENGTH_SHORT).show()
+            TextInjectionService.instance?.showToast(getString(R.string.toast_loading_model))
+                ?: android.widget.Toast.makeText(this, getString(R.string.toast_loading_model), android.widget.Toast.LENGTH_SHORT).show()
             initializeRecognizer()
             return
         }
@@ -270,7 +270,7 @@ class FloatingMicService : Service() {
                 transcribeAudio(audioData)
             } else {
                 withContext(Dispatchers.Main) {
-                    showToast("No speech detected")
+                    showToast(getString(R.string.toast_no_speech))
                 }
             }
         }
@@ -288,7 +288,7 @@ class FloatingMicService : Service() {
             if (!result.isNullOrBlank()) {
                 injectText(result)
             } else {
-                showToast("No speech detected")
+                showToast(getString(R.string.toast_no_speech))
             }
         }
     }
@@ -309,8 +309,8 @@ class FloatingMicService : Service() {
         val clipboard = getSystemService(CLIPBOARD_SERVICE) as android.content.ClipboardManager
         val clip = android.content.ClipData.newPlainText("Transcription", text)
         clipboard.setPrimaryClip(clip)
-        TextInjectionService.instance?.showToast("Copied to clipboard: $text")
-            ?: android.widget.Toast.makeText(this, "Copied: $text", android.widget.Toast.LENGTH_SHORT).show()
+        TextInjectionService.instance?.showToast(getString(R.string.toast_copied, text))
+            ?: android.widget.Toast.makeText(this, getString(R.string.toast_copied, text), android.widget.Toast.LENGTH_SHORT).show()
     }
 
     private fun updateMicButtonState() {
@@ -342,7 +342,7 @@ class FloatingMicService : Service() {
             .setContentText(getString(R.string.service_notification_text))
             .setSmallIcon(R.drawable.ic_mic_small)
             .setContentIntent(openPendingIntent)
-            .addAction(R.drawable.ic_close, "Stop", stopPendingIntent)
+            .addAction(R.drawable.ic_close, getString(R.string.action_stop), stopPendingIntent)
             .setOngoing(true)
             .build()
     }

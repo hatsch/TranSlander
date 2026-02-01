@@ -346,7 +346,7 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             // Speech Model (required for all voice input)
-            SettingsSection(title = "Speech Model") {
+            SettingsSection(title = stringResource(R.string.section_speech_model)) {
                 ModelSettingItem(
                     downloadState = downloadState,
                     isRecognizerReady = isRecognizerReady,
@@ -374,8 +374,8 @@ fun SettingsScreen(
                 )
 
                 SwitchSettingItem(
-                    title = "Auto-load on startup",
-                    subtitle = if (autoLoadModel) "Model loads when app starts" else "Load model manually",
+                    title = stringResource(R.string.model_auto_load_title),
+                    subtitle = if (autoLoadModel) stringResource(R.string.model_auto_load_on) else stringResource(R.string.model_auto_load_off),
                     icon = Icons.Default.Speed,
                     checked = autoLoadModel,
                     onCheckedChange = { enabled ->
@@ -397,10 +397,10 @@ fun SettingsScreen(
             }
 
             // Microphone Permission (required for all voice input)
-            SettingsSection(title = "Microphone") {
+            SettingsSection(title = stringResource(R.string.section_microphone)) {
                 PermissionItem(
                     title = stringResource(R.string.permission_mic_title),
-                    subtitle = if (hasMicPermission.value) "Granted - tap to manage" else "Required for voice input",
+                    subtitle = if (hasMicPermission.value) stringResource(R.string.permission_granted_manage) else stringResource(R.string.permission_required_voice),
                     icon = Icons.Default.Mic,
                     isGranted = hasMicPermission.value,
                     onClick = { if (hasMicPermission.value) onOpenAppSettings() else onRequestMicPermission() },
@@ -409,12 +409,12 @@ fun SettingsScreen(
             }
 
             // Keyboard Integration Section
-            SettingsSection(title = "Keyboard Integration") {
+            SettingsSection(title = stringResource(R.string.section_keyboard)) {
                 PermissionItem(
-                    title = "Voice Input Method",
+                    title = stringResource(R.string.keyboard_voice_ime),
                     subtitle = if (hasVoiceImeEnabled.value)
-                        "Enabled - Mic button appears on keyboard"
-                    else "Enable to use mic button on HeliBoard keyboard",
+                        stringResource(R.string.keyboard_ime_enabled)
+                    else stringResource(R.string.keyboard_ime_disabled),
                     icon = Icons.Default.Keyboard,
                     isGranted = hasVoiceImeEnabled.value,
                     onClick = { onOpenInputMethodSettings() },
@@ -423,12 +423,12 @@ fun SettingsScreen(
             }
 
             // Accessibility Service
-            SettingsSection(title = "Accessibility Service") {
+            SettingsSection(title = stringResource(R.string.section_accessibility)) {
                 PermissionItem(
-                    title = "Text Injection Service",
+                    title = stringResource(R.string.accessibility_text_injection),
                     subtitle = if (hasAccessibilityEnabled.value)
-                        "Enabled - Text injected into focused fields"
-                        else "Enable to inject text into any app",
+                        stringResource(R.string.accessibility_enabled)
+                        else stringResource(R.string.accessibility_disabled),
                     icon = Icons.Default.Accessibility,
                     isGranted = hasAccessibilityEnabled.value,
                     onClick = {
@@ -474,15 +474,15 @@ fun SettingsScreen(
             }
 
             // Optional Floating Mic Button
-            SettingsSection(title = "Floating Mic Button") {
+            SettingsSection(title = stringResource(R.string.section_floating_mic)) {
                 SwitchSettingItem(
-                    title = "Enable Floating Button",
+                    title = stringResource(R.string.floating_enable),
                     subtitle = when {
-                        !hasMicPermission.value -> "Grant microphone permission first"
-                        !hasOverlayPermission.value -> "Grant overlay permission first"
-                        !isRecognizerReady -> "Load model first"
-                        serviceEnabled -> "Shows red when recording"
-                        else -> "Additional mic button overlay"
+                        !hasMicPermission.value -> stringResource(R.string.floating_grant_mic_first)
+                        !hasOverlayPermission.value -> stringResource(R.string.floating_grant_overlay_first)
+                        !isRecognizerReady -> stringResource(R.string.floating_load_model_first)
+                        serviceEnabled -> stringResource(R.string.floating_shows_red)
+                        else -> stringResource(R.string.floating_additional)
                     },
                     icon = Icons.Default.RadioButtonChecked,
                     checked = serviceEnabled,
@@ -497,7 +497,7 @@ fun SettingsScreen(
 
                 PermissionItem(
                     title = stringResource(R.string.setting_overlay),
-                    subtitle = if (hasOverlayPermission.value) "Granted - tap to manage" else "Required for floating button",
+                    subtitle = if (hasOverlayPermission.value) stringResource(R.string.permission_granted_manage) else stringResource(R.string.permission_required_overlay),
                     icon = Icons.Default.Layers,
                     isGranted = hasOverlayPermission.value,
                     onClick = { onRequestOverlayPermission() },
@@ -519,10 +519,10 @@ fun SettingsScreen(
             }
 
             // Transcription Section
-            SettingsSection(title = "Voice Message Transcription") {
+            SettingsSection(title = stringResource(R.string.section_transcription)) {
                 PermissionItem(
-                    title = "Audio Files Access",
-                    subtitle = if (hasAudioPermission.value) "Granted - tap to manage" else "Required to read audio files",
+                    title = stringResource(R.string.transcription_audio_access),
+                    subtitle = if (hasAudioPermission.value) stringResource(R.string.permission_granted_manage) else stringResource(R.string.permission_required_audio),
                     icon = Icons.Default.AudioFile,
                     isGranted = hasAudioPermission.value,
                     onClick = { if (hasAudioPermission.value) onOpenAppSettings() else onRequestAudioFilesPermission() },
@@ -530,11 +530,15 @@ fun SettingsScreen(
                 )
 
                 SwitchSettingItem(
-                    title = "Monitor Folders",
+                    title = stringResource(R.string.transcription_monitor_folders),
                     subtitle = when {
-                        !hasAudioPermission.value -> "Grant audio files permission first"
-                        audioMonitorEnabled -> "Watching ${monitoredFolders.size.takeIf { it > 0 } ?: "Downloads"} folder(s)"
-                        else -> "Notify when voice messages are downloaded"
+                        !hasAudioPermission.value -> stringResource(R.string.transcription_grant_audio_first)
+                        audioMonitorEnabled -> {
+                            val count = monitoredFolders.size
+                            if (count > 0) stringResource(R.string.transcription_watching_folders, count)
+                            else stringResource(R.string.transcription_watching_downloads)
+                        }
+                        else -> stringResource(R.string.transcription_notify_downloaded)
                     },
                     icon = Icons.Default.FolderOpen,
                     checked = audioMonitorEnabled,
@@ -577,13 +581,13 @@ fun SettingsScreen(
                                     }) {
                                         Icon(
                                             Icons.Default.Close,
-                                            contentDescription = "Remove",
+                                            contentDescription = stringResource(R.string.action_remove),
                                             tint = MaterialTheme.colorScheme.error
                                         )
                                     }
                                 } else {
                                     Text(
-                                        "Default",
+                                        stringResource(R.string.transcription_default_folder),
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onSurfaceVariant
                                     )
@@ -594,8 +598,8 @@ fun SettingsScreen(
 
                     // Add folder button
                     ListItem(
-                        headlineContent = { Text("Add folder") },
-                        supportingContent = { Text("Watch additional folders for voice messages") },
+                        headlineContent = { Text(stringResource(R.string.transcription_add_folder)) },
+                        supportingContent = { Text(stringResource(R.string.transcription_add_folder_desc)) },
                         leadingContent = {
                             Icon(Icons.Default.Add, contentDescription = null)
                         },
@@ -622,17 +626,17 @@ fun SettingsScreen(
                 HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
                 ListItem(
-                    headlineContent = { Text("Share or Open Audio") },
-                    supportingContent = { Text("Use Share or Open With from other apps") },
+                    headlineContent = { Text(stringResource(R.string.transcription_share_open)) },
+                    supportingContent = { Text(stringResource(R.string.transcription_share_open_desc)) },
                     leadingContent = { Icon(Icons.Default.Share, contentDescription = null) }
                 )
             }
 
             // Word Corrections Section
-            SettingsSection(title = "Word Corrections") {
+            SettingsSection(title = stringResource(R.string.section_word_corrections)) {
                 SwitchSettingItem(
-                    title = "Enable Corrections",
-                    subtitle = if (dictionaryEnabled) "Auto-correct recognized words" else "Corrections disabled",
+                    title = stringResource(R.string.corrections_enable),
+                    subtitle = if (dictionaryEnabled) stringResource(R.string.corrections_enabled_desc) else stringResource(R.string.corrections_disabled_desc),
                     icon = Icons.Default.Spellcheck,
                     checked = dictionaryEnabled,
                     onCheckedChange = { enabled ->
@@ -643,11 +647,11 @@ fun SettingsScreen(
                 )
 
                 ListItem(
-                    headlineContent = { Text("Manage Corrections") },
-                    supportingContent = { Text("${replacementRules.size} replacement rule(s)") },
+                    headlineContent = { Text(stringResource(R.string.corrections_manage)) },
+                    supportingContent = { Text(stringResource(R.string.corrections_count, replacementRules.size)) },
                     leadingContent = { Icon(Icons.Default.EditNote, contentDescription = null) },
                     trailingContent = {
-                        Icon(Icons.Default.ChevronRight, contentDescription = "Manage")
+                        Icon(Icons.Default.ChevronRight, contentDescription = stringResource(R.string.corrections_manage))
                     },
                     modifier = Modifier.clickable { showDictionaryDialog = true }
                 )
@@ -672,7 +676,7 @@ fun SettingsScreen(
             }
 
             // Appearance Section
-            SettingsSection(title = "Appearance") {
+            SettingsSection(title = stringResource(R.string.section_appearance)) {
                 ThemeSettingItem(
                     selectedTheme = themeMode,
                     onThemeSelected = { theme ->
@@ -743,9 +747,9 @@ fun PermissionItem(
         },
         trailingContent = {
             if (isGranted) {
-                Icon(Icons.Default.Check, "Granted", tint = MaterialTheme.colorScheme.primary)
+                Icon(Icons.Default.Check, stringResource(R.string.permission_granted_manage), tint = MaterialTheme.colorScheme.primary)
             } else {
-                Icon(Icons.Default.ChevronRight, "Grant", tint = MaterialTheme.colorScheme.onSurfaceVariant)
+                Icon(Icons.Default.ChevronRight, stringResource(R.string.action_grant_permission), tint = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         },
         modifier = Modifier.clickable(onClick = actualClick)
@@ -766,13 +770,13 @@ fun ModelSettingItem(
             headlineContent = { Text("Parakeet TDT v3") },
             supportingContent = {
                 when {
-                    downloadState is ModelManager.DownloadState.NotStarted -> Text("Not downloaded (~600 MB)")
-                    downloadState is ModelManager.DownloadState.Downloading -> Text("Downloading: ${downloadState.progress}%")
-                    downloadState is ModelManager.DownloadState.Extracting -> Text("Extracting...")
-                    downloadState is ModelManager.DownloadState.Error -> Text("Error: ${downloadState.message}")
-                    isRecognizerLoading -> Text("Loading model...")
-                    isRecognizerReady -> Text("Loaded and ready")
-                    downloadState is ModelManager.DownloadState.Ready -> Text("Downloaded - tap Load to activate")
+                    downloadState is ModelManager.DownloadState.NotStarted -> Text(stringResource(R.string.model_not_downloaded))
+                    downloadState is ModelManager.DownloadState.Downloading -> Text(stringResource(R.string.model_downloading, downloadState.progress))
+                    downloadState is ModelManager.DownloadState.Extracting -> Text(stringResource(R.string.model_extracting))
+                    downloadState is ModelManager.DownloadState.Error -> Text(stringResource(R.string.model_error, downloadState.message))
+                    isRecognizerLoading -> Text(stringResource(R.string.model_loading))
+                    isRecognizerReady -> Text(stringResource(R.string.model_loaded))
+                    downloadState is ModelManager.DownloadState.Ready -> Text(stringResource(R.string.model_downloaded))
                 }
             },
             leadingContent = { Icon(Icons.Default.RecordVoiceOver, contentDescription = null) },
@@ -795,12 +799,12 @@ fun ModelSettingItem(
                     }
                     isRecognizerReady -> {
                         TextButton(onClick = onUnloadModel) {
-                            Text("Unload")
+                            Text(stringResource(R.string.model_unload))
                         }
                     }
                     downloadState is ModelManager.DownloadState.Ready -> {
                         Button(onClick = onLoadModel) {
-                            Text("Load")
+                            Text(stringResource(R.string.model_load))
                         }
                     }
                 }
@@ -816,7 +820,7 @@ fun LanguageSettingItem(
     onLanguageSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val selectedLangName = languages.find { it.code == selectedLanguage }?.displayName ?: "Auto-detect"
+    val selectedLangName = languages.find { it.code == selectedLanguage }?.displayName ?: stringResource(R.string.setting_language_auto)
 
     ListItem(
         headlineContent = { Text(stringResource(R.string.setting_language)) },
@@ -851,11 +855,11 @@ fun ThemeSettingItem(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val themes = listOf(
-        SettingsRepository.THEME_SYSTEM to "System",
-        SettingsRepository.THEME_LIGHT to "Light",
-        SettingsRepository.THEME_DARK to "Dark"
+        SettingsRepository.THEME_SYSTEM to stringResource(R.string.setting_theme_system),
+        SettingsRepository.THEME_LIGHT to stringResource(R.string.setting_theme_light),
+        SettingsRepository.THEME_DARK to stringResource(R.string.setting_theme_dark)
     )
-    val selectedThemeName = themes.find { it.first == selectedTheme }?.second ?: "System"
+    val selectedThemeName = themes.find { it.first == selectedTheme }?.second ?: stringResource(R.string.setting_theme_system)
 
     ListItem(
         headlineContent = { Text(stringResource(R.string.setting_theme)) },
@@ -890,14 +894,14 @@ fun ButtonSizeSettingItem(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val sizes = listOf(
-        SettingsRepository.BUTTON_SIZE_SMALL to "Small",
-        SettingsRepository.BUTTON_SIZE_MEDIUM to "Medium",
-        SettingsRepository.BUTTON_SIZE_LARGE to "Large"
+        SettingsRepository.BUTTON_SIZE_SMALL to stringResource(R.string.floating_size_small),
+        SettingsRepository.BUTTON_SIZE_MEDIUM to stringResource(R.string.floating_size_medium),
+        SettingsRepository.BUTTON_SIZE_LARGE to stringResource(R.string.floating_size_large)
     )
-    val selectedSizeName = sizes.find { it.first == selectedSize }?.second ?: "Medium"
+    val selectedSizeName = sizes.find { it.first == selectedSize }?.second ?: stringResource(R.string.floating_size_medium)
 
     ListItem(
-        headlineContent = { Text("Button Size") },
+        headlineContent = { Text(stringResource(R.string.floating_button_size)) },
         supportingContent = { Text(selectedSizeName) },
         leadingContent = { Icon(Icons.Default.PhotoSizeSelectLarge, contentDescription = null) },
         modifier = Modifier.clickable { expanded = true }
@@ -934,7 +938,7 @@ fun DictionaryDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Word Corrections") },
+        title = { Text(stringResource(R.string.corrections_dialog_title)) },
         text = {
             Column(
                 modifier = Modifier
@@ -943,7 +947,7 @@ fun DictionaryDialog(
             ) {
                 // Add new rule form
                 Text(
-                    "Add new correction",
+                    stringResource(R.string.corrections_add_new),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -955,14 +959,14 @@ fun DictionaryDialog(
                     OutlinedTextField(
                         value = fromText,
                         onValueChange = { fromText = it },
-                        label = { Text("From") },
+                        label = { Text(stringResource(R.string.corrections_from)) },
                         singleLine = true,
                         modifier = Modifier.weight(1f)
                     )
                     OutlinedTextField(
                         value = toText,
                         onValueChange = { toText = it },
-                        label = { Text("To") },
+                        label = { Text(stringResource(R.string.corrections_to)) },
                         singleLine = true,
                         modifier = Modifier.weight(1f)
                     )
@@ -976,7 +980,7 @@ fun DictionaryDialog(
                         },
                         enabled = fromText.isNotBlank() && toText.isNotBlank()
                     ) {
-                        Icon(Icons.Default.Add, "Add")
+                        Icon(Icons.Default.Add, stringResource(R.string.action_add))
                     }
                 }
 
@@ -984,14 +988,14 @@ fun DictionaryDialog(
 
                 // Existing rules list
                 Text(
-                    "Current rules (${rules.size})",
+                    stringResource(R.string.corrections_current_rules, rules.size),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
 
                 if (rules.isEmpty()) {
                     Text(
-                        "No correction rules yet",
+                        stringResource(R.string.corrections_no_rules),
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
@@ -1018,7 +1022,7 @@ fun DictionaryDialog(
                                     IconButton(onClick = { onRemoveRule(rule.from) }) {
                                         Icon(
                                             Icons.Default.Delete,
-                                            contentDescription = "Delete",
+                                            contentDescription = stringResource(R.string.action_remove),
                                             tint = MaterialTheme.colorScheme.error
                                         )
                                     }
@@ -1031,7 +1035,7 @@ fun DictionaryDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text("Done")
+                Text(stringResource(R.string.corrections_done))
             }
         }
     )

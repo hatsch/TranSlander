@@ -1,0 +1,36 @@
+Une application de saisie vocale entièrement hors ligne pour Android. Parlez dans votre téléphone et le texte apparaît dans n'importe quelle application — pas d'internet requis, pas de traitement cloud, vos données vocales ne quittent jamais votre appareil.
+
+<b>Fonctionnalités</b>
+
+<b>Reconnaissance vocale hors ligne</b>
+Utilise le modèle neuronal Parakeet TDT v3 fonctionnant localement via sherpa-onnx. Prend en charge plus de 26 langues avec détection automatique. Aucune connexion internet nécessaire après le téléchargement initial du modèle.
+
+<b>Fonctionne dans toute application</b>
+Utilise l'API d'accessibilité Android pour insérer du texte directement dans n'importe quel champ de texte actif. Se rabat sur le presse-papiers si aucun champ de texte n'est actif.
+
+<b>Plusieurs méthodes de saisie</b>
+• Bouton d'accessibilité — Bouton dans la barre de navigation système, fonctionne partout
+• Bouton micro flottant — Superposition déplaçable, toujours visible
+• Intégration clavier — Fonctionne avec des claviers comme HeliBoard
+
+<b>Transcription de messages vocaux</b>
+Partagez ou ouvrez des fichiers audio depuis n'importe quelle application pour les transcrire. Prend en charge les formats OPUS, AAC, OGG, M4A, MP3, WAV. La surveillance optionnelle de dossiers surveille votre dossier Téléchargements pour les nouveaux messages vocaux.
+
+<b>Corrections de mots</b>
+Dictionnaire personnalisé pour corriger les erreurs de reconnaissance récurrentes. Définissez des règles comme "Tamtam" → "Tamdam" et elles sont appliquées automatiquement.
+
+<b>Confidentialité d'abord</b>
+Tout le traitement vocal se fait localement sur votre appareil. Aucune donnée audio n'est jamais envoyée à un serveur. Pas d'analyse, pas de suivi.
+
+<b>Accessibilité</b>
+Cette application utilise le service d'accessibilité d'Android pour aider les utilisateurs qui ont des difficultés à taper sur les écrans tactiles. La saisie vocale est directement insérée dans n'importe quel champ de texte, rendant l'appareil plus accessible aux utilisateurs souffrant de déficiences motrices ou d'autres conditions rendant la saisie difficile.
+
+<b>Langues prises en charge</b>
+Anglais, allemand, français, espagnol, italien, portugais, néerlandais, polonais, russe, ukrainien, tchèque, slovaque, hongrois, roumain, bulgare, croate, slovène, grec, danois, suédois, finnois, estonien, letton, lituanien, maltais et plus.
+
+<b>Autorisations</b>
+• Microphone — pour capturer la voix pour la transcription
+• Accessibilité — pour insérer du texte dans les applications
+• Superposition — pour le bouton micro flottant
+• Stockage — pour accéder aux fichiers audio pour la transcription
+• Internet — téléchargement unique du modèle uniquement

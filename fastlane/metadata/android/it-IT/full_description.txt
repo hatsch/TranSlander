@@ -1,0 +1,36 @@
+Un'app di dettatura vocale completamente offline per Android. Parla nel tuo telefono e il testo appare in qualsiasi app — non serve internet, nessuna elaborazione cloud, i tuoi dati vocali non lasciano mai il tuo dispositivo.
+
+<b>Funzionalità</b>
+
+<b>Riconoscimento vocale offline</b>
+Utilizza il modello neurale Parakeet TDT v3 eseguito localmente tramite sherpa-onnx. Supporta oltre 26 lingue con rilevamento automatico. Nessuna connessione internet necessaria dopo il download iniziale del modello.
+
+<b>Funziona in qualsiasi app</b>
+Utilizza l'API di accessibilità Android per inserire testo direttamente in qualsiasi campo di testo attivo. Ricorre agli appunti se nessun campo di testo è attivo.
+
+<b>Metodi di input multipli</b>
+• Pulsante di accessibilità — Pulsante nella barra di navigazione di sistema, funziona ovunque
+• Pulsante microfono flottante — Overlay trascinabile, sempre visibile
+• Integrazione tastiera — Funziona con tastiere come HeliBoard
+
+<b>Trascrizione messaggi vocali</b>
+Condividi o apri file audio da qualsiasi app per trascriverli. Supporta i formati OPUS, AAC, OGG, M4A, MP3, WAV. Il monitoraggio opzionale delle cartelle controlla la cartella Download per nuovi messaggi vocali.
+
+<b>Correzioni parole</b>
+Dizionario personalizzato per correggere errori di riconoscimento ricorrenti. Definisci regole come "Tamtam" → "Tamdam" e vengono applicate automaticamente.
+
+<b>Privacy prima di tutto</b>
+Tutta l'elaborazione vocale avviene localmente sul tuo dispositivo. Nessun dato audio viene mai inviato a un server. Nessuna analisi, nessun tracciamento.
+
+<b>Accessibilità</b>
+Questa app utilizza il servizio di accessibilità di Android per aiutare gli utenti che hanno difficoltà a digitare sugli schermi touch. L'input vocale viene inserito direttamente in qualsiasi campo di testo, rendendo il dispositivo più accessibile per utenti con disabilità motorie o altre condizioni che rendono difficile la digitazione.
+
+<b>Lingue supportate</b>
+Inglese, tedesco, francese, spagnolo, italiano, portoghese, olandese, polacco, russo, ucraino, ceco, slovacco, ungherese, rumeno, bulgaro, croato, sloveno, greco, danese, svedese, finlandese, estone, lettone, lituano, maltese e altre.
+
+<b>Autorizzazioni</b>
+• Microfono — per catturare la voce per la trascrizione
+• Accessibilità — per inserire testo nelle app
+• Overlay — per il pulsante microfono flottante
+• Archiviazione — per accedere ai file audio per la trascrizione
+• Internet — solo per il download una tantum del modello

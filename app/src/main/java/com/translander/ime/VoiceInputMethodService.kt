@@ -6,6 +6,7 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import android.widget.Toast
+import com.translander.R
 import com.translander.TranslanderApp
 import com.translander.asr.AudioRecorder
 import com.translander.ui.RecordingUIBuilder
@@ -91,7 +92,7 @@ class VoiceInputMethodService : InputMethodService() {
 
         if (!recognizerManager.isInitialized()) {
             Log.i(TAG, "Recognizer not initialized, attempting to initialize")
-            statusText?.text = "Loading model..."
+            statusText?.text = getString(R.string.model_loading)
 
             serviceScope.launch {
                 try {
@@ -101,13 +102,13 @@ class VoiceInputMethodService : InputMethodService() {
                         startRecording()
                     } else {
                         Log.w(TAG, "Failed to initialize model")
-                        statusText?.text = "Model not available"
+                        statusText?.text = getString(R.string.ime_model_not_available)
                         kotlinx.coroutines.delay(1500)
                         switchBackToPreviousKeyboard()
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error initializing model", e)
-                    statusText?.text = "Error loading model"
+                    statusText?.text = getString(R.string.ime_error_loading)
                     kotlinx.coroutines.delay(1500)
                     switchBackToPreviousKeyboard()
                 }
@@ -117,7 +118,7 @@ class VoiceInputMethodService : InputMethodService() {
 
         Log.i(TAG, "Starting recording")
         isRecording = true
-        statusText?.text = "Listening..."
+        statusText?.text = getString(R.string.state_listening)
 
         audioRecorder = AudioRecorder()
         recordingJob = serviceScope.launch(Dispatchers.IO) {
@@ -126,7 +127,7 @@ class VoiceInputMethodService : InputMethodService() {
             } catch (e: Exception) {
                 Log.e(TAG, "Recording error", e)
                 withContext(Dispatchers.Main) {
-                    statusText?.text = "Recording error"
+                    statusText?.text = getString(R.string.toast_recording_error)
                     switchBackToPreviousKeyboard()
                 }
             }
@@ -139,7 +140,7 @@ class VoiceInputMethodService : InputMethodService() {
         Log.i(TAG, "Stopping recording")
         isRecording = false
         recordingJob?.cancel()
-        statusText?.text = "Processing..."
+        statusText?.text = getString(R.string.state_processing)
 
         serviceScope.launch(Dispatchers.IO) {
             try {
@@ -165,7 +166,7 @@ class VoiceInputMethodService : InputMethodService() {
                         currentInputConnection?.commitText(result, 1)
                     } else {
                         Log.w(TAG, "No speech detected")
-                        Toast.makeText(this@VoiceInputMethodService, "No speech detected", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@VoiceInputMethodService, getString(R.string.toast_no_speech), Toast.LENGTH_SHORT).show()
                     }
                     switchBackToPreviousKeyboard()
                 }

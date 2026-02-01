@@ -11,6 +11,7 @@ import android.Manifest
 import android.content.pm.PackageManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.translander.R
 import com.translander.TranslanderApp
 import com.translander.asr.AudioRecorder
 import kotlinx.coroutines.CoroutineScope
@@ -66,7 +67,7 @@ class TextInjectionService : AccessibilityService() {
 
             if (!modelManager.isModelReady()) {
                 withContext(Dispatchers.Main) {
-                    showToast("Model not downloaded. Open app to download.")
+                    showToast(getString(R.string.toast_model_not_downloaded))
                 }
                 return@launch
             }
@@ -75,9 +76,9 @@ class TextInjectionService : AccessibilityService() {
                 val success = recognizerManager.initialize()
                 withContext(Dispatchers.Main) {
                     if (success) {
-                        showToast("Voice recognition ready")
+                        showToast(getString(R.string.toast_voice_ready))
                     } else {
-                        showToast("Failed to load model")
+                        showToast(getString(R.string.toast_model_load_failed))
                     }
                 }
             }
@@ -97,7 +98,7 @@ class TextInjectionService : AccessibilityService() {
         // Check mic permission first
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "Microphone permission not granted")
-            showToast("Microphone permission required. Open app to grant.")
+            showToast(getString(R.string.toast_mic_required_open_app))
             return
         }
 
@@ -106,13 +107,13 @@ class TextInjectionService : AccessibilityService() {
 
         if (!recognizerManager.isInitialized()) {
             Log.w(TAG, "Recognizer not initialized, trying to initialize")
-            showToast("Loading model, please wait...")
+            showToast(getString(R.string.toast_loading_model))
             initializeRecognizer()
             return
         }
 
         isRecording = true
-        showToast("Recording...")
+        showToast(getString(R.string.state_recording))
 
         recordingJob = serviceScope.launch(Dispatchers.IO) {
             recorderMutex.withLock {
@@ -126,7 +127,7 @@ class TextInjectionService : AccessibilityService() {
     private fun stopRecording() {
         Log.i(TAG, "stopRecording called")
         isRecording = false
-        showToast("Processing...")
+        showToast(getString(R.string.state_processing))
 
         recordingJob?.cancel()
 
@@ -143,7 +144,7 @@ class TextInjectionService : AccessibilityService() {
                 transcribeAudio(audioData)
             } else {
                 withContext(Dispatchers.Main) {
-                    showToast("No speech detected")
+                    showToast(getString(R.string.toast_no_speech))
                 }
             }
         }
@@ -171,7 +172,7 @@ class TextInjectionService : AccessibilityService() {
             }
         } else {
             withContext(Dispatchers.Main) {
-                showToast("No speech detected")
+                showToast(getString(R.string.toast_no_speech))
             }
         }
     }
@@ -211,7 +212,7 @@ class TextInjectionService : AccessibilityService() {
             }
         } else {
             Log.w(TAG, "No focused text field found, copying to clipboard")
-            showToast("No text field focused. Copied to clipboard.")
+            showToast(getString(R.string.toast_no_field_clipboard))
             copyToClipboard(text)
         }
     }
@@ -335,7 +336,7 @@ class TextInjectionService : AccessibilityService() {
         }
 
         if (!pasteSuccess) {
-            showToast("Copied to clipboard (paste manually)")
+            showToast(getString(R.string.toast_copied_clipboard_paste))
         }
     }
 

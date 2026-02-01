@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import com.translander.R
 import com.translander.TranslanderApp
 import com.translander.asr.AudioRecorder
 import com.translander.ui.RecordingOverlay
@@ -52,7 +53,7 @@ class VoiceInputActivity : Activity() {
         // Check overlay permission
         if (!Settings.canDrawOverlays(this)) {
             Log.w(TAG, "No overlay permission")
-            Toast.makeText(this, "Overlay permission required. Enable in Translander settings.", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, getString(R.string.toast_overlay_required), Toast.LENGTH_LONG).show()
             setResult(RESULT_CANCELED)
             finish()
             return
@@ -62,7 +63,7 @@ class VoiceInputActivity : Activity() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
             != PackageManager.PERMISSION_GRANTED) {
             Log.w(TAG, "No microphone permission")
-            Toast.makeText(this, "Microphone permission required", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, getString(R.string.toast_mic_required), Toast.LENGTH_SHORT).show()
             setResult(RESULT_CANCELED)
             finish()
             return
@@ -82,7 +83,7 @@ class VoiceInputActivity : Activity() {
                 }
             }
             recordingOverlay?.show()
-            recordingOverlay?.setStatus("Loading model...")
+            recordingOverlay?.setStatus(getString(R.string.model_loading))
 
             activityScope.launch {
                 try {
@@ -92,13 +93,13 @@ class VoiceInputActivity : Activity() {
                         startRecording()
                     } else {
                         Log.w(TAG, "Failed to initialize model")
-                        Toast.makeText(this@VoiceInputActivity, "Voice model not available", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@VoiceInputActivity, getString(R.string.toast_voice_model_unavailable), Toast.LENGTH_SHORT).show()
                         setResult(RESULT_CANCELED)
                         finish()
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Error initializing model", e)
-                    Toast.makeText(this@VoiceInputActivity, "Error loading voice model", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@VoiceInputActivity, getString(R.string.toast_error_loading_model), Toast.LENGTH_SHORT).show()
                     setResult(RESULT_CANCELED)
                     finish()
                 }
@@ -148,7 +149,7 @@ class VoiceInputActivity : Activity() {
         Log.i(TAG, "Starting recording")
         isRecording = true
 
-        recordingOverlay?.setStatus("Listening...")
+        recordingOverlay?.setStatus(getString(R.string.state_listening))
 
         audioRecorder = AudioRecorder()
         recordingJob = activityScope.launch(Dispatchers.IO) {
@@ -157,7 +158,7 @@ class VoiceInputActivity : Activity() {
             } catch (e: Exception) {
                 Log.e(TAG, "Recording error", e)
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@VoiceInputActivity, "Recording error", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@VoiceInputActivity, getString(R.string.toast_recording_error), Toast.LENGTH_SHORT).show()
                     setResult(RESULT_CANCELED)
                     finish()
                 }
@@ -180,7 +181,7 @@ class VoiceInputActivity : Activity() {
         isRecording = false
         recordingJob?.cancel()
 
-        recordingOverlay?.setStatus("Processing...")
+        recordingOverlay?.setStatus(getString(R.string.state_processing))
 
         activityScope.launch(Dispatchers.IO) {
             try {

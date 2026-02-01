@@ -1,0 +1,36 @@
+Uma aplicação de ditado por voz totalmente offline para Android. Fale para o seu telemóvel e o texto aparece em qualquer aplicação — sem necessidade de internet, sem processamento na nuvem, os seus dados de voz nunca saem do seu dispositivo.
+
+<b>Funcionalidades</b>
+
+<b>Reconhecimento de voz offline</b>
+Utiliza o modelo neural Parakeet TDT v3 a funcionar localmente através do sherpa-onnx. Suporta mais de 26 idiomas com deteção automática. Não é necessária ligação à internet após o download inicial do modelo.
+
+<b>Funciona em qualquer aplicação</b>
+Utiliza a API de Acessibilidade do Android para inserir texto diretamente em qualquer campo de texto ativo. Recorre à área de transferência se nenhum campo de texto estiver ativo.
+
+<b>Múltiplos métodos de entrada</b>
+• Botão de acessibilidade — Botão na barra de navegação do sistema, funciona em todo o sistema
+• Botão de microfone flutuante — Sobreposição arrastável, sempre visível
+• Integração com teclado — Funciona com teclados como o HeliBoard
+
+<b>Transcrição de mensagens de voz</b>
+Partilhe ou abra ficheiros de áudio de qualquer aplicação para os transcrever. Suporta formatos OPUS, AAC, OGG, M4A, MP3, WAV. A monitorização opcional de pastas vigia a pasta de Transferências para novas mensagens de voz.
+
+<b>Correções de palavras</b>
+Dicionário personalizado para corrigir erros de reconhecimento recorrentes. Defina regras como "Tamtam" → "Tamdam" e são aplicadas automaticamente.
+
+<b>Privacidade em primeiro lugar</b>
+Todo o processamento de voz acontece localmente no seu dispositivo. Nenhum dado de áudio é enviado para qualquer servidor. Sem análises, sem rastreamento.
+
+<b>Acessibilidade</b>
+Esta aplicação utiliza o Serviço de Acessibilidade do Android para ajudar utilizadores que têm dificuldade em escrever em ecrãs táteis. A entrada de voz é inserida diretamente em qualquer campo de texto, tornando o dispositivo mais acessível para utilizadores com deficiências motoras ou outras condições que dificultam a escrita.
+
+<b>Idiomas suportados</b>
+Inglês, alemão, francês, espanhol, italiano, português, neerlandês, polaco, russo, ucraniano, checo, eslovaco, húngaro, romeno, búlgaro, croata, esloveno, grego, dinamarquês, sueco, finlandês, estónio, letão, lituano, maltês e outros.
+
+<b>Permissões</b>
+• Microfone — para captar voz para transcrição
+• Acessibilidade — para inserir texto em aplicações
+• Sobreposição — para o botão de microfone flutuante
+• Armazenamento — para aceder a ficheiros de áudio para transcrição
+• Internet — apenas para o download único do modelo

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Beállítások</string>
+
+    <!-- Service -->
+    <string name="service_notification_title">TranSlander aktív</string>
+    <string name="service_notification_text">Koppintson a lebegő mikrofonra a beszéd átírásához</string>
+    <string name="accessibility_service_label">TranSlander szövegbevitel</string>
+    <string name="accessibility_service_description">Lehetővé teszi a TranSlander számára, hogy az átírt szöveget közvetlenül a szövegmezőkbe illessze be. Engedélyezze a zökkenőmentes hangalapú szövegbevitelhez.</string>
+
+    <!-- Settings Sections -->
+    <string name="section_speech_model">Beszédfelismerő modell</string>
+    <string name="section_microphone">Mikrofon</string>
+    <string name="section_keyboard">Billentyűzet-integráció</string>
+    <string name="section_accessibility">Kisegítő lehetőségek szolgáltatás</string>
+    <string name="section_floating_mic">Lebegő mikrofon gomb</string>
+    <string name="section_transcription">Hangüzenet átírás</string>
+    <string name="section_word_corrections">Szójavítások</string>
+    <string name="section_appearance">Megjelenés</string>
+
+    <!-- Settings Items -->
+    <string name="setting_service_enabled">Szolgáltatás engedélyezése</string>
+    <string name="setting_language">Beszélt nyelv</string>
+    <string name="setting_language_auto">Automatikus felismerés</string>
+    <string name="setting_theme">Téma</string>
+    <string name="setting_theme_system">Rendszer</string>
+    <string name="setting_theme_light">Világos</string>
+    <string name="setting_theme_dark">Sötét</string>
+    <string name="setting_model">Beszédfelismerő modell</string>
+    <string name="setting_model_download">Modell letöltése</string>
+    <string name="setting_model_ready">Modell kész</string>
+    <string name="setting_model_downloading">Letöltés…</string>
+    <string name="setting_model_size">~600 MB</string>
+    <string name="setting_accessibility">Szövegbeviteli engedély</string>
+    <string name="setting_accessibility_desc">Engedélyezze a kisegítő lehetőségek szolgáltatást a közvetlen szövegbevitelhez</string>
+    <string name="setting_overlay">Átfedési engedély</string>
+    <string name="setting_overlay_desc">Szükséges a lebegő mikrofon gomb megjelenítéséhez</string>
+
+    <!-- Model states -->
+    <string name="model_not_downloaded">Nincs letöltve (~600 MB)</string>
+    <string name="model_downloading">Letöltés: %d%%</string>
+    <string name="model_extracting">Kicsomagolás…</string>
+    <string name="model_error">Hiba: %s</string>
+    <string name="model_loading">Modell betöltése…</string>
+    <string name="model_loaded">Betöltve és készen áll</string>
+    <string name="model_downloaded">Letöltve — koppintson a Betöltés gombra az aktiváláshoz</string>
+    <string name="model_load">Betöltés</string>
+    <string name="model_unload">Eltávolítás</string>
+    <string name="model_auto_load_title">Automatikus betöltés indításkor</string>
+    <string name="model_auto_load_on">A modell az alkalmazás indításakor betöltődik</string>
+    <string name="model_auto_load_off">Modell kézi betöltése</string>
+
+    <!-- Floating Button -->
+    <string name="floating_enable">Lebegő gomb engedélyezése</string>
+    <string name="floating_grant_mic_first">Először engedélyezze a mikrofont</string>
+    <string name="floating_grant_overlay_first">Először engedélyezze az átfedést</string>
+    <string name="floating_load_model_first">Először töltse be a modellt</string>
+    <string name="floating_shows_red">Felvételkor pirosan világít</string>
+    <string name="floating_additional">További lebegő mikrofon gomb</string>
+    <string name="floating_button_size">Gomb mérete</string>
+    <string name="floating_size_small">Kicsi</string>
+    <string name="floating_size_medium">Közepes</string>
+    <string name="floating_size_large">Nagy</string>
+
+    <!-- Keyboard Integration -->
+    <string name="keyboard_voice_ime">Hangalapú beviteli mód</string>
+    <string name="keyboard_ime_enabled">Engedélyezve — A mikrofon gomb megjelenik a billentyűzeten</string>
+    <string name="keyboard_ime_disabled">Engedélyezze a mikrofon gomb használatához a HeliBoard billentyűzeten</string>
+
+    <!-- Accessibility Service Settings -->
+    <string name="accessibility_text_injection">Szövegbeillesztő szolgáltatás</string>
+    <string name="accessibility_enabled">Engedélyezve — A szöveg az aktív mezőkbe kerül</string>
+    <string name="accessibility_disabled">Engedélyezze a szöveg bármely alkalmazásba történő beillesztéséhez</string>
+
+    <!-- Permission states -->
+    <string name="permission_granted_manage">Megadva — koppintson a kezeléshez</string>
+    <string name="permission_required_voice">Szükséges a hangbevitelhez</string>
+    <string name="permission_required_overlay">Szükséges a lebegő gombhoz</string>
+    <string name="permission_required_audio">Szükséges a hangfájlok olvasásához</string>
+
+    <!-- Transcription Settings -->
+    <string name="transcription_audio_access">Hangfájlok elérése</string>
+    <string name="transcription_monitor_folders">Mappák figyelése</string>
+    <string name="transcription_grant_audio_first">Először engedélyezze a hangfájlok elérését</string>
+    <string name="transcription_watching_folders">%d mappa figyelése</string>
+    <string name="transcription_watching_downloads">Letöltések mappa figyelése</string>
+    <string name="transcription_notify_downloaded">Értesítés hangüzenetek letöltésekor</string>
+    <string name="transcription_add_folder">Mappa hozzáadása</string>
+    <string name="transcription_add_folder_desc">További mappák figyelése hangüzenetekhez</string>
+    <string name="transcription_default_folder">Alapértelmezett</string>
+    <string name="transcription_share_open">Hang megosztása vagy megnyitása</string>
+    <string name="transcription_share_open_desc">Használja a Megosztás vagy Megnyitás funkciót más alkalmazásokból</string>
+
+    <!-- Word Corrections -->
+    <string name="corrections_enable">Javítások engedélyezése</string>
+    <string name="corrections_enabled_desc">Felismert szavak automatikus javítása</string>
+    <string name="corrections_disabled_desc">Javítások kikapcsolva</string>
+    <string name="corrections_manage">Javítások kezelése</string>
+    <string name="corrections_count">%d csere szabály</string>
+    <string name="corrections_dialog_title">Szójavítások</string>
+    <string name="corrections_add_new">Új javítás hozzáadása</string>
+    <string name="corrections_from">Erről</string>
+    <string name="corrections_to">Erre</string>
+    <string name="corrections_current_rules">Jelenlegi szabályok (%d)</string>
+    <string name="corrections_no_rules">Még nincsenek javítási szabályok</string>
+    <string name="corrections_done">Kész</string>
+
+    <!-- Recording states -->
+    <string name="state_idle">Koppintson a beszédhez</string>
+    <string name="state_recording">Felvétel…</string>
+    <string name="state_processing">Feldolgozás…</string>
+    <string name="state_error">Hiba történt</string>
+    <string name="state_listening">Hallgatás…</string>
+
+    <!-- Permissions -->
+    <string name="permission_mic_title">Mikrofon engedély</string>
+    <string name="permission_mic_message">Szükséges a hang rögzítéséhez az átíráshoz.</string>
+    <string name="permission_overlay_title">Átfedési engedély</string>
+    <string name="permission_overlay_message">Szükséges a lebegő mikrofon gomb megjelenítéséhez.</string>
+
+    <!-- Accessibility Disclosure -->
+    <string name="accessibility_disclosure_title">Kisegítő lehetőségek szolgáltatás tájékoztató</string>
+    <string name="accessibility_disclosure_body">Ez az alkalmazás az Android kisegítő lehetőségek szolgáltatását használja az átírt beszéd szövegmezőkbe történő beillesztéséhez.\n\nMit csinál a szolgáltatás:\n• Megkeresi az aktuálisan aktív szövegmezőt\n• Beolvassa a meglévő szöveget és a kurzor pozícióját\n• Beilleszti az átírt beszédet a kurzor pozíciójába\n\nMit NEM csinál:\n• Nem gyűjt, nem tárol és nem továbbít semmilyen adatot\n• Nem olvas tartalmat más alkalmazásokból\n• Minden feldolgozás kizárólag az eszközön történik\n\nHa elutasítja, az alkalmazás továbbra is működik a szöveg vágólapra másolásával.</string>
+    <string name="accessibility_disclosure_agree">Elfogadom &amp; Tovább</string>
+    <string name="accessibility_disclosure_decline">Elutasítom</string>
+
+    <!-- Actions -->
+    <string name="action_grant_permission">Engedély megadása</string>
+    <string name="action_download">Letöltés</string>
+    <string name="action_cancel">Mégse</string>
+    <string name="action_stop">Leállítás</string>
+    <string name="action_remove">Eltávolítás</string>
+    <string name="action_add">Hozzáadás</string>
+
+    <!-- Toast messages -->
+    <string name="toast_model_not_downloaded">A modell nincs letöltve. Nyissa meg az alkalmazást a letöltéshez.</string>
+    <string name="toast_voice_ready">Hangfelismerés kész</string>
+    <string name="toast_model_load_failed">A modell betöltése sikertelen</string>
+    <string name="toast_mic_required">Mikrofon engedély szükséges</string>
+    <string name="toast_mic_required_open_app">Mikrofon engedély szükséges. Nyissa meg az alkalmazást az engedélyezéshez.</string>
+    <string name="toast_loading_model">Modell betöltése, kérjük várjon…</string>
+    <string name="toast_no_speech">Nem észlelt beszédet</string>
+    <string name="toast_no_field_clipboard">Nincs aktív szövegmező. Vágólapra másolva.</string>
+    <string name="toast_copied_clipboard_paste">Vágólapra másolva (illessze be kézzel)</string>
+    <string name="toast_copied">Másolva: %s</string>
+    <string name="toast_overlay_required">Átfedési engedély szükséges. Engedélyezze a TranSlander beállításaiban.</string>
+    <string name="toast_voice_model_unavailable">A hangmodell nem érhető el</string>
+    <string name="toast_error_loading_model">Hiba a hangmodell betöltésekor</string>
+    <string name="toast_recording_error">Felvételi hiba</string>
+
+    <!-- IME states -->
+    <string name="ime_model_not_available">A modell nem érhető el</string>
+    <string name="ime_error_loading">Hiba a modell betöltésekor</string>
+
+    <!-- Recording Overlay -->
+    <string name="overlay_done">Kész</string>
+    <string name="overlay_cancel">Mégse</string>
+
+    <!-- Transcription Activity -->
+    <string name="transcribe_title">Hang átírása</string>
+    <string name="transcribe_checking_model">Beszédfelismerő modell ellenőrzése…</string>
+    <string name="transcribe_decoding">Hang dekódolása: %1$d%%</string>
+    <string name="transcribe_transcribing">Átírás…</string>
+    <string name="transcribe_copy">Másolás</string>
+    <string name="transcribe_share">Megosztás</string>
+    <string name="transcribe_share_title">Átírás megosztása</string>
+    <string name="transcribe_close">Bezárás</string>
+    <string name="transcribe_copied">Vágólapra másolva</string>
+
+    <!-- Audio Monitor Service -->
+    <string name="monitor_channel_name">Hangfigyelő</string>
+    <string name="monitor_channel_description">Háttérszolgáltatás hangüzenetek figyeléséhez</string>
+    <string name="monitor_notification_title">Letöltések figyelése</string>
+    <string name="monitor_notification_text">Hangüzenetek figyelése</string>
+    <string name="monitor_stop">Leállítás</string>
+
+    <!-- Audio Detected Notification -->
+    <string name="audio_detected_channel_name">Hangüzenet észlelés</string>
+    <string name="audio_detected_channel_description">Értesítések hangüzenetek észlelésekor</string>
+    <string name="audio_detected_title">Hangüzenet észlelve</string>
+    <string name="audio_detected_text">Koppintson az átíráshoz</string>
+    <string name="audio_detected_action">Átírás</string>
+</resources>
