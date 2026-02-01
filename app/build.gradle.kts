@@ -30,8 +30,8 @@ android {
         applicationId = "at.webformat.translander"
         minSdk = 26
         targetSdk = 35
-        versionCode = 3
-        versionName = "1.0.2"
+        versionCode = 4
+        versionName = "1.1.0"
 
         // Only include arm64-v8a for modern phones (~50% smaller APK)
         // Remove this filter if you need to support older 32-bit devices or emulators
