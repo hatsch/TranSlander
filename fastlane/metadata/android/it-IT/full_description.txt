@@ -1,36 +1,36 @@
-Un'app di dettatura vocale completamente offline per Android. Parla nel tuo telefono e il testo appare in qualsiasi app — non serve internet, nessuna elaborazione cloud, i tuoi dati vocali non lasciano mai il tuo dispositivo.
+Un'app di dettatura vocale completamente offline per Android. Parla nel tuo telefono e il testo compare in qualsiasi app — senza internet, senza cloud, i tuoi dati vocali non lasciano mai il tuo dispositivo.
 
 <b>Funzionalità</b>
 
 <b>Riconoscimento vocale offline</b>
-Utilizza il modello neurale Parakeet TDT v3 eseguito localmente tramite sherpa-onnx. Supporta oltre 26 lingue con rilevamento automatico. Nessuna connessione internet necessaria dopo il download iniziale del modello.
+Usa il modello neurale Parakeet TDT v3, che gira localmente tramite sherpa-onnx. Supporta oltre 26 lingue con rilevamento automatico. Dopo il download iniziale del modello non serve connessione internet.
 
 <b>Funziona in qualsiasi app</b>
-Utilizza l'API di accessibilità Android per inserire testo direttamente in qualsiasi campo di testo attivo. Ricorre agli appunti se nessun campo di testo è attivo.
+Inserisce il testo direttamente nel campo attivo tramite l'API di accessibilità Android. Se non c'è un campo di testo attivo, usa gli appunti.
 
-<b>Metodi di input multipli</b>
-• Pulsante di accessibilità — Pulsante nella barra di navigazione di sistema, funziona ovunque
-• Pulsante microfono flottante — Overlay trascinabile, sempre visibile
-• Integrazione tastiera — Funziona con tastiere come HeliBoard
+<b>Diversi metodi di immissione</b>
+• Pulsante di accessibilità — nella barra di navigazione di sistema, disponibile ovunque
+• Microfono flottante — overlay trascinabile, sempre visibile
+• Integrazione tastiera — compatibile con tastiere come HeliBoard
 
 <b>Trascrizione messaggi vocali</b>
-Condividi o apri file audio da qualsiasi app per trascriverli. Supporta i formati OPUS, AAC, OGG, M4A, MP3, WAV. Il monitoraggio opzionale delle cartelle controlla la cartella Download per nuovi messaggi vocali.
+Condividi o apri file audio da qualsiasi app per trascriverli. Formati supportati: OPUS, AAC, OGG, M4A, MP3, WAV. Il monitoraggio opzionale rileva nuovi messaggi vocali nella cartella Download.
 
-<b>Correzioni parole</b>
+<b>Correzione parole</b>
 Dizionario personalizzato per correggere errori di riconoscimento ricorrenti. Definisci regole come "Tamtam" → "Tamdam" e vengono applicate automaticamente.
 
-<b>Privacy prima di tutto</b>
-Tutta l'elaborazione vocale avviene localmente sul tuo dispositivo. Nessun dato audio viene mai inviato a un server. Nessuna analisi, nessun tracciamento.
+<b>Privacy</b>
+Tutta l'elaborazione vocale avviene localmente sul tuo dispositivo. Nessun dato audio viene mai trasmesso a un server. Nessuna analisi, nessun tracciamento.
 
 <b>Accessibilità</b>
-Questa app utilizza il servizio di accessibilità di Android per aiutare gli utenti che hanno difficoltà a digitare sugli schermi touch. L'input vocale viene inserito direttamente in qualsiasi campo di testo, rendendo il dispositivo più accessibile per utenti con disabilità motorie o altre condizioni che rendono difficile la digitazione.
+Questa app usa il servizio di accessibilità di Android per facilitare l'immissione di testo su schermi touch. L'input vocale viene inserito direttamente in qualsiasi campo di testo, rendendo il dispositivo più accessibile a chi ha difficoltà motorie o altre limitazioni.
 
 <b>Lingue supportate</b>
 Inglese, tedesco, francese, spagnolo, italiano, portoghese, olandese, polacco, russo, ucraino, ceco, slovacco, ungherese, rumeno, bulgaro, croato, sloveno, greco, danese, svedese, finlandese, estone, lettone, lituano, maltese e altre.
 
 <b>Autorizzazioni</b>
-• Microfono — per catturare la voce per la trascrizione
-• Accessibilità — per inserire testo nelle app
-• Overlay — per il pulsante microfono flottante
-• Archiviazione — per accedere ai file audio per la trascrizione
-• Internet — solo per il download una tantum del modello
+• Microfono — cattura vocale per la trascrizione
+• Accessibilità — inserimento testo nelle app
+• Overlay — per il microfono flottante
+• Archiviazione — accesso ai file audio per la trascrizione
+• Internet — solo per il download iniziale del modello

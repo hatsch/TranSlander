@@ -15,7 +15,7 @@
     <string name="section_accessibility">Servizio di accessibilità</string>
     <string name="section_floating_mic">Microfono flottante</string>
     <string name="section_transcription">Trascrizione messaggi vocali</string>
-    <string name="section_word_corrections">Correzioni parole</string>
+    <string name="section_word_corrections">Correzione parole</string>
     <string name="section_appearance">Aspetto</string>
 
     <!-- Settings Items -->
@@ -32,7 +32,7 @@
     <string name="setting_model_downloading">Download in corso…</string>
     <string name="setting_model_size">~600 MB</string>
     <string name="setting_accessibility">Permesso immissione testo</string>
-    <string name="setting_accessibility_desc">Attiva il servizio di accessibilità per l\'immissione diretta del testo</string>
+    <string name="setting_accessibility_desc">Attiva il servizio di accessibilità per l\'immissione diretta</string>
     <string name="setting_overlay">Permesso di sovrapposizione</string>
     <string name="setting_overlay_desc">Necessario per mostrare il microfono flottante</string>
 
@@ -47,7 +47,7 @@
     <string name="model_load">Carica</string>
     <string name="model_unload">Scarica</string>
     <string name="model_auto_load_title">Caricamento automatico all\'avvio</string>
-    <string name="model_auto_load_on">Il modello si carica all\'avvio dell\'app</string>
+    <string name="model_auto_load_on">Il modello si carica all\'avvio</string>
     <string name="model_auto_load_off">Carica il modello manualmente</string>
 
     <!-- Floating Button -->
@@ -64,12 +64,12 @@
 
     <!-- Keyboard Integration -->
     <string name="keyboard_voice_ime">Metodo di immissione vocale</string>
-    <string name="keyboard_ime_enabled">Attivato — Il pulsante micro appare sulla tastiera</string>
-    <string name="keyboard_ime_disabled">Attiva per usare il pulsante micro sulla tastiera HeliBoard</string>
+    <string name="keyboard_ime_enabled">Attivato — il pulsante micro appare sulla tastiera</string>
+    <string name="keyboard_ime_disabled">Attiva per il pulsante micro sulla tastiera HeliBoard</string>
 
     <!-- Accessibility Service Settings -->
-    <string name="accessibility_text_injection">Servizio di iniezione testo</string>
-    <string name="accessibility_enabled">Attivato — Testo inserito nei campi attivi</string>
+    <string name="accessibility_text_injection">Servizio di inserimento testo</string>
+    <string name="accessibility_enabled">Attivato — testo inserito nei campi attivi</string>
     <string name="accessibility_disabled">Attiva per inserire testo in qualsiasi app</string>
 
     <!-- Permission states -->
@@ -84,20 +84,20 @@
     <string name="transcription_grant_audio_first">Prima concedi il permesso per i file audio</string>
     <string name="transcription_watching_folders">%d cartella/e monitorata/e</string>
     <string name="transcription_watching_downloads">Monitoraggio cartella Download</string>
-    <string name="transcription_notify_downloaded">Notifica quando vengono scaricati messaggi vocali</string>
+    <string name="transcription_notify_downloaded">Avvisa quando vengono scaricati messaggi vocali</string>
     <string name="transcription_add_folder">Aggiungi cartella</string>
-    <string name="transcription_add_folder_desc">Monitora cartelle aggiuntive per i messaggi vocali</string>
+    <string name="transcription_add_folder_desc">Monitora altre cartelle per i messaggi vocali</string>
     <string name="transcription_default_folder">Predefinito</string>
     <string name="transcription_share_open">Condividi o apri audio</string>
     <string name="transcription_share_open_desc">Usa Condividi o Apri con da altre app</string>
 
     <!-- Word Corrections -->
     <string name="corrections_enable">Attiva correzioni</string>
-    <string name="corrections_enabled_desc">Correggi automaticamente le parole riconosciute</string>
+    <string name="corrections_enabled_desc">Corregge automaticamente le parole riconosciute</string>
     <string name="corrections_disabled_desc">Correzioni disattivate</string>
     <string name="corrections_manage">Gestisci correzioni</string>
     <string name="corrections_count">%d regola/e di sostituzione</string>
-    <string name="corrections_dialog_title">Correzioni parole</string>
+    <string name="corrections_dialog_title">Correzione parole</string>
     <string name="corrections_add_new">Aggiungi nuova correzione</string>
     <string name="corrections_from">Da</string>
     <string name="corrections_to">A</string>
@@ -119,8 +119,8 @@
     <string name="permission_overlay_message">Necessario per mostrare il pulsante microfono flottante.</string>
 
     <!-- Accessibility Disclosure -->
-    <string name="accessibility_disclosure_title">Informativa sul servizio di accessibilità</string>
-    <string name="accessibility_disclosure_body">Questa app utilizza il servizio di accessibilità di Android per inserire il parlato trascritto nei campi di testo.\n\nCosa fa il servizio:\n• Trova il campo di testo attualmente attivo\n• Legge il testo esistente e la posizione del cursore\n• Inserisce il tuo parlato trascritto nella posizione del cursore\n\nCosa NON fa:\n• Non raccoglie, memorizza o trasmette alcun dato\n• Non legge contenuti da altre app\n• Tutta l\'elaborazione avviene interamente sul tuo dispositivo\n\nSe rifiuti, l\'app funzionerà comunque copiando il testo negli appunti.</string>
+    <string name="accessibility_disclosure_title">Info sul servizio di accessibilità</string>
+    <string name="accessibility_disclosure_body">Questa app usa il servizio di accessibilità di Android per inserire il parlato trascritto nei campi di testo.\n\nCosa fa il servizio:\n• Trova il campo di testo attivo\n• Legge il testo esistente e la posizione del cursore\n• Inserisce il tuo parlato trascritto alla posizione del cursore\n\nCosa NON fa:\n• Non raccoglie, memorizza o trasmette alcun dato\n• Non legge contenuti da altre app\n• Tutta l\'elaborazione avviene sul tuo dispositivo\n\nSe rifiuti, l\'app funzionerà comunque copiando il testo negli appunti.</string>
     <string name="accessibility_disclosure_agree">Accetta &amp; Continua</string>
     <string name="accessibility_disclosure_decline">Rifiuta</string>
 
@@ -138,7 +138,7 @@
     <string name="toast_model_load_failed">Impossibile caricare il modello</string>
     <string name="toast_mic_required">Permesso microfono necessario</string>
     <string name="toast_mic_required_open_app">Permesso microfono necessario. Apri l\'app per concederlo.</string>
-    <string name="toast_loading_model">Caricamento modello, attendere…</string>
+    <string name="toast_loading_model">Caricamento modello, un attimo…</string>
     <string name="toast_no_speech">Nessun parlato rilevato</string>
     <string name="toast_no_field_clipboard">Nessun campo di testo attivo. Copiato negli appunti.</string>
     <string name="toast_copied_clipboard_paste">Copiato negli appunti (incolla manualmente)</string>

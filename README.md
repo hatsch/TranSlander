@@ -102,6 +102,8 @@ Translander provides three APIs for voice input integration:
 
 Auto-detect, English, German, French, Spanish, Italian, Portuguese, Dutch, Polish, Russian, Ukrainian, Czech, Slovak, Hungarian, Romanian, Bulgarian, Croatian, Slovenian, Greek, Danish, Swedish, Finnish, Estonian, Latvian, Lithuanian, Maltese
 
+The user interface is available in all supported languages. Translations were machine-generated and may contain errors or awkward phrasing — pull requests welcome.
+
 ## Build
 
 ### Prerequisites

@@ -32,7 +32,7 @@
     <string name="setting_model_downloading">Descargando…</string>
     <string name="setting_model_size">~600 MB</string>
     <string name="setting_accessibility">Permiso de entrada de texto</string>
-    <string name="setting_accessibility_desc">Activar servicio de accesibilidad para entrada directa de texto</string>
+    <string name="setting_accessibility_desc">Activa el servicio de accesibilidad para entrada directa de texto</string>
     <string name="setting_overlay">Permiso de superposición</string>
     <string name="setting_overlay_desc">Necesario para mostrar el micrófono flotante</string>
 
@@ -64,12 +64,12 @@
 
     <!-- Keyboard Integration -->
     <string name="keyboard_voice_ime">Método de entrada por voz</string>
-    <string name="keyboard_ime_enabled">Activado — El botón de micro aparece en el teclado</string>
-    <string name="keyboard_ime_disabled">Activa para usar el botón de micro en el teclado HeliBoard</string>
+    <string name="keyboard_ime_enabled">Activado — el botón de micro aparece en el teclado</string>
+    <string name="keyboard_ime_disabled">Activa para el botón de micro en el teclado HeliBoard</string>
 
     <!-- Accessibility Service Settings -->
-    <string name="accessibility_text_injection">Servicio de inyección de texto</string>
-    <string name="accessibility_enabled">Activado — Texto insertado en campos activos</string>
+    <string name="accessibility_text_injection">Servicio de inserción de texto</string>
+    <string name="accessibility_enabled">Activado — texto insertado en campos activos</string>
     <string name="accessibility_disabled">Activa para insertar texto en cualquier app</string>
 
     <!-- Permission states -->
@@ -84,16 +84,16 @@
     <string name="transcription_grant_audio_first">Primero concede el permiso de archivos de audio</string>
     <string name="transcription_watching_folders">Monitorizando %d carpeta(s)</string>
     <string name="transcription_watching_downloads">Monitorizando carpeta Descargas</string>
-    <string name="transcription_notify_downloaded">Notificar cuando se descarguen mensajes de voz</string>
+    <string name="transcription_notify_downloaded">Avisar cuando se descarguen mensajes de voz</string>
     <string name="transcription_add_folder">Añadir carpeta</string>
-    <string name="transcription_add_folder_desc">Monitorizar carpetas adicionales para mensajes de voz</string>
+    <string name="transcription_add_folder_desc">Monitorizar más carpetas para mensajes de voz</string>
     <string name="transcription_default_folder">Predeterminado</string>
     <string name="transcription_share_open">Compartir o abrir audio</string>
     <string name="transcription_share_open_desc">Usa Compartir o Abrir con desde otras apps</string>
 
     <!-- Word Corrections -->
     <string name="corrections_enable">Activar correcciones</string>
-    <string name="corrections_enabled_desc">Corregir automáticamente palabras reconocidas</string>
+    <string name="corrections_enabled_desc">Corrige automáticamente las palabras reconocidas</string>
     <string name="corrections_disabled_desc">Correcciones desactivadas</string>
     <string name="corrections_manage">Gestionar correcciones</string>
     <string name="corrections_count">%d regla(s) de reemplazo</string>
@@ -119,8 +119,8 @@
     <string name="permission_overlay_message">Necesario para mostrar el botón de micrófono flotante.</string>
 
     <!-- Accessibility Disclosure -->
-    <string name="accessibility_disclosure_title">Información del servicio de accesibilidad</string>
-    <string name="accessibility_disclosure_body">Esta app usa el servicio de accesibilidad de Android para insertar voz transcrita en campos de texto.\n\nQué hace el servicio:\n• Encuentra el campo de texto activo\n• Lee el texto existente y la posición del cursor\n• Inserta tu voz transcrita en la posición del cursor\n\nQué NO hace:\n• No recopila, almacena ni transmite ningún dato\n• No lee contenido de otras apps\n• Todo el procesamiento ocurre completamente en tu dispositivo\n\nSi rechazas, la app seguirá funcionando copiando el texto al portapapeles.</string>
+    <string name="accessibility_disclosure_title">Info del servicio de accesibilidad</string>
+    <string name="accessibility_disclosure_body">Esta app usa el servicio de accesibilidad de Android para insertar voz transcrita en campos de texto.\n\nQué hace el servicio:\n• Encuentra el campo de texto activo\n• Lee el texto existente y la posición del cursor\n• Inserta tu voz transcrita en la posición del cursor\n\nQué NO hace:\n• No recopila, almacena ni transmite ningún dato\n• No lee contenido de otras apps\n• Todo el procesamiento ocurre en tu dispositivo\n\nSi rechazas, la app seguirá funcionando copiando el texto al portapapeles.</string>
     <string name="accessibility_disclosure_agree">Aceptar &amp; Continuar</string>
     <string name="accessibility_disclosure_decline">Rechazar</string>
 
@@ -135,10 +135,10 @@
     <!-- Toast messages -->
     <string name="toast_model_not_downloaded">Modelo no descargado. Abre la app para descargarlo.</string>
     <string name="toast_voice_ready">Reconocimiento de voz listo</string>
-    <string name="toast_model_load_failed">Error al cargar el modelo</string>
+    <string name="toast_model_load_failed">No se pudo cargar el modelo</string>
     <string name="toast_mic_required">Se requiere permiso de micrófono</string>
     <string name="toast_mic_required_open_app">Se requiere permiso de micrófono. Abre la app para concederlo.</string>
-    <string name="toast_loading_model">Cargando modelo, espera por favor…</string>
+    <string name="toast_loading_model">Cargando modelo, un momento…</string>
     <string name="toast_no_speech">No se detectó voz</string>
     <string name="toast_no_field_clipboard">Ningún campo de texto activo. Copiado al portapapeles.</string>
     <string name="toast_copied_clipboard_paste">Copiado al portapapeles (pega manualmente)</string>

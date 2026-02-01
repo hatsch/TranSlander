@@ -4,9 +4,9 @@
 
     <!-- Service -->
     <string name="service_notification_title">TranSlander actif</string>
-    <string name="service_notification_text">Appuyez sur le micro flottant pour transcrire la parole</string>
+    <string name="service_notification_text">Touche le micro flottant pour transcrire la parole</string>
     <string name="accessibility_service_label">Saisie de texte TranSlander</string>
-    <string name="accessibility_service_description">Permet à TranSlander d\'insérer du texte transcrit directement dans les champs de saisie. Activez cette option pour une saisie vocale fluide.</string>
+    <string name="accessibility_service_description">Permet à TranSlander d\'insérer du texte transcrit directement dans les champs de saisie. Active cette option pour une saisie vocale fluide.</string>
 
     <!-- Settings Sections -->
     <string name="section_speech_model">Modèle vocal</string>
@@ -15,7 +15,7 @@
     <string name="section_accessibility">Service d\'accessibilité</string>
     <string name="section_floating_mic">Micro flottant</string>
     <string name="section_transcription">Transcription de messages vocaux</string>
-    <string name="section_word_corrections">Corrections de mots</string>
+    <string name="section_word_corrections">Corrections lexicales</string>
     <string name="section_appearance">Apparence</string>
 
     <!-- Settings Items -->
@@ -32,7 +32,7 @@
     <string name="setting_model_downloading">Téléchargement…</string>
     <string name="setting_model_size">~600 Mo</string>
     <string name="setting_accessibility">Autorisation de saisie</string>
-    <string name="setting_accessibility_desc">Activer le service d\'accessibilité pour la saisie directe</string>
+    <string name="setting_accessibility_desc">Active le service d\'accessibilité pour la saisie directe</string>
     <string name="setting_overlay">Autorisation de superposition</string>
     <string name="setting_overlay_desc">Nécessaire pour afficher le micro flottant</string>
 
@@ -43,7 +43,7 @@
     <string name="model_error">Erreur : %s</string>
     <string name="model_loading">Chargement du modèle…</string>
     <string name="model_loaded">Chargé et prêt</string>
-    <string name="model_downloaded">Téléchargé — appuyez sur Charger pour activer</string>
+    <string name="model_downloaded">Téléchargé — touche Charger pour activer</string>
     <string name="model_load">Charger</string>
     <string name="model_unload">Décharger</string>
     <string name="model_auto_load_title">Chargement automatique au démarrage</string>
@@ -52,9 +52,9 @@
 
     <!-- Floating Button -->
     <string name="floating_enable">Activer le bouton flottant</string>
-    <string name="floating_grant_mic_first">Accordez d\'abord l\'accès au microphone</string>
-    <string name="floating_grant_overlay_first">Accordez d\'abord l\'autorisation de superposition</string>
-    <string name="floating_load_model_first">Chargez d\'abord le modèle</string>
+    <string name="floating_grant_mic_first">Accorde d\'abord l\'accès au microphone</string>
+    <string name="floating_grant_overlay_first">Accorde d\'abord l\'autorisation de superposition</string>
+    <string name="floating_load_model_first">Charge d\'abord le modèle</string>
     <string name="floating_shows_red">Devient rouge pendant l\'enregistrement</string>
     <string name="floating_additional">Bouton micro flottant supplémentaire</string>
     <string name="floating_button_size">Taille du bouton</string>
@@ -64,16 +64,16 @@
 
     <!-- Keyboard Integration -->
     <string name="keyboard_voice_ime">Méthode de saisie vocale</string>
-    <string name="keyboard_ime_enabled">Activé — Le bouton micro apparaît sur le clavier</string>
-    <string name="keyboard_ime_disabled">Activer pour utiliser le micro sur le clavier HeliBoard</string>
+    <string name="keyboard_ime_enabled">Activé — le bouton micro apparaît sur le clavier</string>
+    <string name="keyboard_ime_disabled">Active pour le bouton micro sur le clavier HeliBoard</string>
 
     <!-- Accessibility Service Settings -->
-    <string name="accessibility_text_injection">Service d\'injection de texte</string>
-    <string name="accessibility_enabled">Activé — Texte inséré dans les champs actifs</string>
-    <string name="accessibility_disabled">Activer pour insérer du texte dans toute application</string>
+    <string name="accessibility_text_injection">Service d\'insertion de texte</string>
+    <string name="accessibility_enabled">Activé — texte inséré dans les champs actifs</string>
+    <string name="accessibility_disabled">Active pour insérer du texte dans n\'importe quelle appli</string>
 
     <!-- Permission states -->
-    <string name="permission_granted_manage">Accordé — appuyez pour gérer</string>
+    <string name="permission_granted_manage">Accordé — touche pour gérer</string>
     <string name="permission_required_voice">Nécessaire pour la saisie vocale</string>
     <string name="permission_required_overlay">Nécessaire pour le bouton flottant</string>
     <string name="permission_required_audio">Nécessaire pour lire les fichiers audio</string>
@@ -81,23 +81,23 @@
     <!-- Transcription Settings -->
     <string name="transcription_audio_access">Accès aux fichiers audio</string>
     <string name="transcription_monitor_folders">Surveiller les dossiers</string>
-    <string name="transcription_grant_audio_first">Accordez d\'abord l\'accès aux fichiers audio</string>
+    <string name="transcription_grant_audio_first">Accorde d\'abord l\'accès aux fichiers audio</string>
     <string name="transcription_watching_folders">%d dossier(s) surveillé(s)</string>
     <string name="transcription_watching_downloads">Surveillance du dossier Téléchargements</string>
-    <string name="transcription_notify_downloaded">Notifier lorsque des messages vocaux sont téléchargés</string>
+    <string name="transcription_notify_downloaded">Notifier quand des messages vocaux sont téléchargés</string>
     <string name="transcription_add_folder">Ajouter un dossier</string>
-    <string name="transcription_add_folder_desc">Surveiller des dossiers supplémentaires pour les messages vocaux</string>
+    <string name="transcription_add_folder_desc">Surveiller d\'autres dossiers pour les messages vocaux</string>
     <string name="transcription_default_folder">Par défaut</string>
     <string name="transcription_share_open">Partager ou ouvrir un audio</string>
-    <string name="transcription_share_open_desc">Utilisez Partager ou Ouvrir avec depuis d\'autres applications</string>
+    <string name="transcription_share_open_desc">Utilise Partager ou Ouvrir avec depuis d\'autres applis</string>
 
     <!-- Word Corrections -->
     <string name="corrections_enable">Activer les corrections</string>
-    <string name="corrections_enabled_desc">Corriger automatiquement les mots reconnus</string>
+    <string name="corrections_enabled_desc">Corrige automatiquement les mots reconnus</string>
     <string name="corrections_disabled_desc">Corrections désactivées</string>
     <string name="corrections_manage">Gérer les corrections</string>
     <string name="corrections_count">%d règle(s) de remplacement</string>
-    <string name="corrections_dialog_title">Corrections de mots</string>
+    <string name="corrections_dialog_title">Corrections lexicales</string>
     <string name="corrections_add_new">Ajouter une correction</string>
     <string name="corrections_from">De</string>
     <string name="corrections_to">Vers</string>
@@ -106,7 +106,7 @@
     <string name="corrections_done">Terminé</string>
 
     <!-- Recording states -->
-    <string name="state_idle">Appuyez pour parler</string>
+    <string name="state_idle">Touche pour parler</string>
     <string name="state_recording">Enregistrement…</string>
     <string name="state_processing">Traitement…</string>
     <string name="state_error">Une erreur est survenue</string>
@@ -114,13 +114,13 @@
 
     <!-- Permissions -->
     <string name="permission_mic_title">Autorisation du microphone</string>
-    <string name="permission_mic_message">Nécessaire pour enregistrer votre voix pour la transcription.</string>
+    <string name="permission_mic_message">Nécessaire pour enregistrer ta voix pour la transcription.</string>
     <string name="permission_overlay_title">Autorisation de superposition</string>
     <string name="permission_overlay_message">Nécessaire pour afficher le bouton microphone flottant.</string>
 
     <!-- Accessibility Disclosure -->
-    <string name="accessibility_disclosure_title">Information sur le service d\'accessibilité</string>
-    <string name="accessibility_disclosure_body">Cette application utilise le service d\'accessibilité d\'Android pour insérer la parole transcrite dans les champs de texte.\n\nCe que fait le service :\n• Trouve le champ de texte actuellement actif\n• Lit le texte existant et la position du curseur\n• Insère votre parole transcrite à l\'emplacement du curseur\n\nCe qu\'il ne fait PAS :\n• Ne collecte, ne stocke et ne transmet aucune donnée\n• Ne lit pas le contenu d\'autres applications\n• Tout le traitement se fait entièrement sur votre appareil\n\nSi vous refusez, l\'application fonctionnera en copiant le texte dans votre presse-papiers.</string>
+    <string name="accessibility_disclosure_title">Info sur le service d\'accessibilité</string>
+    <string name="accessibility_disclosure_body">Cette appli utilise le service d\'accessibilité d\'Android pour insérer la parole transcrite dans les champs de texte.\n\nCe que fait le service :\n• Trouve le champ de texte actif\n• Lit le texte existant et la position du curseur\n• Insère ta parole transcrite à l\'emplacement du curseur\n\nCe qu\'il ne fait PAS :\n• Ne collecte, ne stocke et ne transmet aucune donnée\n• Ne lit pas le contenu d\'autres applis\n• Tout le traitement se fait sur ton appareil\n\nSi tu refuses, l\'appli fonctionnera quand même en copiant le texte dans le presse-papiers.</string>
     <string name="accessibility_disclosure_agree">Accepter &amp; Continuer</string>
     <string name="accessibility_disclosure_decline">Refuser</string>
 
@@ -133,17 +133,17 @@
     <string name="action_add">Ajouter</string>
 
     <!-- Toast messages -->
-    <string name="toast_model_not_downloaded">Modèle non téléchargé. Ouvrez l\'application pour le télécharger.</string>
+    <string name="toast_model_not_downloaded">Modèle non téléchargé. Ouvre l\'appli pour le télécharger.</string>
     <string name="toast_voice_ready">Reconnaissance vocale prête</string>
-    <string name="toast_model_load_failed">Échec du chargement du modèle</string>
+    <string name="toast_model_load_failed">Impossible de charger le modèle</string>
     <string name="toast_mic_required">Autorisation du microphone requise</string>
-    <string name="toast_mic_required_open_app">Autorisation du microphone requise. Ouvrez l\'application pour l\'accorder.</string>
-    <string name="toast_loading_model">Chargement du modèle, veuillez patienter…</string>
+    <string name="toast_mic_required_open_app">Autorisation du microphone requise. Ouvre l\'appli pour l\'accorder.</string>
+    <string name="toast_loading_model">Chargement du modèle, un instant…</string>
     <string name="toast_no_speech">Aucune parole détectée</string>
     <string name="toast_no_field_clipboard">Aucun champ de texte actif. Copié dans le presse-papiers.</string>
-    <string name="toast_copied_clipboard_paste">Copié dans le presse-papiers (collez manuellement)</string>
+    <string name="toast_copied_clipboard_paste">Copié dans le presse-papiers (colle manuellement)</string>
     <string name="toast_copied">Copié : %s</string>
-    <string name="toast_overlay_required">Autorisation de superposition requise. Activez-la dans les paramètres de TranSlander.</string>
+    <string name="toast_overlay_required">Autorisation de superposition requise. Active-la dans les paramètres de TranSlander.</string>
     <string name="toast_voice_model_unavailable">Modèle vocal non disponible</string>
     <string name="toast_error_loading_model">Erreur lors du chargement du modèle vocal</string>
     <string name="toast_recording_error">Erreur d\'enregistrement</string>
@@ -176,8 +176,8 @@
 
     <!-- Audio Detected Notification -->
     <string name="audio_detected_channel_name">Détection de messages vocaux</string>
-    <string name="audio_detected_channel_description">Notifications lorsque des messages vocaux sont détectés</string>
+    <string name="audio_detected_channel_description">Notifications quand des messages vocaux sont détectés</string>
     <string name="audio_detected_title">Message vocal détecté</string>
-    <string name="audio_detected_text">Appuyez pour transcrire</string>
+    <string name="audio_detected_text">Touche pour transcrire</string>
     <string name="audio_detected_action">Transcrire</string>
 </resources>

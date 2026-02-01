@@ -1,36 +1,36 @@
-Une application de saisie vocale entièrement hors ligne pour Android. Parlez dans votre téléphone et le texte apparaît dans n'importe quelle application — pas d'internet requis, pas de traitement cloud, vos données vocales ne quittent jamais votre appareil.
+Une appli de saisie vocale entièrement hors ligne pour Android. Parle dans ton téléphone et le texte apparaît dans n'importe quelle appli — pas d'internet, pas de cloud, tes données vocales ne quittent jamais ton appareil.
 
 <b>Fonctionnalités</b>
 
 <b>Reconnaissance vocale hors ligne</b>
-Utilise le modèle neuronal Parakeet TDT v3 fonctionnant localement via sherpa-onnx. Prend en charge plus de 26 langues avec détection automatique. Aucune connexion internet nécessaire après le téléchargement initial du modèle.
+Utilise le modèle neuronal Parakeet TDT v3 qui tourne localement via sherpa-onnx. Plus de 26 langues prises en charge avec détection automatique. Aucune connexion internet après le téléchargement initial du modèle.
 
-<b>Fonctionne dans toute application</b>
-Utilise l'API d'accessibilité Android pour insérer du texte directement dans n'importe quel champ de texte actif. Se rabat sur le presse-papiers si aucun champ de texte n'est actif.
+<b>Compatible avec toutes les applis</b>
+Insère le texte directement dans le champ actif grâce à l'API d'accessibilité Android. S'il n'y a pas de champ de texte actif, le presse-papiers est utilisé.
 
-<b>Plusieurs méthodes de saisie</b>
-• Bouton d'accessibilité — Bouton dans la barre de navigation système, fonctionne partout
-• Bouton micro flottant — Superposition déplaçable, toujours visible
-• Intégration clavier — Fonctionne avec des claviers comme HeliBoard
+<b>Plusieurs modes de saisie</b>
+• Bouton d'accessibilité — dans la barre de navigation système, disponible partout
+• Micro flottant — overlay déplaçable, toujours visible
+• Intégration clavier — compatible avec des claviers comme HeliBoard
 
 <b>Transcription de messages vocaux</b>
-Partagez ou ouvrez des fichiers audio depuis n'importe quelle application pour les transcrire. Prend en charge les formats OPUS, AAC, OGG, M4A, MP3, WAV. La surveillance optionnelle de dossiers surveille votre dossier Téléchargements pour les nouveaux messages vocaux.
+Partage ou ouvre des fichiers audio depuis n'importe quelle appli pour les transcrire. Formats pris en charge : OPUS, AAC, OGG, M4A, MP3, WAV. La surveillance optionnelle détecte les nouveaux messages vocaux dans le dossier Téléchargements.
 
-<b>Corrections de mots</b>
-Dictionnaire personnalisé pour corriger les erreurs de reconnaissance récurrentes. Définissez des règles comme "Tamtam" → "Tamdam" et elles sont appliquées automatiquement.
+<b>Corrections lexicales</b>
+Dictionnaire personnalisé pour corriger les erreurs de reconnaissance récurrentes. Définis des règles comme "Tamtam" → "Tamdam" et elles s'appliquent automatiquement.
 
-<b>Confidentialité d'abord</b>
-Tout le traitement vocal se fait localement sur votre appareil. Aucune donnée audio n'est jamais envoyée à un serveur. Pas d'analyse, pas de suivi.
+<b>Vie privée</b>
+Tout le traitement vocal se fait localement sur ton appareil. Aucune donnée audio n'est transmise à un serveur. Ni analyse, ni suivi.
 
 <b>Accessibilité</b>
-Cette application utilise le service d'accessibilité d'Android pour aider les utilisateurs qui ont des difficultés à taper sur les écrans tactiles. La saisie vocale est directement insérée dans n'importe quel champ de texte, rendant l'appareil plus accessible aux utilisateurs souffrant de déficiences motrices ou d'autres conditions rendant la saisie difficile.
+Cette appli utilise le service d'accessibilité d'Android pour faciliter la saisie de texte sur écran tactile. La saisie vocale est insérée directement dans n'importe quel champ de texte, ce qui rend l'appareil plus accessible aux personnes ayant des difficultés motrices ou d'autres limitations.
 
 <b>Langues prises en charge</b>
-Anglais, allemand, français, espagnol, italien, portugais, néerlandais, polonais, russe, ukrainien, tchèque, slovaque, hongrois, roumain, bulgare, croate, slovène, grec, danois, suédois, finnois, estonien, letton, lituanien, maltais et plus.
+Anglais, allemand, français, espagnol, italien, portugais, néerlandais, polonais, russe, ukrainien, tchèque, slovaque, hongrois, roumain, bulgare, croate, slovène, grec, danois, suédois, finnois, estonien, letton, lituanien, maltais et d'autres.
 
 <b>Autorisations</b>
-• Microphone — pour capturer la voix pour la transcription
-• Accessibilité — pour insérer du texte dans les applications
-• Superposition — pour le bouton micro flottant
-• Stockage — pour accéder aux fichiers audio pour la transcription
-• Internet — téléchargement unique du modèle uniquement
+• Microphone — capture vocale pour la transcription
+• Accessibilité — insertion de texte dans les applis
+• Superposition — pour le micro flottant
+• Stockage — accès aux fichiers audio pour la transcription
+• Internet — uniquement pour le téléchargement initial du modèle
