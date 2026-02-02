@@ -38,10 +38,18 @@
     <string name="setting_overlay_desc">Required to show floating mic button</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Not downloaded (~600 MB)</string>
+    <string name="model_not_downloaded">Model not installed</string>
+    <string name="model_size">~600 MB</string>
     <string name="model_downloading">Downloading: %d%%</string>
+    <string name="model_copying">Copying to app storage: %d%%</string>
     <string name="model_extracting">Extracting…</string>
     <string name="model_error">Error: %s</string>
+    <string name="model_error_network">Download failed — check your internet connection</string>
+    <string name="model_error_checksum">File verification failed — please try again</string>
+    <string name="model_error_missing_file">Missing model file: %s</string>
+    <string name="model_error_folder_access">Cannot access selected folder</string>
+    <string name="model_error_storage">Not enough storage or files incomplete</string>
+    <string name="error_no_browser">No browser app installed</string>
     <string name="model_loading">Loading model…</string>
     <string name="model_loaded">Loaded and ready</string>
     <string name="model_downloaded">Downloaded — tap Load to activate</string>
@@ -51,6 +59,10 @@
     <string name="model_auto_load_on">Model loads when app starts</string>
     <string name="model_auto_load_off">Load model manually</string>
     <string name="model_attribution" translatable="false">NVIDIA Parakeet TDT v3 · CC-BY-4.0</string>
+    <string name="model_import_title">Load model from folder</string>
+    <string name="model_import_instructions">Download the model files from the link below and place them in a folder on your device:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nThen select that folder.</string>
+    <string name="model_import_link" translatable="false">https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8</string>
+    <string name="model_import_open_link">Open download page</string>
 
     <!-- Floating Button -->
     <string name="floating_enable">Enable Floating Button</string>
@@ -156,7 +168,9 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Grant Permission</string>
-    <string name="action_download">Download</string>
+    <string name="action_download">Download model</string>
+    <string name="action_load_local">Import from folder</string>
+    <string name="action_select_folder">Select folder</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_stop">Stop</string>
     <string name="action_remove">Remove</string>

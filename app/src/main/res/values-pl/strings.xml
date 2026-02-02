@@ -29,10 +29,18 @@
     <string name="setting_accessibility_desc">Włącz usługę dostępności, aby bezpośrednio wprowadzać tekst</string>
     <string name="setting_overlay">Uprawnienie nakładki</string>
     <string name="setting_overlay_desc">Wymagane do wyświetlania pływającego przycisku mikrofonu</string>
-    <string name="model_not_downloaded">Nie pobrano (~600 MB)</string>
+    <string name="model_not_downloaded">Model niezainstalowany</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Pobieranie: %d%%</string>
+    <string name="model_copying">Kopiowanie do pamięci aplikacji: %d%%</string>
     <string name="model_extracting">Rozpakowywanie…</string>
     <string name="model_error">Błąd: %s</string>
+    <string name="model_error_network">Pobieranie nie powiodło się — sprawdź połączenie z internetem</string>
+    <string name="model_error_checksum">Weryfikacja pliku nie powiodła się — spróbuj ponownie</string>
+    <string name="model_error_missing_file">Brak pliku modelu: %s</string>
+    <string name="model_error_folder_access">Nie można uzyskać dostępu do wybranego folderu</string>
+    <string name="model_error_storage">Brak miejsca lub pliki niekompletne</string>
+    <string name="error_no_browser">Brak zainstalowanej przeglądarki</string>
     <string name="model_loading">Ładowanie modelu…</string>
     <string name="model_loaded">Załadowany i gotowy</string>
     <string name="model_downloaded">Pobrany — dotknij Załaduj, aby aktywować</string>
@@ -98,7 +106,7 @@
     <string name="accessibility_disclosure_agree">Zgadzam się i kontynuuję</string>
     <string name="accessibility_disclosure_decline">Odmów</string>
     <string name="action_grant_permission">Przyznaj uprawnienie</string>
-    <string name="action_download">Pobierz</string>
+    <string name="action_download">Pobierz model</string>
     <string name="action_cancel">Anuluj</string>
     <string name="action_stop">Zatrzymaj</string>
     <string name="action_remove">Usuń</string>
@@ -140,4 +148,9 @@
     <string name="audio_detected_title">Wykryto wiadomość głosową</string>
     <string name="audio_detected_text">Dotknij, aby transkrybować</string>
     <string name="audio_detected_action">Transkrybuj</string>
+    <string name="action_load_local">Importuj z folderu</string>
+    <string name="action_select_folder">Wybierz folder</string>
+    <string name="model_import_title">Załaduj model z folderu</string>
+    <string name="model_import_instructions">Pobierz pliki modelu z poniższego linku i umieść je w folderze na swoim urządzeniu:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nNastępnie wybierz ten folder.</string>
+    <string name="model_import_open_link">Otwórz stronę pobierania</string>
 </resources>

@@ -37,10 +37,18 @@
     <string name="setting_overlay_desc">Necessario per mostrare il microfono flottante</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Non scaricato (~600 MB)</string>
+    <string name="model_not_downloaded">Modello non installato</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Download: %d%%</string>
+    <string name="model_copying">Copia nella memoria dell\'app: %d%%</string>
     <string name="model_extracting">Estrazione…</string>
     <string name="model_error">Errore: %s</string>
+    <string name="model_error_network">Download fallito — controlla la tua connessione internet</string>
+    <string name="model_error_checksum">Verifica del file fallita — riprova</string>
+    <string name="model_error_missing_file">File del modello mancante: %s</string>
+    <string name="model_error_folder_access">Impossibile accedere alla cartella selezionata</string>
+    <string name="model_error_storage">Spazio insufficiente o file incompleti</string>
+    <string name="error_no_browser">Nessuna app browser installata</string>
     <string name="model_loading">Caricamento modello…</string>
     <string name="model_loaded">Caricato e pronto</string>
     <string name="model_downloaded">Scaricato — tocca Carica per attivare</string>
@@ -126,7 +134,7 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Concedi permesso</string>
-    <string name="action_download">Scarica</string>
+    <string name="action_download">Scarica modello</string>
     <string name="action_cancel">Annulla</string>
     <string name="action_stop">Ferma</string>
     <string name="action_remove">Rimuovi</string>
@@ -180,4 +188,9 @@
     <string name="audio_detected_title">Messaggio vocale rilevato</string>
     <string name="audio_detected_text">Tocca per trascrivere</string>
     <string name="audio_detected_action">Trascrivi</string>
+    <string name="action_load_local">Importa da cartella</string>
+    <string name="action_select_folder">Seleziona cartella</string>
+    <string name="model_import_title">Carica modello da cartella</string>
+    <string name="model_import_instructions">Scarica i file del modello dal link qui sotto e mettili in una cartella sul tuo dispositivo:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nPoi seleziona quella cartella.</string>
+    <string name="model_import_open_link">Apri pagina di download</string>
 </resources>

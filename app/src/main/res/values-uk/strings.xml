@@ -29,10 +29,18 @@
     <string name="setting_accessibility_desc">Увімкніть службу доступності для прямого введення тексту</string>
     <string name="setting_overlay">Дозвіл на накладання</string>
     <string name="setting_overlay_desc">Потрібен для показу плаваючої кнопки мікрофона</string>
-    <string name="model_not_downloaded">Не завантажено (~600 МБ)</string>
+    <string name="model_not_downloaded">Модель не встановлена</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Завантаження: %d%%</string>
+    <string name="model_copying">Копіювання до сховища додатку: %d%%</string>
     <string name="model_extracting">Розпакування…</string>
     <string name="model_error">Помилка: %s</string>
+    <string name="model_error_network">Завантаження не вдалося — перевірте підключення до інтернету</string>
+    <string name="model_error_checksum">Перевірка файлу не вдалася — спробуйте ще раз</string>
+    <string name="model_error_missing_file">Відсутній файл моделі: %s</string>
+    <string name="model_error_folder_access">Не вдається отримати доступ до вибраної папки</string>
+    <string name="model_error_storage">Недостатньо місця або файли неповні</string>
+    <string name="error_no_browser">Браузер не встановлено</string>
     <string name="model_loading">Завантаження моделі…</string>
     <string name="model_loaded">Завантажено та готово</string>
     <string name="model_downloaded">Завантажено — натисніть Завантажити для активації</string>
@@ -98,7 +106,7 @@
     <string name="accessibility_disclosure_agree">Погодитися і продовжити</string>
     <string name="accessibility_disclosure_decline">Відхилити</string>
     <string name="action_grant_permission">Надати дозвіл</string>
-    <string name="action_download">Завантажити</string>
+    <string name="action_download">Завантажити модель</string>
     <string name="action_cancel">Скасувати</string>
     <string name="action_stop">Зупинити</string>
     <string name="action_remove">Видалити</string>
@@ -140,4 +148,9 @@
     <string name="audio_detected_title">Виявлено голосове повідомлення</string>
     <string name="audio_detected_text">Натисніть для транскрибування</string>
     <string name="audio_detected_action">Транскрибувати</string>
+    <string name="action_load_local">Імпортувати з папки</string>
+    <string name="action_select_folder">Вибрати папку</string>
+    <string name="model_import_title">Завантажити модель з папки</string>
+    <string name="model_import_instructions">Завантажте файли моделі за посиланням нижче та розмістіть їх у папці на вашому пристрої:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nПотім виберіть цю папку.</string>
+    <string name="model_import_open_link">Відкрити сторінку завантаження</string>
 </resources>

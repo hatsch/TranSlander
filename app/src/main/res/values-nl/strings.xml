@@ -29,10 +29,18 @@
     <string name="setting_accessibility_desc">Schakel toegankelijkheidsservice in voor directe tekstinvoer</string>
     <string name="setting_overlay">Overlay-toestemming</string>
     <string name="setting_overlay_desc">Vereist om de zwevende microfoonknop te tonen</string>
-    <string name="model_not_downloaded">Niet gedownload (~600 MB)</string>
+    <string name="model_not_downloaded">Model niet geïnstalleerd</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Downloaden: %d%%</string>
+    <string name="model_copying">Kopiëren naar app-opslag: %d%%</string>
     <string name="model_extracting">Uitpakken…</string>
     <string name="model_error">Fout: %s</string>
+    <string name="model_error_network">Download mislukt — controleer je internetverbinding</string>
+    <string name="model_error_checksum">Bestandsverificatie mislukt — probeer het opnieuw</string>
+    <string name="model_error_missing_file">Ontbrekend modelbestand: %s</string>
+    <string name="model_error_folder_access">Kan niet bij de geselecteerde map</string>
+    <string name="model_error_storage">Onvoldoende opslagruimte of bestanden incompleet</string>
+    <string name="error_no_browser">Geen browser-app geïnstalleerd</string>
     <string name="model_loading">Model laden…</string>
     <string name="model_loaded">Geladen en gereed</string>
     <string name="model_downloaded">Gedownload — tik op Laden om te activeren</string>
@@ -98,7 +106,7 @@
     <string name="accessibility_disclosure_agree">Akkoord en doorgaan</string>
     <string name="accessibility_disclosure_decline">Weigeren</string>
     <string name="action_grant_permission">Toestemming verlenen</string>
-    <string name="action_download">Downloaden</string>
+    <string name="action_download">Model downloaden</string>
     <string name="action_cancel">Annuleren</string>
     <string name="action_stop">Stoppen</string>
     <string name="action_remove">Verwijderen</string>
@@ -140,4 +148,9 @@
     <string name="audio_detected_title">Spraakbericht gedetecteerd</string>
     <string name="audio_detected_text">Tik om te transcriberen</string>
     <string name="audio_detected_action">Transcriberen</string>
+    <string name="action_load_local">Importeren uit map</string>
+    <string name="action_select_folder">Map selecteren</string>
+    <string name="model_import_title">Model laden uit map</string>
+    <string name="model_import_instructions">Download de modelbestanden via de link hieronder en plaats ze in een map op je apparaat:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nSelecteer vervolgens die map.</string>
+    <string name="model_import_open_link">Downloadpagina openen</string>
 </resources>

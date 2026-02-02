@@ -1,8 +1,12 @@
 package com.translander.asr
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
+import androidx.documentfile.provider.DocumentFile
+import kotlin.coroutines.coroutineContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.withContext
@@ -40,12 +44,22 @@ class ModelManager(private val context: Context) {
         )
     }
 
+    enum class ErrorType {
+        NETWORK,
+        CHECKSUM_MISMATCH,
+        MISSING_FILE,
+        FOLDER_ACCESS,
+        STORAGE,
+        UNKNOWN
+    }
+
     sealed class DownloadState {
         object NotStarted : DownloadState()
         data class Downloading(val progress: Int) : DownloadState()
+        data class Copying(val progress: Int) : DownloadState()
         object Extracting : DownloadState()
         object Ready : DownloadState()
-        data class Error(val message: String) : DownloadState()
+        data class Error(val type: ErrorType, val details: String? = null) : DownloadState()
     }
 
     private val _downloadState = MutableStateFlow<DownloadState>(DownloadState.NotStarted)
@@ -63,9 +77,11 @@ class ModelManager(private val context: Context) {
         checkModelStatus()
     }
 
-    private fun checkModelStatus() {
-        if (isModelReady()) {
-            _downloadState.value = DownloadState.Ready
+    fun checkModelStatus() {
+        _downloadState.value = if (isModelReady()) {
+            DownloadState.Ready
+        } else {
+            DownloadState.NotStarted
         }
     }
 
@@ -125,27 +141,34 @@ class ModelManager(private val context: Context) {
                     _downloadState.value = DownloadState.Ready
                     Log.i(TAG, "Model download complete")
                 } else {
-                    _downloadState.value = DownloadState.Error("Model files incomplete")
+                    _downloadState.value = DownloadState.Error(ErrorType.STORAGE)
                 }
 
+            } catch (e: SecurityException) {
+                Log.e(TAG, "Download failed: checksum mismatch", e)
+                _downloadState.value = DownloadState.Error(ErrorType.CHECKSUM_MISMATCH)
+                modelDir.deleteRecursively()
+            } catch (e: java.io.IOException) {
+                Log.e(TAG, "Download failed: network error", e)
+                _downloadState.value = DownloadState.Error(ErrorType.NETWORK)
+                modelDir.deleteRecursively()
             } catch (e: Exception) {
                 Log.e(TAG, "Download failed", e)
-                _downloadState.value = DownloadState.Error(e.message ?: "Unknown error")
-                // Clean up partial download
+                _downloadState.value = DownloadState.Error(ErrorType.UNKNOWN, e.message)
                 modelDir.deleteRecursively()
             }
         }
     }
 
-    private fun downloadFile(url: String, targetFile: File, onProgress: (Int) -> Unit) {
+    private suspend fun downloadFile(url: String, targetFile: File, onProgress: (Int) -> Unit) {
         val request = Request.Builder().url(url).build()
         val response = httpClient.newCall(request).execute()
 
         if (!response.isSuccessful) {
-            throw Exception("Download failed: ${response.code}")
+            throw java.io.IOException("Download failed: ${response.code}")
         }
 
-        val body = response.body ?: throw Exception("Empty response body")
+        val body = response.body ?: throw java.io.IOException("Empty response body")
         val contentLength = body.contentLength()
 
         body.byteStream().use { input ->
@@ -155,6 +178,7 @@ class ModelManager(private val context: Context) {
                 var totalBytesRead = 0L
 
                 while (input.read(buffer).also { bytesRead = it } != -1) {
+                    coroutineContext.ensureActive()
                     output.write(buffer, 0, bytesRead)
                     totalBytesRead += bytesRead
 
@@ -177,6 +201,107 @@ class ModelManager(private val context: Context) {
             }
         }
         return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+
+    /**
+     * Import model files from a user-selected local folder.
+     * Accepts both original names (encoder.int8.onnx) and local names (encoder.onnx).
+     */
+    suspend fun importFromFolder(uri: Uri) {
+        if (isModelReady()) {
+            _downloadState.value = DownloadState.Ready
+            return
+        }
+
+        withContext(Dispatchers.IO) {
+            try {
+                _downloadState.value = DownloadState.Copying(0)
+
+                val docFile = DocumentFile.fromTreeUri(context, uri)
+                    ?: throw IllegalStateException("Cannot access selected folder")
+
+                // Find each required model file in the selected folder
+                val filesToCopy = mutableMapOf<DocumentFile, String>() // source -> local name
+                for ((remoteName, localName) in MODEL_FILES) {
+                    // Try remote name first (encoder.int8.onnx), then local name (encoder.onnx)
+                    val sourceFile = docFile.findFile(remoteName)
+                        ?: docFile.findFile(localName)
+                        ?: throw java.io.FileNotFoundException(localName)
+                    filesToCopy[sourceFile] = localName
+                }
+
+                modelDir.mkdirs()
+
+                val progressPerFile = 100 / filesToCopy.size
+                for ((index, entry) in filesToCopy.entries.withIndex()) {
+                    val (sourceFile, localName) = entry
+                    val targetFile = File(modelDir, localName)
+
+                    Log.i(TAG, "Copying: ${sourceFile.name} -> $localName")
+
+                    context.contentResolver.openInputStream(sourceFile.uri)?.use { input ->
+                        FileOutputStream(targetFile).use { output ->
+                            val buffer = ByteArray(8192)
+                            var bytesRead: Int
+                            var totalBytesRead = 0L
+                            val fileSize = sourceFile.length()
+
+                            while (input.read(buffer).also { bytesRead = it } != -1) {
+                                coroutineContext.ensureActive()
+                                output.write(buffer, 0, bytesRead)
+                                totalBytesRead += bytesRead
+                                if (fileSize > 0) {
+                                    val fileProgress = ((totalBytesRead * 100) / fileSize).toInt()
+                                    val overallProgress = (index * progressPerFile) + (fileProgress * progressPerFile / 100)
+                                    _downloadState.value = DownloadState.Copying(overallProgress)
+                                }
+                            }
+                        }
+                    } ?: throw java.io.IOException("Cannot read file: ${sourceFile.name}")
+
+                    // Verify checksum for ONNX files
+                    val remoteName = MODEL_FILES.entries.find { it.value == localName }?.key
+                    val expectedChecksum = remoteName?.let { FILE_CHECKSUMS[it] }
+                    if (expectedChecksum != null) {
+                        val actualChecksum = calculateSha256(targetFile)
+                        if (actualChecksum != expectedChecksum) {
+                            throw SecurityException(
+                                "Checksum mismatch for $localName: expected $expectedChecksum, got $actualChecksum"
+                            )
+                        }
+                        Log.i(TAG, "Checksum verified for $localName")
+                    }
+                }
+
+                if (isModelReady()) {
+                    _downloadState.value = DownloadState.Ready
+                    Log.i(TAG, "Model import complete")
+                } else {
+                    _downloadState.value = DownloadState.Error(ErrorType.STORAGE)
+                }
+
+            } catch (e: SecurityException) {
+                Log.e(TAG, "Import failed: checksum mismatch", e)
+                _downloadState.value = DownloadState.Error(ErrorType.CHECKSUM_MISMATCH)
+                modelDir.deleteRecursively()
+            } catch (e: java.io.FileNotFoundException) {
+                Log.e(TAG, "Import failed: missing file", e)
+                _downloadState.value = DownloadState.Error(ErrorType.MISSING_FILE, e.message)
+                modelDir.deleteRecursively()
+            } catch (e: IllegalStateException) {
+                Log.e(TAG, "Import failed: folder access", e)
+                _downloadState.value = DownloadState.Error(ErrorType.FOLDER_ACCESS)
+                modelDir.deleteRecursively()
+            } catch (e: java.io.IOException) {
+                Log.e(TAG, "Import failed: IO error", e)
+                _downloadState.value = DownloadState.Error(ErrorType.STORAGE)
+                modelDir.deleteRecursively()
+            } catch (e: Exception) {
+                Log.e(TAG, "Import failed", e)
+                _downloadState.value = DownloadState.Error(ErrorType.UNKNOWN, e.message)
+                modelDir.deleteRecursively()
+            }
+        }
     }
 
     suspend fun deleteModel() {

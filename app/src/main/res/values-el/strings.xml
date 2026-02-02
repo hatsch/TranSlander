@@ -29,10 +29,18 @@
     <string name="setting_accessibility_desc">Ενεργοποιήστε την υπηρεσία προσβασιμότητας για απευθείας εισαγωγή κειμένου</string>
     <string name="setting_overlay">Άδεια επικάλυψης</string>
     <string name="setting_overlay_desc">Απαιτείται για την εμφάνιση του αιωρούμενου κουμπιού μικροφώνου</string>
-    <string name="model_not_downloaded">Δεν έχει ληφθεί (~600 MB)</string>
+    <string name="model_not_downloaded">Το μοντέλο δεν είναι εγκατεστημένο</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Λήψη: %d%%</string>
+    <string name="model_copying">Αντιγραφή στον αποθηκευτικό χώρο: %d%%</string>
     <string name="model_extracting">Εξαγωγή…</string>
     <string name="model_error">Σφάλμα: %s</string>
+    <string name="model_error_network">Η λήψη απέτυχε — ελέγξτε τη σύνδεσή σας στο διαδίκτυο</string>
+    <string name="model_error_checksum">Η επαλήθευση αρχείου απέτυχε — δοκιμάστε ξανά</string>
+    <string name="model_error_missing_file">Λείπει αρχείο μοντέλου: %s</string>
+    <string name="model_error_folder_access">Δεν είναι δυνατή η πρόσβαση στον επιλεγμένο φάκελο</string>
+    <string name="model_error_storage">Ανεπαρκής αποθηκευτικός χώρος ή ελλιπή αρχεία</string>
+    <string name="error_no_browser">Δεν υπάρχει εγκατεστημένο πρόγραμμα περιήγησης</string>
     <string name="model_loading">Φόρτωση μοντέλου…</string>
     <string name="model_loaded">Φορτωμένο και έτοιμο</string>
     <string name="model_downloaded">Λήφθηκε — πατήστε Φόρτωση για ενεργοποίηση</string>
@@ -98,7 +106,7 @@
     <string name="accessibility_disclosure_agree">Αποδοχή και συνέχεια</string>
     <string name="accessibility_disclosure_decline">Απόρριψη</string>
     <string name="action_grant_permission">Παραχώρηση άδειας</string>
-    <string name="action_download">Λήψη</string>
+    <string name="action_download">Λήψη μοντέλου</string>
     <string name="action_cancel">Ακύρωση</string>
     <string name="action_stop">Διακοπή</string>
     <string name="action_remove">Αφαίρεση</string>
@@ -140,4 +148,9 @@
     <string name="audio_detected_title">Ανιχνεύθηκε φωνητικό μήνυμα</string>
     <string name="audio_detected_text">Πατήστε για μεταγραφή</string>
     <string name="audio_detected_action">Μεταγραφή</string>
+    <string name="action_load_local">Εισαγωγή από φάκελο</string>
+    <string name="action_select_folder">Επιλογή φακέλου</string>
+    <string name="model_import_title">Φόρτωση μοντέλου από φάκελο</string>
+    <string name="model_import_instructions">Κατεβάστε τα αρχεία του μοντέλου από τον παρακάτω σύνδεσμο και τοποθετήστε τα σε έναν φάκελο στη συσκευή σας:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nΣτη συνέχεια επιλέξτε αυτόν τον φάκελο.</string>
+    <string name="model_import_open_link">Άνοιγμα σελίδας λήψης</string>
 </resources>

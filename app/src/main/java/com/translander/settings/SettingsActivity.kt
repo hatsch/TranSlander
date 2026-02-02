@@ -46,6 +46,8 @@ import com.translander.asr.ModelManager
 import com.translander.service.FloatingMicService
 import com.translander.service.TextInjectionService
 import com.translander.transcribe.TranscribeManager
+import android.content.ActivityNotFoundException
+import android.widget.Toast
 import com.translander.ui.theme.TranslanderTheme
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -58,6 +60,14 @@ class SettingsActivity : ComponentActivity() {
         ActivityResultContracts.RequestPermission()
     ) { _ ->
         // Just refresh UI - don't auto-start service
+    }
+
+    private var onModelFolderSelected: ((Uri) -> Unit)? = null
+
+    private val modelFolderPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.let { onModelFolderSelected?.invoke(it) }
     }
 
     private var onFolderSelected: ((String) -> Unit)? = null
@@ -135,6 +145,10 @@ class SettingsActivity : ComponentActivity() {
                     onStopService = { stopFloatingService() },
                     onRestartService = { restartFloatingService() },
                     onPickFolder = { callback -> openFolderPicker(callback) },
+                    onPickModelFolder = { callback ->
+                        onModelFolderSelected = callback
+                        modelFolderPickerLauncher.launch(null)
+                    },
                     isVoiceImeEnabled = { isVoiceImeEnabled() },
                     onOpenInputMethodSettings = { openInputMethodSettings() }
                 )
@@ -146,6 +160,9 @@ class SettingsActivity : ComponentActivity() {
         super.onResume()
         // Trigger permission state refresh in Compose
         refreshTrigger.value++
+
+        // Revalidate model files on disk
+        TranslanderApp.instance.modelManager.checkModelStatus()
 
         // Sync floating service state
         val app = TranslanderApp.instance
@@ -278,6 +295,7 @@ fun SettingsScreen(
     onStopService: () -> Unit,
     onRestartService: () -> Unit,
     onPickFolder: ((String) -> Unit) -> Unit,
+    onPickModelFolder: ((Uri) -> Unit) -> Unit,
     isVoiceImeEnabled: () -> Boolean,
     onOpenInputMethodSettings: () -> Unit
 ) {
@@ -356,9 +374,19 @@ fun SettingsScreen(
                             modelManager.downloadModel()
                         }
                     },
+                    onLoadLocal = {
+                        onPickModelFolder { uri ->
+                            scope.launch {
+                                modelManager.importFromFolder(uri)
+                            }
+                        }
+                    },
                     onLoadModel = {
-                        scope.launch {
-                            recognizerManager.initialize()
+                        modelManager.checkModelStatus()
+                        if (modelManager.isModelReady()) {
+                            scope.launch {
+                                recognizerManager.initialize()
+                            }
                         }
                     },
                     onUnloadModel = {
@@ -381,7 +409,11 @@ fun SettingsScreen(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .clickable {
-                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3")))
+                            try {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3")))
+                            } catch (_: ActivityNotFoundException) {
+                                Toast.makeText(context, context.getString(R.string.error_no_browser), Toast.LENGTH_SHORT).show()
+                            }
                         }
                 )
 
@@ -774,18 +806,32 @@ fun ModelSettingItem(
     isRecognizerReady: Boolean,
     isRecognizerLoading: Boolean,
     onDownload: () -> Unit,
+    onLoadLocal: () -> Unit,
     onLoadModel: () -> Unit,
     onUnloadModel: () -> Unit
 ) {
+    var showImportDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
     Column {
         ListItem(
             headlineContent = { Text("Parakeet TDT v3") },
             supportingContent = {
                 when {
-                    downloadState is ModelManager.DownloadState.NotStarted -> Text(stringResource(R.string.model_not_downloaded))
+                    downloadState is ModelManager.DownloadState.NotStarted -> Text(stringResource(R.string.model_not_downloaded) + "\n" + stringResource(R.string.model_size))
                     downloadState is ModelManager.DownloadState.Downloading -> Text(stringResource(R.string.model_downloading, downloadState.progress))
+                    downloadState is ModelManager.DownloadState.Copying -> Text(stringResource(R.string.model_copying, downloadState.progress))
                     downloadState is ModelManager.DownloadState.Extracting -> Text(stringResource(R.string.model_extracting))
-                    downloadState is ModelManager.DownloadState.Error -> Text(stringResource(R.string.model_error, downloadState.message))
+                    downloadState is ModelManager.DownloadState.Error -> Text(
+                        when (downloadState.type) {
+                            ModelManager.ErrorType.NETWORK -> stringResource(R.string.model_error_network)
+                            ModelManager.ErrorType.CHECKSUM_MISMATCH -> stringResource(R.string.model_error_checksum)
+                            ModelManager.ErrorType.MISSING_FILE -> stringResource(R.string.model_error_missing_file, downloadState.details ?: "")
+                            ModelManager.ErrorType.FOLDER_ACCESS -> stringResource(R.string.model_error_folder_access)
+                            ModelManager.ErrorType.STORAGE -> stringResource(R.string.model_error_storage)
+                            ModelManager.ErrorType.UNKNOWN -> stringResource(R.string.model_error, downloadState.details ?: "")
+                        }
+                    )
                     isRecognizerLoading -> Text(stringResource(R.string.model_loading))
                     isRecognizerReady -> Text(stringResource(R.string.model_loaded))
                     downloadState is ModelManager.DownloadState.Ready -> Text(stringResource(R.string.model_downloaded))
@@ -796,13 +842,24 @@ fun ModelSettingItem(
                 when {
                     downloadState is ModelManager.DownloadState.NotStarted ||
                     downloadState is ModelManager.DownloadState.Error -> {
-                        Button(onClick = onDownload) {
-                            Text(stringResource(R.string.action_download))
+                        Column(horizontalAlignment = Alignment.End) {
+                            Button(onClick = onDownload) {
+                                Text(stringResource(R.string.action_download))
+                            }
+                            TextButton(onClick = { showImportDialog = true }) {
+                                Text(stringResource(R.string.action_load_local))
+                            }
                         }
                     }
-                    downloadState is ModelManager.DownloadState.Downloading -> {
+                    downloadState is ModelManager.DownloadState.Downloading ||
+                    downloadState is ModelManager.DownloadState.Copying -> {
+                        val progress = when (downloadState) {
+                            is ModelManager.DownloadState.Downloading -> downloadState.progress
+                            is ModelManager.DownloadState.Copying -> downloadState.progress
+                            else -> 0
+                        }
                         CircularProgressIndicator(
-                            progress = { downloadState.progress / 100f },
+                            progress = { progress / 100f },
                             modifier = Modifier.size(24.dp)
                         )
                     }
@@ -819,6 +876,44 @@ fun ModelSettingItem(
                             Text(stringResource(R.string.model_load))
                         }
                     }
+                }
+            }
+        )
+
+    }
+
+    if (showImportDialog) {
+        AlertDialog(
+            onDismissRequest = { showImportDialog = false },
+            title = { Text(stringResource(R.string.model_import_title)) },
+            text = {
+                Column {
+                    Text(stringResource(R.string.model_import_instructions))
+                    Spacer(modifier = Modifier.size(12.dp))
+                    TextButton(
+                        onClick = {
+                            try {
+                                context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(context.getString(R.string.model_import_link))))
+                            } catch (_: ActivityNotFoundException) {
+                                Toast.makeText(context, context.getString(R.string.error_no_browser), Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                    ) {
+                        Text(stringResource(R.string.model_import_open_link))
+                    }
+                }
+            },
+            confirmButton = {
+                Button(onClick = {
+                    showImportDialog = false
+                    onLoadLocal()
+                }) {
+                    Text(stringResource(R.string.action_select_folder))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showImportDialog = false }) {
+                    Text(stringResource(R.string.action_cancel))
                 }
             }
         )

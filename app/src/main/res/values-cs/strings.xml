@@ -37,10 +37,18 @@
     <string name="setting_overlay_desc">Vyžadováno pro zobrazení plovoucího tlačítka mikrofonu</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Nestaženo (~600 MB)</string>
+    <string name="model_not_downloaded">Model nenainstalován</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Stahování: %d%%</string>
+    <string name="model_copying">Kopírování do úložiště aplikace: %d%%</string>
     <string name="model_extracting">Rozbalování…</string>
     <string name="model_error">Chyba: %s</string>
+    <string name="model_error_network">Stahování selhalo — zkontrolujte připojení k internetu</string>
+    <string name="model_error_checksum">Ověření souboru selhalo — zkuste to znovu</string>
+    <string name="model_error_missing_file">Chybějící soubor modelu: %s</string>
+    <string name="model_error_folder_access">Nelze přistoupit k vybrané složce</string>
+    <string name="model_error_storage">Nedostatek úložiště nebo neúplné soubory</string>
+    <string name="error_no_browser">Žádný prohlížeč není nainstalován</string>
     <string name="model_loading">Načítání modelu…</string>
     <string name="model_loaded">Načteno a připraveno</string>
     <string name="model_downloaded">Staženo — klepněte na Načíst pro aktivaci</string>
@@ -126,7 +134,7 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Udělit oprávnění</string>
-    <string name="action_download">Stáhnout</string>
+    <string name="action_download">Stáhnout model</string>
     <string name="action_cancel">Zrušit</string>
     <string name="action_stop">Zastavit</string>
     <string name="action_remove">Odebrat</string>
@@ -180,4 +188,9 @@
     <string name="audio_detected_title">Zjištěna hlasová zpráva</string>
     <string name="audio_detected_text">Klepněte pro přepis</string>
     <string name="audio_detected_action">Přepsat</string>
+    <string name="action_load_local">Importovat ze složky</string>
+    <string name="action_select_folder">Vybrat složku</string>
+    <string name="model_import_title">Načíst model ze složky</string>
+    <string name="model_import_instructions">Stáhněte soubory modelu z odkazu níže a umístěte je do složky na zařízení:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nPoté vyberte tuto složku.</string>
+    <string name="model_import_open_link">Otevřít stránku ke stažení</string>
 </resources>

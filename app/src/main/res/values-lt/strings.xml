@@ -29,10 +29,18 @@
     <string name="setting_accessibility_desc">Įjunkite pritaikymo neįgaliesiems paslaugą tiesioginei teksto įvesčiai</string>
     <string name="setting_overlay">Perdangos leidimas</string>
     <string name="setting_overlay_desc">Reikalingas slankiajam mikrofono mygtukui rodyti</string>
-    <string name="model_not_downloaded">Neatsisiųsta (~600 MB)</string>
+    <string name="model_not_downloaded">Modelis neįdiegtas</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Atsisiunčiama: %d%%</string>
+    <string name="model_copying">Kopijavimas į programos saugyklą: %d%%</string>
     <string name="model_extracting">Išskleidžiama…</string>
     <string name="model_error">Klaida: %s</string>
+    <string name="model_error_network">Atsisiuntimas nepavyko — patikrinkite interneto ryšį</string>
+    <string name="model_error_checksum">Failo patikra nepavyko — bandykite dar kartą</string>
+    <string name="model_error_missing_file">Trūkstamas modelio failas: %s</string>
+    <string name="model_error_folder_access">Nepavyksta pasiekti pasirinkto aplanko</string>
+    <string name="model_error_storage">Nepakanka vietos arba failai neišsamūs</string>
+    <string name="error_no_browser">Naršyklė neįdiegta</string>
     <string name="model_loading">Įkeliamas modelis…</string>
     <string name="model_loaded">Įkeltas ir paruoštas</string>
     <string name="model_downloaded">Atsisiųsta — bakstelėkite Įkelti, kad suaktyvintumėte</string>
@@ -98,7 +106,7 @@
     <string name="accessibility_disclosure_agree">Sutikti ir tęsti</string>
     <string name="accessibility_disclosure_decline">Atsisakyti</string>
     <string name="action_grant_permission">Suteikti leidimą</string>
-    <string name="action_download">Atsisiųsti</string>
+    <string name="action_download">Atsisiųsti modelį</string>
     <string name="action_cancel">Atšaukti</string>
     <string name="action_stop">Sustabdyti</string>
     <string name="action_remove">Pašalinti</string>
@@ -140,4 +148,9 @@
     <string name="audio_detected_title">Aptikta balso žinutė</string>
     <string name="audio_detected_text">Bakstelėkite, kad transkribuotumėte</string>
     <string name="audio_detected_action">Transkribuoti</string>
+    <string name="action_load_local">Importuoti iš aplanko</string>
+    <string name="action_select_folder">Pasirinkti aplanką</string>
+    <string name="model_import_title">Įkelti modelį iš aplanko</string>
+    <string name="model_import_instructions">Atsisiųskite modelio failus iš žemiau esančios nuorodos ir įdėkite juos į aplanką savo įrenginyje:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nTada pasirinkite tą aplanką.</string>
+    <string name="model_import_open_link">Atidaryti atsisiuntimo puslapį</string>
 </resources>

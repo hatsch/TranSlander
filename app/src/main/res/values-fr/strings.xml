@@ -37,10 +37,18 @@
     <string name="setting_overlay_desc">Nécessaire pour afficher le micro flottant</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Non téléchargé (~600 Mo)</string>
+    <string name="model_not_downloaded">Modèle non installé</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Téléchargement : %d%%</string>
+    <string name="model_copying">Copie vers le stockage de l\'appli : %d%%</string>
     <string name="model_extracting">Extraction…</string>
     <string name="model_error">Erreur : %s</string>
+    <string name="model_error_network">Échec du téléchargement — vérifiez votre connexion internet</string>
+    <string name="model_error_checksum">Échec de la vérification du fichier — veuillez réessayer</string>
+    <string name="model_error_missing_file">Fichier de modèle manquant : %s</string>
+    <string name="model_error_folder_access">Impossible d\'accéder au dossier sélectionné</string>
+    <string name="model_error_storage">Pas assez d\'espace ou fichiers incomplets</string>
+    <string name="error_no_browser">Aucune application navigateur installée</string>
     <string name="model_loading">Chargement du modèle…</string>
     <string name="model_loaded">Chargé et prêt</string>
     <string name="model_downloaded">Téléchargé — touche Charger pour activer</string>
@@ -126,7 +134,7 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Accorder l\'autorisation</string>
-    <string name="action_download">Télécharger</string>
+    <string name="action_download">Télécharger le modèle</string>
     <string name="action_cancel">Annuler</string>
     <string name="action_stop">Arrêter</string>
     <string name="action_remove">Supprimer</string>
@@ -180,4 +188,9 @@
     <string name="audio_detected_title">Message vocal détecté</string>
     <string name="audio_detected_text">Touche pour transcrire</string>
     <string name="audio_detected_action">Transcrire</string>
+    <string name="action_load_local">Importer depuis un dossier</string>
+    <string name="action_select_folder">Sélectionner le dossier</string>
+    <string name="model_import_title">Charger le modèle depuis un dossier</string>
+    <string name="model_import_instructions">Télécharge les fichiers du modèle depuis le lien ci-dessous et place-les dans un dossier sur ton appareil :\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nPuis sélectionne ce dossier.</string>
+    <string name="model_import_open_link">Ouvrir la page de téléchargement</string>
 </resources>
