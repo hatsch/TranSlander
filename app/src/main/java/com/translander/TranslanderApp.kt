@@ -55,7 +55,11 @@ class TranslanderApp : Application() {
         }
 
         // Auto-start audio monitor if enabled
-        transcribeManager.startEnabledTriggers()
+        try {
+            transcribeManager.startEnabledTriggers()
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start enabled triggers", e)
+        }
     }
 
     private fun createNotificationChannel() {
