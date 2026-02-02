@@ -373,6 +373,18 @@ fun SettingsScreen(
                     }
                 )
 
+                val context = LocalContext.current
+                Text(
+                    text = stringResource(R.string.model_attribution),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .clickable {
+                            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3")))
+                        }
+                )
+
                 SwitchSettingItem(
                     title = stringResource(R.string.model_auto_load_title),
                     subtitle = if (autoLoadModel) stringResource(R.string.model_auto_load_on) else stringResource(R.string.model_auto_load_off),
