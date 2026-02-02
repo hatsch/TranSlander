@@ -268,6 +268,8 @@ See [Git guide for fdroiddata contributors](https://gitlab.com/fdroid/wiki/-/wik
 
 **F-Droid build order:** `prebuild` → scanner → `build` → gradle. The scanner runs between `prebuild` and `build`. Anything compiled in `prebuild` (like AAR files) will be flagged by the scanner as binary artifacts. Use `build:` instead of `prebuild:` for compiling native code from srclibs — this way the scanner never sees the built artifacts and `scanignore` is not needed. See `com.github.xiaoshihou.jiyi` and `de.schliweb.makeacopy` in fdroiddata for reference.
 
+**Commit field:** F-Droid maintainers require full commit hashes (not tags or short hashes) in the `commit:` field. Example: `commit: f4d24b55fcf203c0a85f0030fb98e59f162d61fc` not `commit: v1.1.1`.
+
 **Metadata descriptions:** Don't put `Description:` in the fdroiddata YAML. F-Droid pulls it automatically from `fastlane/metadata/android/en-US/full_description.txt` in the source repo. About 53% of F-Droid apps use this approach.
 
 **Git push:** Only use `--force` when history was actually rewritten (e.g., after rebase). A regular `git push` is sufficient for fast-forward updates.
