@@ -1,0 +1,4 @@
+Boot stability fix:
+• Prevent crash after system update
+• Guard foreground service startup on Android 12+
+• NVIDIA Parakeet TDT CC-BY-4.0 attribution

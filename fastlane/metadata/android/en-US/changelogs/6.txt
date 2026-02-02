@@ -1,0 +1,6 @@
+Local model import:
+• Import model from a local folder instead of downloading
+• Separate "Download model" and "Import from folder" options
+• Copy progress indicator
+• User-friendly error messages
+• Model file validation on resume and before loading
