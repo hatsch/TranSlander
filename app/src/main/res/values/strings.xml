@@ -50,6 +50,7 @@
     <string name="model_auto_load_title">Auto-load on startup</string>
     <string name="model_auto_load_on">Model loads when app starts</string>
     <string name="model_auto_load_off">Load model manually</string>
+    <string name="model_attribution" translatable="false">NVIDIA Parakeet TDT v3 · CC-BY-4.0</string>
 
     <!-- Floating Button -->
     <string name="floating_enable">Enable Floating Button</string>
