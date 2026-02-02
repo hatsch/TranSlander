@@ -40,7 +40,7 @@ export PATH=$JAVA_HOME/bin:$ANDROID_HOME/platform-tools:$PATH
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 
 # If signature mismatch error, uninstall first:
-adb uninstall com.translander && adb install app/build/outputs/apk/debug/app-debug.apk
+adb uninstall at.webformat.translander && adb install app/build/outputs/apk/debug/app-debug.apk
 ```
 
 ### Build Verification After Changes
@@ -235,7 +235,7 @@ OfflineRecognizerConfig(
 - READ_MEDIA_AUDIO (API >= 33, audio monitor)
 
 ## Package Info
-- **Package**: `com.translander`
+- **Package**: `at.webformat.translander`
 - **App Class**: `TranslanderApp.kt`
 - **Main Activity**: `SettingsActivity.kt`
 

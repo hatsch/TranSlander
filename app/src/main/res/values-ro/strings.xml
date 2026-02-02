@@ -29,10 +29,18 @@
     <string name="setting_accessibility_desc">Activează serviciul de accesibilitate pentru introducere directă de text</string>
     <string name="setting_overlay">Permisiune de suprapunere</string>
     <string name="setting_overlay_desc">Necesară pentru a afișa butonul microfon plutitor</string>
-    <string name="model_not_downloaded">Nedescărcat (~600 MB)</string>
+    <string name="model_not_downloaded">Model neinstalat</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Se descarcă: %d%%</string>
+    <string name="model_copying">Se copiază în stocarea aplicației: %d%%</string>
     <string name="model_extracting">Se extrage…</string>
     <string name="model_error">Eroare: %s</string>
+    <string name="model_error_network">Descărcarea a eșuat — verificați conexiunea la internet</string>
+    <string name="model_error_checksum">Verificarea fișierului a eșuat — încercați din nou</string>
+    <string name="model_error_missing_file">Fișier model lipsă: %s</string>
+    <string name="model_error_folder_access">Nu se poate accesa folderul selectat</string>
+    <string name="model_error_storage">Spațiu insuficient sau fișiere incomplete</string>
+    <string name="error_no_browser">Niciun browser instalat</string>
     <string name="model_loading">Se încarcă modelul…</string>
     <string name="model_loaded">Încărcat și pregătit</string>
     <string name="model_downloaded">Descărcat — atinge Încarcă pentru a activa</string>
@@ -98,7 +106,7 @@
     <string name="accessibility_disclosure_agree">Accept și continuă</string>
     <string name="accessibility_disclosure_decline">Refuz</string>
     <string name="action_grant_permission">Acordă permisiune</string>
-    <string name="action_download">Descarcă</string>
+    <string name="action_download">Descarcă modelul</string>
     <string name="action_cancel">Anulează</string>
     <string name="action_stop">Oprește</string>
     <string name="action_remove">Elimină</string>
@@ -140,4 +148,9 @@
     <string name="audio_detected_title">Mesaj vocal detectat</string>
     <string name="audio_detected_text">Atinge pentru a transcrie</string>
     <string name="audio_detected_action">Transcrie</string>
+    <string name="action_load_local">Importă din folder</string>
+    <string name="action_select_folder">Selectează folder</string>
+    <string name="model_import_title">Încarcă modelul din folder</string>
+    <string name="model_import_instructions">Descărcați fișierele modelului de la linkul de mai jos și plasați-le într-un folder pe dispozitivul dvs.:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nApoi selectați acel folder.</string>
+    <string name="model_import_open_link">Deschide pagina de descărcare</string>
 </resources>

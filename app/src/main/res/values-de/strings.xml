@@ -37,10 +37,18 @@
     <string name="setting_overlay_desc">Erforderlich für das schwebende Mikrofon</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Nicht heruntergeladen (~600 MB)</string>
+    <string name="model_not_downloaded">Modell nicht installiert</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Herunterladen: %d%%</string>
+    <string name="model_copying">Kopiere in App-Speicher: %d%%</string>
     <string name="model_extracting">Wird entpackt…</string>
     <string name="model_error">Fehler: %s</string>
+    <string name="model_error_network">Download fehlgeschlagen — prüfen Sie Ihre Internetverbindung</string>
+    <string name="model_error_checksum">Dateiüberprüfung fehlgeschlagen — bitte erneut versuchen</string>
+    <string name="model_error_missing_file">Fehlende Modelldatei: %s</string>
+    <string name="model_error_folder_access">Zugriff auf ausgewählten Ordner nicht möglich</string>
+    <string name="model_error_storage">Nicht genug Speicherplatz oder Dateien unvollständig</string>
+    <string name="error_no_browser">Keine Browser-App installiert</string>
     <string name="model_loading">Modell wird geladen…</string>
     <string name="model_loaded">Geladen und bereit</string>
     <string name="model_downloaded">Heruntergeladen — zum Aktivieren auf Laden tippen</string>
@@ -126,7 +134,7 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Berechtigung erteilen</string>
-    <string name="action_download">Herunterladen</string>
+    <string name="action_download">Modell herunterladen</string>
     <string name="action_cancel">Abbrechen</string>
     <string name="action_stop">Stopp</string>
     <string name="action_remove">Entfernen</string>
@@ -180,4 +188,9 @@
     <string name="audio_detected_title">Sprachnachricht erkannt</string>
     <string name="audio_detected_text">Tippen zum Transkribieren</string>
     <string name="audio_detected_action">Transkribieren</string>
+    <string name="action_load_local">Aus Ordner importieren</string>
+    <string name="action_select_folder">Ordner wählen</string>
+    <string name="model_import_title">Modell aus Ordner laden</string>
+    <string name="model_import_instructions">Laden Sie die Modelldateien über den Link unten herunter und legen Sie sie in einem Ordner auf Ihrem Gerät ab:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nWählen Sie dann diesen Ordner aus.</string>
+    <string name="model_import_open_link">Downloadseite öffnen</string>
 </resources>

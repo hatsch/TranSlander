@@ -37,10 +37,18 @@
     <string name="setting_overlay_desc">Необходимо за показване на плаващия бутон за микрофон</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Не е изтеглен (~600 MB)</string>
+    <string name="model_not_downloaded">Моделът не е инсталиран</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Изтегляне: %d%%</string>
+    <string name="model_copying">Копиране в хранилището на приложението: %d%%</string>
     <string name="model_extracting">Разархивиране…</string>
     <string name="model_error">Грешка: %s</string>
+    <string name="model_error_network">Изтеглянето неуспешно — проверете интернет връзката си</string>
+    <string name="model_error_checksum">Неуспешна проверка на файла — опитайте отново</string>
+    <string name="model_error_missing_file">Липсващ файл на модела: %s</string>
+    <string name="model_error_folder_access">Няма достъп до избраната папка</string>
+    <string name="model_error_storage">Недостатъчно място или непълни файлове</string>
+    <string name="error_no_browser">Няма инсталиран браузър</string>
     <string name="model_loading">Зареждане на модел…</string>
     <string name="model_loaded">Зареден и готов</string>
     <string name="model_downloaded">Изтеглен — докоснете Зареди за активиране</string>
@@ -126,7 +134,7 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Дай разрешение</string>
-    <string name="action_download">Изтегляне</string>
+    <string name="action_download">Изтегляне на модела</string>
     <string name="action_cancel">Отказ</string>
     <string name="action_stop">Спиране</string>
     <string name="action_remove">Премахване</string>
@@ -180,4 +188,9 @@
     <string name="audio_detected_title">Открито гласово съобщение</string>
     <string name="audio_detected_text">Докоснете за транскрибиране</string>
     <string name="audio_detected_action">Транскрибиране</string>
+    <string name="action_load_local">Импортиране от папка</string>
+    <string name="action_select_folder">Избери папка</string>
+    <string name="model_import_title">Зареждане на модел от папка</string>
+    <string name="model_import_instructions">Изтеглете файловете на модела от връзката по-долу и ги поставете в папка на устройството:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nСлед това изберете тази папка.</string>
+    <string name="model_import_open_link">Отвори страницата за изтегляне</string>
 </resources>

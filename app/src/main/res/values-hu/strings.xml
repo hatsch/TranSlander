@@ -37,10 +37,18 @@
     <string name="setting_overlay_desc">Szükséges a lebegő mikrofon gomb megjelenítéséhez</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Nincs letöltve (~600 MB)</string>
+    <string name="model_not_downloaded">Modell nincs telepítve</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Letöltés: %d%%</string>
+    <string name="model_copying">Másolás az alkalmazástárhelyre: %d%%</string>
     <string name="model_extracting">Kicsomagolás…</string>
     <string name="model_error">Hiba: %s</string>
+    <string name="model_error_network">A letöltés sikertelen — ellenőrizze az internetkapcsolatot</string>
+    <string name="model_error_checksum">A fájl ellenőrzése sikertelen — próbálja újra</string>
+    <string name="model_error_missing_file">Hiányzó modellfájl: %s</string>
+    <string name="model_error_folder_access">A kiválasztott mappa nem érhető el</string>
+    <string name="model_error_storage">Nincs elég tárhely vagy hiányos fájlok</string>
+    <string name="error_no_browser">Nincs böngésző telepítve</string>
     <string name="model_loading">Modell betöltése…</string>
     <string name="model_loaded">Betöltve és készen áll</string>
     <string name="model_downloaded">Letöltve — koppintson a Betöltés gombra az aktiváláshoz</string>
@@ -126,7 +134,7 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Engedély megadása</string>
-    <string name="action_download">Letöltés</string>
+    <string name="action_download">Modell letöltése</string>
     <string name="action_cancel">Mégse</string>
     <string name="action_stop">Leállítás</string>
     <string name="action_remove">Eltávolítás</string>
@@ -180,4 +188,9 @@
     <string name="audio_detected_title">Hangüzenet észlelve</string>
     <string name="audio_detected_text">Koppintson az átíráshoz</string>
     <string name="audio_detected_action">Átírás</string>
+    <string name="action_load_local">Importálás mappából</string>
+    <string name="action_select_folder">Mappa kiválasztása</string>
+    <string name="model_import_title">Modell betöltése mappából</string>
+    <string name="model_import_instructions">Töltse le a modellfájlokat az alábbi linkről, és helyezze el őket egy mappában az eszközén:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nEzután válassza ki azt a mappát.</string>
+    <string name="model_import_open_link">Letöltési oldal megnyitása</string>
 </resources>

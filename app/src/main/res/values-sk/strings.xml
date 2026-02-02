@@ -37,10 +37,18 @@
     <string name="setting_overlay_desc">Vyžadované na zobrazenie plávajúceho tlačidla mikrofónu</string>
 
     <!-- Model states -->
-    <string name="model_not_downloaded">Nestiahnuté (~600 MB)</string>
+    <string name="model_not_downloaded">Model nenainštalovaný</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">Sťahovanie: %d%%</string>
+    <string name="model_copying">Kopírovanie do úložiska aplikácie: %d%%</string>
     <string name="model_extracting">Rozbaľovanie…</string>
     <string name="model_error">Chyba: %s</string>
+    <string name="model_error_network">Sťahovanie zlyhalo — skontrolujte pripojenie na internet</string>
+    <string name="model_error_checksum">Overenie súboru zlyhalo — skúste to znova</string>
+    <string name="model_error_missing_file">Chýbajúci súbor modelu: %s</string>
+    <string name="model_error_folder_access">Nie je možné pristúpiť k vybranému priečinku</string>
+    <string name="model_error_storage">Nedostatok úložiska alebo neúplné súbory</string>
+    <string name="error_no_browser">Žiadny prehliadač nie je nainštalovaný</string>
     <string name="model_loading">Načítavanie modelu…</string>
     <string name="model_loaded">Načítané a pripravené</string>
     <string name="model_downloaded">Stiahnuté — klepnite na Načítať pre aktiváciu</string>
@@ -126,7 +134,7 @@
 
     <!-- Actions -->
     <string name="action_grant_permission">Udeliť oprávnenie</string>
-    <string name="action_download">Stiahnuť</string>
+    <string name="action_download">Stiahnuť model</string>
     <string name="action_cancel">Zrušiť</string>
     <string name="action_stop">Zastaviť</string>
     <string name="action_remove">Odstrániť</string>
@@ -180,4 +188,9 @@
     <string name="audio_detected_title">Zistená hlasová správa</string>
     <string name="audio_detected_text">Klepnite pre prepis</string>
     <string name="audio_detected_action">Prepísať</string>
+    <string name="action_load_local">Importovať z priečinka</string>
+    <string name="action_select_folder">Vybrať priečinok</string>
+    <string name="model_import_title">Načítať model z priečinka</string>
+    <string name="model_import_instructions">Stiahnite súbory modelu z odkazu nižšie a umiestnite ich do priečinka na zariadení:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nPotom vyberte tento priečinok.</string>
+    <string name="model_import_open_link">Otvoriť stránku na stiahnutie</string>
 </resources>

@@ -29,10 +29,18 @@
     <string name="setting_accessibility_desc">Ativar serviço de acessibilidade para introdução direta de texto</string>
     <string name="setting_overlay">Permissão de sobreposição</string>
     <string name="setting_overlay_desc">Necessária para mostrar o botão de microfone flutuante</string>
-    <string name="model_not_downloaded">Não transferido (~600 MB)</string>
+    <string name="model_not_downloaded">Modelo não instalado</string>
+    <string name="model_size" translatable="false">~600 MB</string>
     <string name="model_downloading">A transferir: %d%%</string>
+    <string name="model_copying">A copiar para a memória da app: %d%%</string>
     <string name="model_extracting">A extrair…</string>
     <string name="model_error">Erro: %s</string>
+    <string name="model_error_network">Falha no download — verifique a sua ligação à internet</string>
+    <string name="model_error_checksum">Falha na verificação do ficheiro — tente novamente</string>
+    <string name="model_error_missing_file">Ficheiro de modelo em falta: %s</string>
+    <string name="model_error_folder_access">Não é possível aceder à pasta selecionada</string>
+    <string name="model_error_storage">Espaço insuficiente ou ficheiros incompletos</string>
+    <string name="error_no_browser">Nenhum navegador instalado</string>
     <string name="model_loading">A carregar modelo…</string>
     <string name="model_loaded">Carregado e pronto</string>
     <string name="model_downloaded">Transferido — toque em Carregar para ativar</string>
@@ -98,7 +106,7 @@
     <string name="accessibility_disclosure_agree">Concordar e continuar</string>
     <string name="accessibility_disclosure_decline">Recusar</string>
     <string name="action_grant_permission">Conceder permissão</string>
-    <string name="action_download">Transferir</string>
+    <string name="action_download">Transferir modelo</string>
     <string name="action_cancel">Cancelar</string>
     <string name="action_stop">Parar</string>
     <string name="action_remove">Remover</string>
@@ -140,4 +148,9 @@
     <string name="audio_detected_title">Mensagem de voz detetada</string>
     <string name="audio_detected_text">Toque para transcrever</string>
     <string name="audio_detected_action">Transcrever</string>
+    <string name="action_load_local">Importar de pasta</string>
+    <string name="action_select_folder">Selecionar pasta</string>
+    <string name="model_import_title">Carregar modelo de pasta</string>
+    <string name="model_import_instructions">Baixe os arquivos do modelo pelo link abaixo e coloque-os em uma pasta no seu dispositivo:\n\n • encoder.int8.onnx\n • decoder.int8.onnx\n • joiner.int8.onnx\n • tokens.txt\n\nDepois selecione essa pasta.</string>
+    <string name="model_import_open_link">Abrir página de download</string>
 </resources>
