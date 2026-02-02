@@ -68,7 +68,7 @@ class RecognizerManager(private val context: Context, private val modelManager: 
                 Log.i(TAG, "Recognizer initialized: $ready")
                 ready
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e(TAG, "Failed to initialize recognizer", e)
             false
         } finally {

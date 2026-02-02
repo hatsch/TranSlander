@@ -3,6 +3,7 @@ package com.translander.transcribe
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import com.translander.TranslanderApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -32,6 +33,10 @@ interface TranscriptionTrigger {
  */
 class TranscribeManager(private val context: Context) {
 
+    companion object {
+        private const val TAG = "TranscribeManager"
+    }
+
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val triggers = mutableListOf<TranscriptionTrigger>()
 
@@ -41,13 +46,17 @@ class TranscribeManager(private val context: Context) {
 
         override fun start() {
             if (active) return
-            val intent = Intent(context, AudioMonitorService::class.java)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(intent)
-            } else {
-                context.startService(intent)
+            try {
+                val intent = Intent(context, AudioMonitorService::class.java)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    context.startForegroundService(intent)
+                } else {
+                    context.startService(intent)
+                }
+                active = true
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to start AudioMonitorService", e)
             }
-            active = true
         }
 
         override fun stop() {
