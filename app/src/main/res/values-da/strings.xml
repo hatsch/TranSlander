@@ -7,6 +7,7 @@
     <string name="service_alert_channel_description">Notifikationer når tjenester ikke kan starte</string>
     <string name="service_start_floating_mic">Tryk for at starte flydende mikrofon</string>
     <string name="service_start_folder_monitor">Tryk for at starte mappeovervågning</string>
+    <string name="service_start_services">Tryk for at starte TranSlander-tjenester</string>
     <string name="accessibility_service_label">TranSlander tekstinput</string>
     <string name="accessibility_service_description">Giver TranSlander mulighed for at indsætte transskriberet tekst direkte i tekstfelter. Aktivér dette for problemfri tale-til-tekst-input.</string>
     <string name="section_speech_model">Talemodel</string>

@@ -9,6 +9,7 @@
     <string name="service_alert_channel_description">Oznámení při selhání spuštění služeb</string>
     <string name="service_start_floating_mic">Klepněte pro spuštění plovoucího mikrofonu</string>
     <string name="service_start_folder_monitor">Klepněte pro spuštění monitoru složek</string>
+    <string name="service_start_services">Klepnutím spustíte služby TranSlander</string>
     <string name="accessibility_service_label">TranSlander Textový vstup</string>
     <string name="accessibility_service_description">Umožňuje TranSlander vkládat přepsaný text přímo do textových polí. Povolte pro plynulý hlasový vstup.</string>
 

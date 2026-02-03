@@ -346,7 +346,7 @@ class FloatingMicService : Service() {
     }
 
     private fun showFailureNotification() {
-        TranslanderApp.instance.showServiceStartNotification(R.string.service_start_floating_mic)
+        TranslanderApp.instance.serviceAlertNotification.show(R.string.service_start_floating_mic)
     }
 
     private fun createNotification(): Notification {

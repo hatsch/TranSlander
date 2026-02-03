@@ -3,11 +3,13 @@ package com.translander.receiver
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.provider.Settings
 import android.util.Log
+import com.translander.R
 import com.translander.TranslanderApp
 import com.translander.service.FloatingMicService
+import com.translander.transcribe.AudioMonitorService
+import com.translander.util.BootCompatHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
@@ -21,35 +23,45 @@ class BootReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         if (intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            Log.i(TAG, "Boot completed, checking if service should start")
+            Log.i(TAG, "Boot completed, checking if services should start")
 
-            // Check if service was enabled and we have overlay permission
-            val hasOverlayPermission = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Settings.canDrawOverlays(context)
-            } else true
-
-            if (!hasOverlayPermission) {
-                Log.i(TAG, "No overlay permission, not starting service")
-                return
-            }
-
-            // Use goAsync() to extend receiver lifetime beyond 10s limit
             val pendingResult = goAsync()
 
             CoroutineScope(Dispatchers.IO).launch {
                 try {
-                    val wasEnabled = TranslanderApp.instance.settingsRepository.serviceEnabled.first()
+                    val app = TranslanderApp.instance
+                    val floatingMicEnabled = app.settingsRepository.serviceEnabled.first()
+                    val audioMonitorEnabled = app.settingsRepository.audioMonitorEnabled.first()
 
-                    if (wasEnabled) {
-                        Log.i(TAG, "Service was enabled, starting FloatingMicService")
-                        val serviceIntent = Intent(context, FloatingMicService::class.java)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // Check overlay permission for floating mic
+                    val hasOverlayPermission = Settings.canDrawOverlays(context)
+
+                    val canStartFloatingMic = floatingMicEnabled && hasOverlayPermission
+                    val canStartAudioMonitor = audioMonitorEnabled
+
+                    Log.i(TAG, "floatingMicEnabled=$floatingMicEnabled, audioMonitorEnabled=$audioMonitorEnabled, hasOverlay=$hasOverlayPermission")
+
+                    if (!canStartFloatingMic && !canStartAudioMonitor) {
+                        Log.i(TAG, "No services enabled, nothing to start")
+                        return@launch
+                    }
+
+                    if (BootCompatHelper.canStartFgsFromBoot) {
+                        // Pre-Android 14: can start FGS directly
+                        if (canStartFloatingMic) {
+                            Log.i(TAG, "Starting FloatingMicService")
+                            val serviceIntent = Intent(context, FloatingMicService::class.java)
                             context.startForegroundService(serviceIntent)
-                        } else {
-                            context.startService(serviceIntent)
+                        }
+                        if (canStartAudioMonitor) {
+                            Log.i(TAG, "Starting AudioMonitorService")
+                            val serviceIntent = Intent(context, AudioMonitorService::class.java)
+                            context.startForegroundService(serviceIntent)
                         }
                     } else {
-                        Log.i(TAG, "Service was not enabled, not starting")
+                        // Android 14+: show single unified notification
+                        Log.i(TAG, "Android 14+: showing notification instead of starting services")
+                        app.serviceAlertNotification.show(R.string.service_start_services)
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "Failed to check service enabled state", e)

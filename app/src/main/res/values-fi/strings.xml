@@ -7,6 +7,7 @@
     <string name="service_alert_channel_description">Ilmoitukset kun palvelut eivät käynnisty</string>
     <string name="service_start_floating_mic">Napauta käynnistääksesi kelluvan mikrofonin</string>
     <string name="service_start_folder_monitor">Napauta käynnistääksesi kansioseurannan</string>
+    <string name="service_start_services">Napauta käynnistääksesi TranSlander-palvelut</string>
     <string name="accessibility_service_label">TranSlander-tekstinsyöttö</string>
     <string name="accessibility_service_description">Sallii TranSlanderin lisätä tunnistetun tekstin suoraan tekstikenttiin. Ota käyttöön saumattomaan puheesta tekstiksi -syöttöön.</string>
     <string name="section_speech_model">Puhemalli</string>

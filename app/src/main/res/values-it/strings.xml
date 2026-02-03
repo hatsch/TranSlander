@@ -9,6 +9,7 @@
     <string name="service_alert_channel_description">Notifiche quando i servizi non riescono ad avviarsi</string>
     <string name="service_start_floating_mic">Tocca per avviare il microfono flottante</string>
     <string name="service_start_folder_monitor">Tocca per avviare il monitoraggio cartelle</string>
+    <string name="service_start_services">Tocca per avviare i servizi TranSlander</string>
     <string name="accessibility_service_label">Immissione testo TranSlander</string>
     <string name="accessibility_service_description">Consente a TranSlander di inserire testo trascritto direttamente nei campi di testo. Attivalo per un\'immissione vocale fluida.</string>
 

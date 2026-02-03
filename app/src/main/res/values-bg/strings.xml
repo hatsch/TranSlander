@@ -9,6 +9,7 @@
     <string name="service_alert_channel_description">Известия при неуспешно стартиране на услуги</string>
     <string name="service_start_floating_mic">Натиснете, за да стартирате плаващия микрофон</string>
     <string name="service_start_folder_monitor">Натиснете, за да стартирате наблюдението на папки</string>
+    <string name="service_start_services">Докоснете, за да стартирате услугите на TranSlander</string>
     <string name="accessibility_service_label">TranSlander Текстов вход</string>
     <string name="accessibility_service_description">Позволява на TranSlander да вмъква транскрибиран текст директно в текстови полета. Активирайте за безпроблемно гласово въвеждане на текст.</string>
 
