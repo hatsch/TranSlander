@@ -10,6 +10,7 @@
     <string name="service_alert_channel_description">Notifications when services need to be started</string>
     <string name="service_start_floating_mic">Tap to start floating mic</string>
     <string name="service_start_folder_monitor">Tap to start folder monitor</string>
+    <string name="service_start_services">Tap to start TranSlander services</string>
     <string name="accessibility_service_label">TranSlander Text Input</string>
     <string name="accessibility_service_description">Allows TranSlander to insert transcribed text directly into text fields. Enable this for seamless voice-to-text input.</string>
 

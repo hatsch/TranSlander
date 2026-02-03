@@ -7,6 +7,7 @@
     <string name="service_alert_channel_description">Pranešimai, kai paslaugos nepavyksta paleisti</string>
     <string name="service_start_floating_mic">Bakstelėkite, kad paleistumėte slankųjį mikrofoną</string>
     <string name="service_start_folder_monitor">Bakstelėkite, kad paleistumėte aplankų stebėjimą</string>
+    <string name="service_start_services">Palieskite, kad paleistumėte TranSlander paslaugas</string>
     <string name="accessibility_service_label">TranSlander teksto įvestis</string>
     <string name="accessibility_service_description">Leidžia TranSlander įterpti transkribuotą tekstą tiesiai į teksto laukus. Įjunkite tai sklandžiai balso-į-tekstą įvesčiai.</string>
     <string name="section_speech_model">Kalbos modelis</string>

@@ -9,6 +9,7 @@
     <string name="service_alert_channel_description">Oznámenia pri zlyhaní spustenia služieb</string>
     <string name="service_start_floating_mic">Klepnite pre spustenie plávajúceho mikrofónu</string>
     <string name="service_start_folder_monitor">Klepnite pre spustenie monitorovania priečinkov</string>
+    <string name="service_start_services">Klepnutím spustíte služby TranSlander</string>
     <string name="accessibility_service_label">TranSlander Textový vstup</string>
     <string name="accessibility_service_description">Umožňuje TranSlander vkladať prepísaný text priamo do textových polí. Povoľte pre plynulý hlasový vstup.</string>
 

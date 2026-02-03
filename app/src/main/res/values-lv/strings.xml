@@ -7,6 +7,7 @@
     <string name="service_alert_channel_description">Paziņojumi, kad pakalpojumi neizdodas startēt</string>
     <string name="service_start_floating_mic">Pieskarieties, lai palaistu peldošo mikrofonu</string>
     <string name="service_start_folder_monitor">Pieskarieties, lai palaistu mapju uzraudzību</string>
+    <string name="service_start_services">Pieskarieties, lai palaistu TranSlander pakalpojumus</string>
     <string name="accessibility_service_label">TranSlander teksta ievade</string>
     <string name="accessibility_service_description">Ļauj TranSlander ievietot transkribētu tekstu tieši teksta laukos. Iespējojiet šo vienmērīgai runas-teksta ievadei.</string>
     <string name="section_speech_model">Runas modelis</string>

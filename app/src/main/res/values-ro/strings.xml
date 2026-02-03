@@ -7,6 +7,7 @@
     <string name="service_alert_channel_description">Notificări când serviciile nu reușesc să pornească</string>
     <string name="service_start_floating_mic">Atinge pentru a porni microfonul plutitor</string>
     <string name="service_start_folder_monitor">Atinge pentru a porni monitorizarea dosarelor</string>
+    <string name="service_start_services">Atingeți pentru a porni serviciile TranSlander</string>
     <string name="accessibility_service_label">TranSlander introducere text</string>
     <string name="accessibility_service_description">Permite TranSlander să insereze textul transcris direct în câmpurile de text. Activează această opțiune pentru introducere vocală fără întreruperi.</string>
     <string name="section_speech_model">Model de vorbire</string>

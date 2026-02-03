@@ -7,6 +7,7 @@
     <string name="service_alert_channel_description">Powiadomienia, gdy usługi nie mogą się uruchomić</string>
     <string name="service_start_floating_mic">Dotknij, aby uruchomić pływający mikrofon</string>
     <string name="service_start_folder_monitor">Dotknij, aby uruchomić monitor folderów</string>
+    <string name="service_start_services">Dotknij, aby uruchomić usługi TranSlander</string>
     <string name="accessibility_service_label">TranSlander wprowadzanie tekstu</string>
     <string name="accessibility_service_description">Umożliwia TranSlander wstawianie transkrybowanego tekstu bezpośrednio do pól tekstowych. Włącz tę opcję, aby płynnie zamieniać mowę na tekst.</string>
     <string name="section_speech_model">Model mowy</string>

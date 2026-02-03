@@ -7,6 +7,7 @@
     <string name="service_alert_channel_description">Сповіщення, коли служби не можуть запуститися</string>
     <string name="service_start_floating_mic">Натисніть, щоб запустити плаваючий мікрофон</string>
     <string name="service_start_folder_monitor">Натисніть, щоб запустити моніторинг тек</string>
+    <string name="service_start_services">Торкніться, щоб запустити служби TranSlander</string>
     <string name="accessibility_service_label">Введення тексту TranSlander</string>
     <string name="accessibility_service_description">Дозволяє TranSlander вставляти транскрибований текст безпосередньо в текстові поля. Увімкніть для безперебійного введення мовлення-в-текст.</string>
     <string name="section_speech_model">Модель мовлення</string>

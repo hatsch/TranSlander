@@ -9,6 +9,7 @@
     <string name="service_alert_channel_description">Obvestila, ko se storitve ne zaženejo</string>
     <string name="service_start_floating_mic">Tapnite za zagon plavajočega mikrofona</string>
     <string name="service_start_folder_monitor">Tapnite za zagon nadzora map</string>
+    <string name="service_start_services">Tapnite za zagon storitev TranSlander</string>
     <string name="accessibility_service_label">TranSlander Vnos besedila</string>
     <string name="accessibility_service_description">Omogoča TranSlander vstavljanje prepisanega besedila neposredno v besedilna polja. Omogočite za nemoten glasovni vnos besedila.</string>
 
