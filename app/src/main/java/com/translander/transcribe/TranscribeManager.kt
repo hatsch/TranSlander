@@ -2,9 +2,9 @@ package com.translander.transcribe
 
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.util.Log
 import com.translander.TranslanderApp
+import com.translander.util.BootCompatHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -48,11 +48,7 @@ class TranscribeManager(private val context: Context) {
             if (active) return
             try {
                 val intent = Intent(context, AudioMonitorService::class.java)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    context.startForegroundService(intent)
-                } else {
-                    context.startService(intent)
-                }
+                context.startForegroundService(intent)
                 active = true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start AudioMonitorService", e)
@@ -88,6 +84,9 @@ class TranscribeManager(private val context: Context) {
 
     /**
      * Start all enabled triggers based on settings.
+     * On Android 14+, skips auto-start at boot since dataSync FGS is blocked.
+     * BootReceiver handles showing the notification, so we just skip here.
+     * User must open app to start services (handled in SettingsActivity.onResume).
      */
     fun startEnabledTriggers() {
         scope.launch {
@@ -95,7 +94,14 @@ class TranscribeManager(private val context: Context) {
             val monitorEnabled = settings.audioMonitorEnabled.first()
 
             if (monitorEnabled) {
-                audioMonitorTrigger.start()
+                if (BootCompatHelper.canStartFgsFromBoot) {
+                    audioMonitorTrigger.start()
+                } else {
+                    // Android 14+: BootReceiver shows the notification,
+                    // so we just skip starting here. Services will be started
+                    // when user opens the app (SettingsActivity.onResume).
+                    Log.i(TAG, "Android 14+: skipping audio monitor start at boot")
+                }
             }
         }
     }
