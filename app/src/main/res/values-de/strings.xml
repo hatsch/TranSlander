@@ -5,6 +5,10 @@
     <!-- Service -->
     <string name="service_notification_title">TranSlander aktiv</string>
     <string name="service_notification_text">Auf das schwebende Mikrofon tippen, um Sprache zu transkribieren</string>
+    <string name="service_alert_channel_name">Dienstwarnungen</string>
+    <string name="service_alert_channel_description">Benachrichtigungen, wenn Dienste nicht starten können</string>
+    <string name="service_start_floating_mic">Tippen, um schwebendes Mikrofon zu starten</string>
+    <string name="service_start_folder_monitor">Tippen, um Ordnerüberwachung zu starten</string>
     <string name="accessibility_service_label">TranSlander Texteingabe</string>
     <string name="accessibility_service_description">Ermöglicht TranSlander, transkribierten Text direkt in Textfelder einzufügen. Für nahtlose Spracheingabe aktivieren.</string>
 

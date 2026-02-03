@@ -3,6 +3,10 @@
     <string name="settings_title">Seaded</string>
     <string name="service_notification_title">TranSlander aktiivne</string>
     <string name="service_notification_text">Puuduta hõljuvat mikrofoni kõne transkribeerimiseks</string>
+    <string name="service_alert_channel_name">Teenuse hoiatused</string>
+    <string name="service_alert_channel_description">Teavitused, kui teenused ei käivitu</string>
+    <string name="service_start_floating_mic">Puuduta hõljuva mikrofoni käivitamiseks</string>
+    <string name="service_start_folder_monitor">Puuduta kaustaseire käivitamiseks</string>
     <string name="accessibility_service_label">TranSlander tekstisisestus</string>
     <string name="accessibility_service_description">Lubab TranSlander\'il sisestada transkribeeritud teksti otse tekstiväljadele. Luba see sujuvaks kõnest tekstiks sisestuseks.</string>
     <string name="section_speech_model">Kõnemudel</string>

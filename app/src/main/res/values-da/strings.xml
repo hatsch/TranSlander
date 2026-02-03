@@ -3,6 +3,10 @@
     <string name="settings_title">Indstillinger</string>
     <string name="service_notification_title">TranSlander aktiv</string>
     <string name="service_notification_text">Tryk på den flydende mikrofon for at transskribere tale</string>
+    <string name="service_alert_channel_name">Serviceadvarsler</string>
+    <string name="service_alert_channel_description">Notifikationer når tjenester ikke kan starte</string>
+    <string name="service_start_floating_mic">Tryk for at starte flydende mikrofon</string>
+    <string name="service_start_folder_monitor">Tryk for at starte mappeovervågning</string>
     <string name="accessibility_service_label">TranSlander tekstinput</string>
     <string name="accessibility_service_description">Giver TranSlander mulighed for at indsætte transskriberet tekst direkte i tekstfelter. Aktivér dette for problemfri tale-til-tekst-input.</string>
     <string name="section_speech_model">Talemodel</string>

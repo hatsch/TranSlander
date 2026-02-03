@@ -5,6 +5,10 @@
     <!-- Service -->
     <string name="service_notification_title">TranSlander attivo</string>
     <string name="service_notification_text">Tocca il microfono flottante per trascrivere il parlato</string>
+    <string name="service_alert_channel_name">Avvisi di servizio</string>
+    <string name="service_alert_channel_description">Notifiche quando i servizi non riescono ad avviarsi</string>
+    <string name="service_start_floating_mic">Tocca per avviare il microfono flottante</string>
+    <string name="service_start_folder_monitor">Tocca per avviare il monitoraggio cartelle</string>
     <string name="accessibility_service_label">Immissione testo TranSlander</string>
     <string name="accessibility_service_description">Consente a TranSlander di inserire testo trascritto direttamente nei campi di testo. Attivalo per un\'immissione vocale fluida.</string>
 

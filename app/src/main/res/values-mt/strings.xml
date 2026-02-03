@@ -3,6 +3,10 @@
     <string name="settings_title">Settings</string>
     <string name="service_notification_title">TranSlander Attiv</string>
     <string name="service_notification_text">Tektek il-mikrofonu li jżomm biex tittraskrivi d-diskors</string>
+    <string name="service_alert_channel_name">Twissijiet tas-Servizz</string>
+    <string name="service_alert_channel_description">Notifiki meta s-servizzi ma jirnexxilhomx jibdew</string>
+    <string name="service_start_floating_mic">Tektek biex tibda l-mikrofonu li jżomm</string>
+    <string name="service_start_folder_monitor">Tektek biex tibda l-monitoraġġ tal-folders</string>
     <string name="accessibility_service_label">Dħul ta\' test TranSlander</string>
     <string name="accessibility_service_description">Jippermetti lil TranSlander idaħħal test ittraskkritt direttament f\'oqsma tat-test. Attiva dan għal dħul bla xkiel ta\' vuċi-għal-test.</string>
     <string name="section_speech_model">Mudell tad-Diskors</string>

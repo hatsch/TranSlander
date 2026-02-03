@@ -3,6 +3,10 @@
     <string name="settings_title">Inställningar</string>
     <string name="service_notification_title">TranSlander aktiv</string>
     <string name="service_notification_text">Tryck på den flytande mikrofonen för att transkribera tal</string>
+    <string name="service_alert_channel_name">Tjänstvarningar</string>
+    <string name="service_alert_channel_description">Aviseringar när tjänster inte kan starta</string>
+    <string name="service_start_floating_mic">Tryck för att starta flytande mikrofon</string>
+    <string name="service_start_folder_monitor">Tryck för att starta mappövervakning</string>
     <string name="accessibility_service_label">TranSlander textinmatning</string>
     <string name="accessibility_service_description">Låter TranSlander infoga transkriberad text direkt i textfält. Aktivera detta för sömlös röst-till-text-inmatning.</string>
     <string name="section_speech_model">Talmodell</string>

@@ -5,6 +5,10 @@
     <!-- Service -->
     <string name="service_notification_title">TranSlander je aktívny</string>
     <string name="service_notification_text">Klepnite na plávajúci mikrofón pre prepis reči</string>
+    <string name="service_alert_channel_name">Upozornenia služieb</string>
+    <string name="service_alert_channel_description">Oznámenia pri zlyhaní spustenia služieb</string>
+    <string name="service_start_floating_mic">Klepnite pre spustenie plávajúceho mikrofónu</string>
+    <string name="service_start_folder_monitor">Klepnite pre spustenie monitorovania priečinkov</string>
     <string name="accessibility_service_label">TranSlander Textový vstup</string>
     <string name="accessibility_service_description">Umožňuje TranSlander vkladať prepísaný text priamo do textových polí. Povoľte pre plynulý hlasový vstup.</string>
 

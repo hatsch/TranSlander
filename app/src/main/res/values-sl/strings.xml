@@ -5,6 +5,10 @@
     <!-- Service -->
     <string name="service_notification_title">TranSlander je aktiven</string>
     <string name="service_notification_text">Tapnite plavajoči mikrofon za prepis govora</string>
+    <string name="service_alert_channel_name">Opozorila storitev</string>
+    <string name="service_alert_channel_description">Obvestila, ko se storitve ne zaženejo</string>
+    <string name="service_start_floating_mic">Tapnite za zagon plavajočega mikrofona</string>
+    <string name="service_start_folder_monitor">Tapnite za zagon nadzora map</string>
     <string name="accessibility_service_label">TranSlander Vnos besedila</string>
     <string name="accessibility_service_description">Omogoča TranSlander vstavljanje prepisanega besedila neposredno v besedilna polja. Omogočite za nemoten glasovni vnos besedila.</string>
 

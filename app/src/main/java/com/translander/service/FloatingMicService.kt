@@ -91,7 +91,30 @@ class FloatingMicService : Service() {
             }
         }
 
-        startForeground(TranslanderApp.NOTIFICATION_ID, createNotification())
+        try {
+            startForeground(TranslanderApp.NOTIFICATION_ID, createNotification())
+            // Dismiss any failure notification from previous boot attempt
+            getSystemService(android.app.NotificationManager::class.java)
+                ?.cancel(TranslanderApp.SERVICE_ALERT_NOTIFICATION_ID)
+        } catch (e: android.app.ForegroundServiceStartNotAllowedException) {
+            // Android 14+ blocks microphone FGS from BOOT_COMPLETED or background
+            Log.w(TAG, "Cannot start foreground service from boot/background", e)
+            showFailureNotification()
+            stopSelf()
+            return START_NOT_STICKY
+        } catch (e: SecurityException) {
+            // Missing RECORD_AUDIO permission for microphone FGS type
+            Log.w(TAG, "Missing permission for foreground service", e)
+            showFailureNotification()
+            stopSelf()
+            return START_NOT_STICKY
+        } catch (e: IllegalStateException) {
+            // Race condition: app went to background before startForeground completed
+            Log.w(TAG, "Cannot start foreground service, app in background", e)
+            showFailureNotification()
+            stopSelf()
+            return START_NOT_STICKY
+        }
         return START_NOT_STICKY  // Don't auto-restart
     }
 
@@ -320,6 +343,10 @@ class FloatingMicService : Service() {
         micButton.setBackgroundResource(
             if (isRecording) R.drawable.mic_button_recording_bg else R.drawable.mic_button_bg
         )
+    }
+
+    private fun showFailureNotification() {
+        TranslanderApp.instance.showServiceStartNotification(R.string.service_start_floating_mic)
     }
 
     private fun createNotification(): Notification {

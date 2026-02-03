@@ -3,6 +3,10 @@
     <string name="settings_title">Definições</string>
     <string name="service_notification_title">TranSlander ativo</string>
     <string name="service_notification_text">Toque no microfone flutuante para transcrever voz</string>
+    <string name="service_alert_channel_name">Alertas de serviço</string>
+    <string name="service_alert_channel_description">Notificações quando os serviços não conseguem iniciar</string>
+    <string name="service_start_floating_mic">Toque para iniciar o microfone flutuante</string>
+    <string name="service_start_folder_monitor">Toque para iniciar o monitor de pastas</string>
     <string name="accessibility_service_label">TranSlander introdução de texto</string>
     <string name="accessibility_service_description">Permite que o TranSlander insira texto transcrito diretamente em campos de texto. Ative esta opção para uma introdução de voz para texto sem interrupções.</string>
     <string name="section_speech_model">Modelo de voz</string>

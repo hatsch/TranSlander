@@ -5,6 +5,10 @@
     <!-- Service -->
     <string name="service_notification_title">TranSlander е активен</string>
     <string name="service_notification_text">Докоснете плаващия микрофон за транскрибиране на реч</string>
+    <string name="service_alert_channel_name">Сигнали за услуги</string>
+    <string name="service_alert_channel_description">Известия при неуспешно стартиране на услуги</string>
+    <string name="service_start_floating_mic">Натиснете, за да стартирате плаващия микрофон</string>
+    <string name="service_start_folder_monitor">Натиснете, за да стартирате наблюдението на папки</string>
     <string name="accessibility_service_label">TranSlander Текстов вход</string>
     <string name="accessibility_service_description">Позволява на TranSlander да вмъква транскрибиран текст директно в текстови полета. Активирайте за безпроблемно гласово въвеждане на текст.</string>
 
