@@ -141,8 +141,12 @@ class SettingsActivity : ComponentActivity() {
                     hasAudioFilesPermission = { hasAudioFilesPermission() },
                     onOpenAccessibilitySettings = { openAccessibilitySettings() },
                     onOpenAppSettings = { openAppSettings() },
-                    onStartService = { startFloatingService() },
+                    onStartService = {
+                        requestNotificationPermissionIfNeeded()
+                        startFloatingService()
+                    },
                     onStopService = { stopFloatingService() },
+                    onStartAudioMonitor = { requestNotificationPermissionIfNeeded() },
                     onRestartService = { restartFloatingService() },
                     onPickFolder = { callback -> openFolderPicker(callback) },
                     onPickModelFolder = { callback ->
@@ -202,6 +206,20 @@ class SettingsActivity : ComponentActivity() {
             ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED
         } else {
             ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun hasNotificationPermission(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+        } else {
+            true // Not needed before Android 13
+        }
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && !hasNotificationPermission()) {
+            requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
@@ -294,6 +312,7 @@ fun SettingsScreen(
     onStartService: () -> Unit,
     onStopService: () -> Unit,
     onRestartService: () -> Unit,
+    onStartAudioMonitor: () -> Unit,
     onPickFolder: ((String) -> Unit) -> Unit,
     onPickModelFolder: ((Uri) -> Unit) -> Unit,
     isVoiceImeEnabled: () -> Boolean,
@@ -589,6 +608,7 @@ fun SettingsScreen(
                     enabled = hasAudioPermission.value,
                     onCheckedChange = { enabled ->
                         scope.launch {
+                            if (enabled) onStartAudioMonitor()
                             settingsRepository.setAudioMonitorEnabled(enabled)
                             transcribeManager.setAudioMonitorEnabled(enabled)
                         }
