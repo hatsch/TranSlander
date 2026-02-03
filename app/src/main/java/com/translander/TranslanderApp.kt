@@ -3,15 +3,12 @@ package com.translander
 import android.app.Application
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
-import android.content.Intent
 import android.os.Build
 import android.util.Log
-import androidx.core.app.NotificationCompat
-import com.translander.settings.SettingsActivity
 import com.translander.asr.DictionaryManager
 import com.translander.asr.ModelManager
 import com.translander.asr.RecognizerManager
+import com.translander.notification.ServiceAlertNotification
 import com.translander.settings.SettingsRepository
 import com.translander.transcribe.TranscribeManager
 import kotlinx.coroutines.CoroutineScope
@@ -38,6 +35,10 @@ class TranslanderApp : Application() {
 
     lateinit var transcribeManager: TranscribeManager
         private set
+
+    val serviceAlertNotification: ServiceAlertNotification by lazy {
+        ServiceAlertNotification(this)
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -89,28 +90,6 @@ class TranslanderApp : Application() {
             }
             notificationManager.createNotificationChannel(alertChannel)
         }
-    }
-
-    fun showServiceStartNotification(messageResId: Int) {
-        val intent = Intent(this, SettingsActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP
-        }
-        val pendingIntent = PendingIntent.getActivity(
-            this, 0, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val notification = NotificationCompat.Builder(this, SERVICE_ALERT_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_mic)
-            .setContentTitle(getString(R.string.app_name))
-            .setContentText(getString(messageResId))
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-            .build()
-
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager.notify(SERVICE_ALERT_NOTIFICATION_ID, notification)
     }
 
     companion object {

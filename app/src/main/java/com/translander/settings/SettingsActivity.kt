@@ -168,7 +168,7 @@ class SettingsActivity : ComponentActivity() {
         // Revalidate model files on disk
         TranslanderApp.instance.modelManager.checkModelStatus()
 
-        // Sync floating service state
+        // Sync floating service state and restart services if needed (Android 14+ boot workaround)
         val app = TranslanderApp.instance
         app.applicationScope.launch {
             val serviceEnabled = app.settingsRepository.serviceEnabled.first()
@@ -186,6 +186,15 @@ class SettingsActivity : ComponentActivity() {
                     startFloatingService()
                 }
             }
+
+            // Restart audio monitor if enabled (needed on Android 14+ where boot start is blocked)
+            val audioMonitorEnabled = app.settingsRepository.audioMonitorEnabled.first()
+            if (audioMonitorEnabled) {
+                app.transcribeManager.setAudioMonitorEnabled(true)
+            }
+
+            // Dismiss the boot notification now that services are started
+            app.serviceAlertNotification.dismiss()
         }
     }
 
