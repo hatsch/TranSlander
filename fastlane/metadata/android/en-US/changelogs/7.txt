@@ -1,0 +1,4 @@
+Android 14+ boot fix:
+• Services now start reliably after reboot
+• Notification prompts you to open app if needed
+• Request notification permission on Android 13+

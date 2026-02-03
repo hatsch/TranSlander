@@ -99,6 +99,15 @@ When bumping a version, update all of these:
 3. `fastlane/metadata/android/en-US/changelogs/{versionCode}.txt` — Short changelog for F-Droid/store
 4. `github-release.md` — Release notes for GitHub releases
 5. Tag the release: `git tag v{versionName}`
+6. Update fdroiddata YAML — see rules below
+
+**fdroiddata YAML rules:**
+- Only change version fields (`versionName`, `versionCode`, `commit`, `CurrentVersion`, `CurrentVersionCode`)
+- Never modify build commands, paths, or formatting (e.g., keep trailing spaces on `cp ` line)
+- Always ask before pushing to fdroiddata remote
+
+**Git commits:**
+- Never include `Co-Authored-By` in commit messages
 
 ## Architecture
 
