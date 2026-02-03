@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.Environment
 import android.os.FileObserver
@@ -63,7 +64,13 @@ class AudioMonitorService : Service() {
         }
 
         try {
-            startForeground(SERVICE_NOTIFICATION_ID, createServiceNotification())
+            val notification = createServiceNotification()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(SERVICE_NOTIFICATION_ID, notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+            } else {
+                startForeground(SERVICE_NOTIFICATION_ID, notification)
+            }
             // Dismiss any failure notification from previous boot attempt
             getSystemService(android.app.NotificationManager::class.java)
                 ?.cancel(TranslanderApp.SERVICE_ALERT_NOTIFICATION_ID)
@@ -127,7 +134,7 @@ class AudioMonitorService : Service() {
     }
 
     private fun showFailureNotification() {
-        TranslanderApp.instance.showServiceStartNotification(R.string.service_start_folder_monitor)
+        TranslanderApp.instance.serviceAlertNotification.show(R.string.service_start_folder_monitor)
     }
 
     private fun createServiceNotification(): Notification {
