@@ -1,0 +1,2 @@
+• Fix folder monitor 6-hour timeout on Android 15+
+• Code cleanup and documentation improvements

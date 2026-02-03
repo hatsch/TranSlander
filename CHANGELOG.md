@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.2] - 2026-02-03
+
+### Fixed
+- Fix folder monitor 6-hour timeout on Android 15+ (switch to specialUse FGS type)
+- Clean up dead code for minSdk 26 compatibility
+
+### Changed
+- Extract ServiceAlertNotification for better code organization
+- Add documentation for Android 14/15/16 FGS restrictions
+
 ## [1.2.1] - 2026-02-03
 
 ### Fixed
@@ -72,6 +82,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Keyboard integration for HeliBoard and others
 - Model integrity verification with SHA256 checksums
 
+[1.2.2]: https://github.com/hatsch/TranSlander/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/hatsch/TranSlander/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/hatsch/TranSlander/compare/v1.1.1...v1.2.0
 [1.1.1]: https://github.com/hatsch/TranSlander/compare/v1.1.0...v1.1.1
