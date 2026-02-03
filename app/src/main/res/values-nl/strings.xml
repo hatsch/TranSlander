@@ -3,6 +3,10 @@
     <string name="settings_title">Instellingen</string>
     <string name="service_notification_title">TranSlander actief</string>
     <string name="service_notification_text">Tik op de zwevende microfoon om spraak te transcriberen</string>
+    <string name="service_alert_channel_name">Servicewaarschuwingen</string>
+    <string name="service_alert_channel_description">Meldingen wanneer services niet kunnen starten</string>
+    <string name="service_start_floating_mic">Tik om zwevende microfoon te starten</string>
+    <string name="service_start_folder_monitor">Tik om mapbewaking te starten</string>
     <string name="accessibility_service_label">TranSlander tekstinvoer</string>
     <string name="accessibility_service_description">Hiermee kan TranSlander getranscribeerde tekst rechtstreeks in tekstvelden invoegen. Schakel dit in voor naadloze spraak-naar-tekst invoer.</string>
     <string name="section_speech_model">Spraakmodel</string>

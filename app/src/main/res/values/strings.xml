@@ -6,6 +6,10 @@
     <!-- Service -->
     <string name="service_notification_title">TranSlander Active</string>
     <string name="service_notification_text">Tap the floating mic to transcribe speech</string>
+    <string name="service_alert_channel_name">Service Alerts</string>
+    <string name="service_alert_channel_description">Notifications when services need to be started</string>
+    <string name="service_start_floating_mic">Tap to start floating mic</string>
+    <string name="service_start_folder_monitor">Tap to start folder monitor</string>
     <string name="accessibility_service_label">TranSlander Text Input</string>
     <string name="accessibility_service_description">Allows TranSlander to insert transcribed text directly into text fields. Enable this for seamless voice-to-text input.</string>
 

@@ -12,6 +12,7 @@ A fully offline voice typing app for Android. Speak into your phone and text app
 - Uses [Parakeet TDT v3](https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8) neural model (~600MB) running locally via [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx)
 - Supports 25 languages with auto-detection
 - No internet connection needed after model download
+- **Import from folder** — load model files from local storage instead of downloading
 
 ### Works in Any App
 - Uses Android Accessibility API to inject text directly into any focused text field
@@ -148,7 +149,7 @@ app/src/main/java/com/translander/
 ├── asr/                      # Speech recognition
 │   ├── AudioRecorder.kt      # 16kHz PCM recording
 │   ├── DictionaryManager.kt  # Word correction rules
-│   ├── ModelManager.kt       # Model download from HuggingFace
+│   ├── ModelManager.kt       # Model download and local import
 │   ├── ParakeetRecognizer.kt # ONNX inference wrapper
 │   └── RecognizerManager.kt  # Shared recognizer singleton
 ├── ime/
@@ -195,7 +196,7 @@ This app is provided as-is for personal use. Speech recognition accuracy depends
 
 **Model Attribution:** Speech recognition uses [NVIDIA Parakeet TDT](https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3), licensed under [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/). ONNX conversion by [csukuangfj/sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx).
 
-**Privacy:** All speech processing happens locally on your device. No audio data is ever sent to any server. After the [speech model](https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8) is downloaded, you can revoke the Network permission in Android Settings to ensure the app can never access the internet.
+**Privacy:** All speech processing happens locally on your device. No audio data is ever sent to any server. You can [download the model](https://huggingface.co/csukuangfj/sherpa-onnx-nemo-parakeet-tdt-0.6b-v3-int8) directly or import it from a local folder, then revoke the Network permission in Android Settings to ensure the app can never access the internet.
 
 ---
 

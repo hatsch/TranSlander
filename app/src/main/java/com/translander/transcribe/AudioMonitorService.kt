@@ -62,7 +62,30 @@ class AudioMonitorService : Service() {
             return START_NOT_STICKY
         }
 
-        startForeground(SERVICE_NOTIFICATION_ID, createServiceNotification())
+        try {
+            startForeground(SERVICE_NOTIFICATION_ID, createServiceNotification())
+            // Dismiss any failure notification from previous boot attempt
+            getSystemService(android.app.NotificationManager::class.java)
+                ?.cancel(TranslanderApp.SERVICE_ALERT_NOTIFICATION_ID)
+        } catch (e: android.app.ForegroundServiceStartNotAllowedException) {
+            // Android 14+ blocks dataSync FGS from BOOT_COMPLETED or background
+            Log.w(TAG, "Cannot start foreground service from boot/background", e)
+            showFailureNotification()
+            stopSelf()
+            return START_NOT_STICKY
+        } catch (e: SecurityException) {
+            // Missing permission for FGS type
+            Log.w(TAG, "Missing permission for foreground service", e)
+            showFailureNotification()
+            stopSelf()
+            return START_NOT_STICKY
+        } catch (e: IllegalStateException) {
+            // Race condition: app went to background before startForeground completed
+            Log.w(TAG, "Cannot start foreground service, app in background", e)
+            showFailureNotification()
+            stopSelf()
+            return START_NOT_STICKY
+        }
         startMonitoring()
 
         return START_STICKY
@@ -101,6 +124,10 @@ class AudioMonitorService : Service() {
             }
             notificationManager.createNotificationChannel(audioDetectedChannel)
         }
+    }
+
+    private fun showFailureNotification() {
+        TranslanderApp.instance.showServiceStartNotification(R.string.service_start_folder_monitor)
     }
 
     private fun createServiceNotification(): Notification {

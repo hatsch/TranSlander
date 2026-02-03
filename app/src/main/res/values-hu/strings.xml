@@ -5,6 +5,10 @@
     <!-- Service -->
     <string name="service_notification_title">TranSlander aktív</string>
     <string name="service_notification_text">Koppintson a lebegő mikrofonra a beszéd átírásához</string>
+    <string name="service_alert_channel_name">Szolgáltatás figyelmeztetések</string>
+    <string name="service_alert_channel_description">Értesítések, ha a szolgáltatások nem indulnak el</string>
+    <string name="service_start_floating_mic">Koppintson a lebegő mikrofon indításához</string>
+    <string name="service_start_folder_monitor">Koppintson a mappafigyelő indításához</string>
     <string name="accessibility_service_label">TranSlander szövegbevitel</string>
     <string name="accessibility_service_description">Lehetővé teszi a TranSlander számára, hogy az átírt szöveget közvetlenül a szövegmezőkbe illessze be. Engedélyezze a zökkenőmentes hangalapú szövegbevitelhez.</string>
 

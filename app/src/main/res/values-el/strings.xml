@@ -3,6 +3,10 @@
     <string name="settings_title">Ρυθμίσεις</string>
     <string name="service_notification_title">Το TranSlander είναι ενεργό</string>
     <string name="service_notification_text">Πατήστε το αιωρούμενο μικρόφωνο για μεταγραφή ομιλίας</string>
+    <string name="service_alert_channel_name">Ειδοποιήσεις υπηρεσιών</string>
+    <string name="service_alert_channel_description">Ειδοποιήσεις όταν οι υπηρεσίες αποτυγχάνουν να ξεκινήσουν</string>
+    <string name="service_start_floating_mic">Πατήστε για εκκίνηση αιωρούμενου μικροφώνου</string>
+    <string name="service_start_folder_monitor">Πατήστε για εκκίνηση παρακολούθησης φακέλων</string>
     <string name="accessibility_service_label">Εισαγωγή κειμένου TranSlander</string>
     <string name="accessibility_service_description">Επιτρέπει στο TranSlander να εισάγει μεταγεγραμμένο κείμενο απευθείας σε πεδία κειμένου. Ενεργοποιήστε το για απρόσκοπτη εισαγωγή ομιλίας-σε-κείμενο.</string>
     <string name="section_speech_model">Μοντέλο ομιλίας</string>

@@ -86,8 +86,19 @@ The NDK version must match between the fdroiddata YAML and the local SDK. `ANDRO
 | fdroid build skips silently | APK already exists in `unsigned/` | Remove existing APK and src tarball |
 | `Environment variable {env: serverwebroot}` | Missing fdroid config (warning, not fatal) | Ignore — only needed for `fdroid publish` |
 | Lint `MissingTranslation` | New string added to `values/strings.xml` without translations | Add to all `values-{locale}/strings.xml` files |
+
+**Translations workflow:** When adding new strings, defer translations until the feature is complete and stable. This avoids repeatedly updating 23 locale files during iterative development. Add all translations in one batch before the release.
 | Lint `ExtraTranslation` | String in translation file not in default `strings.xml` | Remove from translation files |
 | XML apostrophe crash | Unescaped `'` in strings.xml | Use `\'` — e.g., `there\'s` not `there's` |
+
+## Release Checklist
+
+When bumping a version, update all of these:
+1. `app/build.gradle.kts` — `versionCode` and `versionName`
+2. `CHANGELOG.md` — Add new version entry with date
+3. `fastlane/metadata/android/en-US/changelogs/{versionCode}.txt` — Short changelog for F-Droid/store
+4. `github-release.md` — Release notes for GitHub releases
+5. Tag the release: `git tag v{versionName}`
 
 ## Architecture
 
