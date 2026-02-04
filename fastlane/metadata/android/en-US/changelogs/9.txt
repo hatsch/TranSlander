@@ -1,0 +1,4 @@
+• Thread safety improvements for recording state
+• Fix deprecated API usage (onBackPressed, AccessibilityNodeInfo)
+• Better resource management and async handling
+• Remove non-functional language setting
