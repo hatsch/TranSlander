@@ -72,7 +72,7 @@ class ParakeetRecognizer(
         }
     }
 
-    fun transcribe(audioData: ShortArray, @Suppress("UNUSED_PARAMETER") languageCode: String? = null): String? {
+    fun transcribe(audioData: ShortArray): String? {
         val rec = recognizer ?: return null
 
         if (audioData.isEmpty()) {

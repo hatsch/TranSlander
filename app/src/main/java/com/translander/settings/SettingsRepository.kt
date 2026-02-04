@@ -18,7 +18,6 @@ class SettingsRepository(private val context: Context) {
 
     companion object {
         private val SERVICE_ENABLED_KEY = booleanPreferencesKey("service_enabled")
-        private val LANGUAGE_KEY = stringPreferencesKey("preferred_language")
         private val THEME_KEY = stringPreferencesKey("theme_mode")
         private val BUTTON_X_KEY = intPreferencesKey("button_x")
         private val BUTTON_Y_KEY = intPreferencesKey("button_y")
@@ -27,8 +26,6 @@ class SettingsRepository(private val context: Context) {
         private val AUDIO_MONITOR_ENABLED_KEY = booleanPreferencesKey("audio_monitor_enabled")
         private val MONITORED_FOLDERS_KEY = stringSetPreferencesKey("monitored_folders")
         private val FLOATING_BUTTON_SIZE_KEY = stringPreferencesKey("floating_button_size")
-
-        const val LANGUAGE_AUTO = "auto"
 
         const val BUTTON_SIZE_SMALL = "small"   // 44dp
         const val BUTTON_SIZE_MEDIUM = "medium" // 56dp (default)
@@ -40,10 +37,6 @@ class SettingsRepository(private val context: Context) {
 
     val serviceEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
         preferences[SERVICE_ENABLED_KEY] ?: false
-    }
-
-    val preferredLanguage: Flow<String> = context.dataStore.data.map { preferences ->
-        preferences[LANGUAGE_KEY] ?: LANGUAGE_AUTO
     }
 
     val themeMode: Flow<String> = context.dataStore.data.map { preferences ->
@@ -112,12 +105,6 @@ class SettingsRepository(private val context: Context) {
         }
     }
 
-    suspend fun setPreferredLanguage(language: String) {
-        context.dataStore.edit { preferences ->
-            preferences[LANGUAGE_KEY] = language
-        }
-    }
-
     suspend fun setThemeMode(mode: String) {
         context.dataStore.edit { preferences ->
             preferences[THEME_KEY] = mode
@@ -130,38 +117,4 @@ class SettingsRepository(private val context: Context) {
             preferences[BUTTON_Y_KEY] = y
         }
     }
-
-    data class Language(
-        val code: String,
-        val displayName: String
-    )
-
-    fun getSupportedLanguages(): List<Language> = listOf(
-        Language("auto", "Auto-detect"),
-        Language("en", "English"),
-        Language("de", "German"),
-        Language("fr", "French"),
-        Language("es", "Spanish"),
-        Language("it", "Italian"),
-        Language("pt", "Portuguese"),
-        Language("nl", "Dutch"),
-        Language("pl", "Polish"),
-        Language("ru", "Russian"),
-        Language("uk", "Ukrainian"),
-        Language("cs", "Czech"),
-        Language("sk", "Slovak"),
-        Language("hu", "Hungarian"),
-        Language("ro", "Romanian"),
-        Language("bg", "Bulgarian"),
-        Language("hr", "Croatian"),
-        Language("sl", "Slovenian"),
-        Language("el", "Greek"),
-        Language("da", "Danish"),
-        Language("sv", "Swedish"),
-        Language("fi", "Finnish"),
-        Language("et", "Estonian"),
-        Language("lv", "Latvian"),
-        Language("lt", "Lithuanian"),
-        Language("mt", "Maltese")
-    )
 }

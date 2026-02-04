@@ -105,14 +105,14 @@ class RecognizerManager(private val context: Context, private val modelManager: 
      * Transcribe audio data using the shared recognizer.
      * Applies dictionary replacements if enabled.
      */
-    suspend fun transcribe(audioData: ShortArray, languageCode: String?): String? {
+    suspend fun transcribe(audioData: ShortArray): String? {
         val rec = recognizer
         if (rec == null) {
             Log.w(TAG, "Recognizer not initialized")
             return null
         }
         return withContext(Dispatchers.IO) {
-            val rawResult = rec.transcribe(audioData, languageCode)
+            val rawResult = rec.transcribe(audioData)
 
             // Apply dictionary replacements if enabled
             if (rawResult != null) {

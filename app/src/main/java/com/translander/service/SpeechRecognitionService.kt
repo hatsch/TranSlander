@@ -154,7 +154,7 @@ class SpeechRecognitionService : RecognitionService() {
                 Log.i(TAG, "Audio data size: ${audioData.size} samples")
 
                 // Transcribe
-                val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, null)
+                val result = TranslanderApp.instance.recognizerManager.transcribe(audioData)
 
                 withContext(Dispatchers.Main) {
                     if (!result.isNullOrBlank()) {

@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Виправлення слів</string>
     <string name="section_appearance">Зовнішній вигляд</string>
     <string name="setting_service_enabled">Увімкнути службу</string>
-    <string name="setting_language">Мова мовлення</string>
-    <string name="setting_language_auto">Автоматичне визначення</string>
     <string name="setting_theme">Тема</string>
     <string name="setting_theme_system">Системна</string>
     <string name="setting_theme_light">Світла</string>

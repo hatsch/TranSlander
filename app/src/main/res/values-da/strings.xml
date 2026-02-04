@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Ordrettelser</string>
     <string name="section_appearance">Udseende</string>
     <string name="setting_service_enabled">Aktivér tjeneste</string>
-    <string name="setting_language">Talesprog</string>
-    <string name="setting_language_auto">Automatisk registrering</string>
     <string name="setting_theme">Tema</string>
     <string name="setting_theme_system">System</string>
     <string name="setting_theme_light">Lyst</string>

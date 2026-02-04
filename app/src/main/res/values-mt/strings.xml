@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Korrezzjonijiet tal-Kliem</string>
     <string name="section_appearance">Dehra</string>
     <string name="setting_service_enabled">Attiva s-Servizz</string>
-    <string name="setting_language">Lingwa Mitkellma</string>
-    <string name="setting_language_auto">Individwa awtomatikament</string>
     <string name="setting_theme">Tema</string>
     <string name="setting_theme_system">Sistema</string>
     <string name="setting_theme_light">Ċar</string>

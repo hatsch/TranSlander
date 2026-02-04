@@ -25,8 +25,6 @@
 
     <!-- Settings Items -->
     <string name="setting_service_enabled">Povolit službu</string>
-    <string name="setting_language">Mluvený jazyk</string>
-    <string name="setting_language_auto">Automatická detekce</string>
     <string name="setting_theme">Motiv</string>
     <string name="setting_theme_system">Systémový</string>
     <string name="setting_theme_light">Světlý</string>

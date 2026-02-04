@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Corecții de cuvinte</string>
     <string name="section_appearance">Aspect</string>
     <string name="setting_service_enabled">Activează serviciul</string>
-    <string name="setting_language">Limba vorbită</string>
-    <string name="setting_language_auto">Detectare automată</string>
     <string name="setting_theme">Temă</string>
     <string name="setting_theme_system">Sistem</string>
     <string name="setting_theme_light">Deschisă</string>

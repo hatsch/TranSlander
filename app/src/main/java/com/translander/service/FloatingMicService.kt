@@ -311,10 +311,7 @@ class FloatingMicService : Service() {
 
     private suspend fun transcribeAudio(audioData: ShortArray) {
         Log.i(TAG, "transcribeAudio called with ${audioData.size} samples")
-        val language = TranslanderApp.instance.settingsRepository.preferredLanguage.first()
-        val langCode = if (language == "auto") null else language
-
-        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, langCode)
+        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData)
         Log.i(TAG, "Transcription result: '$result'")
 
         withContext(Dispatchers.Main) {

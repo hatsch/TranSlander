@@ -200,7 +200,7 @@ class VoiceInputActivity : Activity() {
 
                 Log.i(TAG, "Audio data: ${audioData.size} samples")
 
-                val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, null)
+                val result = TranslanderApp.instance.recognizerManager.transcribe(audioData)
 
                 withContext(Dispatchers.Main) {
                     if (!result.isNullOrBlank()) {

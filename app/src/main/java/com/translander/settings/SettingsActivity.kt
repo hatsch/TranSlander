@@ -333,7 +333,6 @@ fun SettingsScreen(
     val modelManager = TranslanderApp.instance.modelManager
 
     val serviceEnabled by settingsRepository.serviceEnabled.collectAsStateWithLifecycle(initialValue = false)
-    val preferredLanguage by settingsRepository.preferredLanguage.collectAsStateWithLifecycle(initialValue = SettingsRepository.LANGUAGE_AUTO)
     val themeMode by settingsRepository.themeMode.collectAsStateWithLifecycle(initialValue = SettingsRepository.THEME_SYSTEM)
     val autoLoadModel by settingsRepository.autoLoadModel.collectAsStateWithLifecycle(initialValue = false)
     val downloadState by modelManager.downloadState.collectAsStateWithLifecycle()
@@ -453,16 +452,6 @@ fun SettingsScreen(
                     onCheckedChange = { enabled ->
                         scope.launch {
                             settingsRepository.setAutoLoadModel(enabled)
-                        }
-                    }
-                )
-
-                LanguageSettingItem(
-                    selectedLanguage = preferredLanguage,
-                    languages = settingsRepository.getSupportedLanguages(),
-                    onLanguageSelected = { lang ->
-                        scope.launch {
-                            settingsRepository.setPreferredLanguage(lang)
                         }
                     }
                 )
@@ -946,41 +935,6 @@ fun ModelSettingItem(
                 }
             }
         )
-    }
-}
-
-@Composable
-fun LanguageSettingItem(
-    selectedLanguage: String,
-    languages: List<SettingsRepository.Language>,
-    onLanguageSelected: (String) -> Unit
-) {
-    var expanded by remember { mutableStateOf(false) }
-    val selectedLangName = languages.find { it.code == selectedLanguage }?.displayName ?: stringResource(R.string.setting_language_auto)
-
-    ListItem(
-        headlineContent = { Text(stringResource(R.string.setting_language)) },
-        supportingContent = { Text(selectedLangName) },
-        leadingContent = { Icon(Icons.Default.Language, contentDescription = null) },
-        modifier = Modifier.clickable { expanded = true }
-    )
-
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = { expanded = false }
-    ) {
-        languages.forEach { lang ->
-            DropdownMenuItem(
-                text = { Text(lang.displayName) },
-                onClick = {
-                    onLanguageSelected(lang.code)
-                    expanded = false
-                },
-                leadingIcon = if (lang.code == selectedLanguage) {
-                    { Icon(Icons.Default.Check, null) }
-                } else null
-            )
-        }
     }
 }
 

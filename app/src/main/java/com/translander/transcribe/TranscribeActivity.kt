@@ -196,13 +196,8 @@ fun TranscribeScreen(
             is AudioDecoder.DecodingState.Success -> {
                 // Transcribe audio
                 state = TranscribeState.Transcribing
-                val language = withContext(Dispatchers.IO) {
-                    settingsRepository.preferredLanguage.first()
-                        .takeIf { it != SettingsRepository.LANGUAGE_AUTO }
-                }
-
                 val result = withContext(Dispatchers.IO) {
-                    recognizerManager.transcribe(decodeResult.audioData, language)
+                    recognizerManager.transcribe(decodeResult.audioData)
                 }
                 if (result != null) {
                     state = TranscribeState.Success(result)

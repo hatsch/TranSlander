@@ -19,7 +19,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
@@ -160,10 +159,7 @@ class TextInjectionService : AccessibilityService() {
 
     private suspend fun transcribeAudio(audioData: ShortArray) {
         Log.i(TAG, "transcribeAudio called with ${audioData.size} samples")
-        val language = TranslanderApp.instance.settingsRepository.preferredLanguage.first()
-        val langCode = if (language == "auto") null else language
-
-        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, langCode)
+        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData)
         Log.i(TAG, "Transcription result: '$result'")
 
         if (!result.isNullOrBlank()) {

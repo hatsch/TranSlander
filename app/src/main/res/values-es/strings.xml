@@ -25,8 +25,6 @@
 
     <!-- Settings Items -->
     <string name="setting_service_enabled">Activar servicio</string>
-    <string name="setting_language">Idioma hablado</string>
-    <string name="setting_language_auto">Detección automática</string>
     <string name="setting_theme">Tema</string>
     <string name="setting_theme_system">Sistema</string>
     <string name="setting_theme_light">Claro</string>
