@@ -30,11 +30,21 @@ class DictionaryManager(private val context: Context) {
         val caseSensitive: Boolean = false
     )
 
+    /** Compiled regex pattern paired with replacement string */
+    private data class CompiledRule(
+        val pattern: Regex,
+        val replacement: String
+    )
+
     private val rulesFile = File(context.filesDir, RULES_FILE)
     private val mutex = Mutex()
 
     private val _rules = MutableStateFlow<List<ReplacementRule>>(emptyList())
     val rules: StateFlow<List<ReplacementRule>> = _rules
+
+    // Cached compiled regex patterns for performance
+    @Volatile
+    private var compiledRules: List<CompiledRule> = emptyList()
 
     init {
         // Load rules synchronously on init to ensure they're available immediately
@@ -64,10 +74,24 @@ class DictionaryManager(private val context: Context) {
                 )
             }
             _rules.value = loadedRules
+            rebuildCompiledRules(loadedRules)
             Log.i(TAG, "Loaded ${loadedRules.size} replacement rules")
         } catch (e: Exception) {
             Log.e(TAG, "Failed to load rules", e)
             _rules.value = emptyList()
+            compiledRules = emptyList()
+        }
+    }
+
+    /** Rebuild cached compiled regex patterns when rules change */
+    private fun rebuildCompiledRules(rules: List<ReplacementRule>) {
+        compiledRules = rules.map { rule ->
+            val pattern = if (rule.caseSensitive) {
+                "\\b${Regex.escape(rule.from)}\\b".toRegex()
+            } else {
+                "\\b${Regex.escape(rule.from)}\\b".toRegex(RegexOption.IGNORE_CASE)
+            }
+            CompiledRule(pattern, rule.to)
         }
     }
 
@@ -106,6 +130,7 @@ class DictionaryManager(private val context: Context) {
         currentRules.removeAll { it.from.equals(from, ignoreCase = true) }
         currentRules.add(ReplacementRule(from.trim(), to.trim(), caseSensitive))
         _rules.value = currentRules
+        rebuildCompiledRules(currentRules)
         saveRules()
         Log.i(TAG, "Added rule: '$from' -> '$to'")
     }
@@ -118,6 +143,7 @@ class DictionaryManager(private val context: Context) {
         val removed = currentRules.removeAll { it.from == from }
         if (removed) {
             _rules.value = currentRules
+            rebuildCompiledRules(currentRules)
             saveRules()
             Log.i(TAG, "Removed rule for: '$from'")
         }
@@ -126,18 +152,15 @@ class DictionaryManager(private val context: Context) {
     /**
      * Apply all replacement rules to the given text.
      * Uses whole-word matching with word boundaries.
+     * Uses pre-compiled regex patterns for performance.
      */
     fun applyReplacements(text: String): String {
-        if (text.isBlank() || _rules.value.isEmpty()) return text
+        val rules = compiledRules  // Capture volatile reference
+        if (text.isBlank() || rules.isEmpty()) return text
 
         var result = text
-        for (rule in _rules.value) {
-            val regex = if (rule.caseSensitive) {
-                "\\b${Regex.escape(rule.from)}\\b".toRegex()
-            } else {
-                "\\b${Regex.escape(rule.from)}\\b".toRegex(RegexOption.IGNORE_CASE)
-            }
-            result = result.replace(regex, rule.to)
+        for (rule in rules) {
+            result = result.replace(rule.pattern, rule.replacement)
         }
         return result
     }
@@ -189,8 +212,10 @@ class DictionaryManager(private val context: Context) {
                     currentRules.add(newRule)
                 }
                 _rules.value = currentRules
+                rebuildCompiledRules(currentRules)
             } else {
                 _rules.value = importedRules
+                rebuildCompiledRules(importedRules)
             }
             saveRules()
             Log.i(TAG, "Imported ${importedRules.size} rules (merge=$merge)")
@@ -204,6 +229,7 @@ class DictionaryManager(private val context: Context) {
      */
     suspend fun clearAllRules() = mutex.withLock {
         _rules.value = emptyList()
+        compiledRules = emptyList()
         saveRules()
         Log.i(TAG, "Cleared all rules")
     }

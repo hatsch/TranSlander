@@ -115,11 +115,11 @@ class TextInjectionService : AccessibilityService() {
         showToast(getString(R.string.state_recording))
 
         recordingJob = serviceScope.launch(Dispatchers.IO) {
-            recorderMutex.withLock {
-                audioRecorder = AudioRecorder()
+            val recorder = recorderMutex.withLock {
+                AudioRecorder().also { audioRecorder = it }
             }
             Log.i(TAG, "Starting audio recording")
-            audioRecorder?.startRecording()
+            recorder.startRecording()
         }
     }
 
@@ -252,12 +252,14 @@ class TextInjectionService : AccessibilityService() {
 
         for (i in 0 until node.childCount) {
             val child = node.getChild(i) ?: continue
-            val result = findFocusedNode(child)
-            if (result != null) {
+            try {
+                val result = findFocusedNode(child)
+                if (result != null) {
+                    return result
+                }
+            } finally {
                 child.recycle()
-                return result
             }
-            child.recycle()
         }
         return null
     }

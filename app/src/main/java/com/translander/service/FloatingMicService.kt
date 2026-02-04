@@ -275,11 +275,11 @@ class FloatingMicService : Service() {
         updateMicButtonState()
 
         recordingJob = serviceScope.launch(Dispatchers.IO) {
-            recorderMutex.withLock {
-                audioRecorder = AudioRecorder()
+            val recorder = recorderMutex.withLock {
+                AudioRecorder().also { audioRecorder = it }
             }
             Log.i(TAG, "Starting audio recording")
-            audioRecorder?.startRecording()
+            recorder.startRecording()
         }
     }
 

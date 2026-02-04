@@ -161,6 +161,9 @@ class AudioMonitorService : Service() {
     }
 
     private fun startMonitoring() {
+        // Stop any existing observers before starting new ones
+        stopMonitoring()
+
         serviceScope.launch {
             val settings = TranslanderApp.instance.settingsRepository
             val monitoredPaths = settings.monitoredFolders.first()
@@ -200,9 +203,13 @@ class AudioMonitorService : Service() {
                 }
             }
         }
-        observer.startWatching()
-        fileObservers.add(observer)
-        Log.i(TAG, "FileObserver started for: ${directory.absolutePath}")
+        try {
+            observer.startWatching()
+            fileObservers.add(observer)
+            Log.i(TAG, "FileObserver started for: ${directory.absolutePath}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start FileObserver for: ${directory.absolutePath}", e)
+        }
     }
 
     private fun stopMonitoring() {

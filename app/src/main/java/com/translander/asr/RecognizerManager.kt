@@ -37,44 +37,39 @@ class RecognizerManager(private val context: Context, private val modelManager: 
      * If already loading, waits for completion.
      */
     suspend fun initialize(): Boolean {
-        // If already loading, wait for it to complete
-        if (_isLoading.value) {
-            Log.i(TAG, "Already loading, waiting for completion")
-            return waitForInitialization()
-        }
-
         return mutex.withLock {
+            // Check loading state inside lock to prevent race
+            if (_isLoading.value) {
+                Log.i(TAG, "Already loading, waiting for completion")
+                // Release lock and wait for initialization
+                return waitForInitialization()
+            }
+
             if (recognizer != null) {
                 Log.i(TAG, "Recognizer already initialized")
                 return true
             }
 
-            if (_isLoading.value) {
-                // Another coroutine started loading while we waited for lock
-                Log.i(TAG, "Loading started by another coroutine")
-                return@withLock false
+            if (!modelManager.isModelReady()) {
+                Log.i(TAG, "Model not ready")
+                return false
             }
 
-        if (!modelManager.isModelReady()) {
-            Log.i(TAG, "Model not ready")
-            return false
-        }
-
-        _isLoading.value = true
-        return try {
-            withContext(Dispatchers.IO) {
-                recognizer = ParakeetRecognizer(context, modelManager.getModelPath())
-                val ready = recognizer?.isReady() == true
-                _isReady.value = ready
-                Log.i(TAG, "Recognizer initialized: $ready")
-                ready
+            _isLoading.value = true
+            try {
+                withContext(Dispatchers.IO) {
+                    recognizer = ParakeetRecognizer(context, modelManager.getModelPath())
+                    val ready = recognizer?.isReady() == true
+                    _isReady.value = ready
+                    Log.i(TAG, "Recognizer initialized: $ready")
+                    ready
+                }
+            } catch (e: Throwable) {
+                Log.e(TAG, "Failed to initialize recognizer", e)
+                false
+            } finally {
+                _isLoading.value = false
             }
-        } catch (e: Throwable) {
-            Log.e(TAG, "Failed to initialize recognizer", e)
-            false
-        } finally {
-            _isLoading.value = false
-        }
         }
     }
 
