@@ -23,6 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.concurrent.CopyOnWriteArrayList
 import android.util.Log
 
 class AudioMonitorService : Service() {
@@ -49,7 +50,7 @@ class AudioMonitorService : Service() {
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-    private var fileObservers: MutableList<FileObserver> = mutableListOf()
+    private val fileObservers: MutableList<FileObserver> = CopyOnWriteArrayList()
     private var debounceJob: Job? = null
 
     override fun onCreate() {
@@ -213,6 +214,7 @@ class AudioMonitorService : Service() {
     }
 
     private fun stopMonitoring() {
+        debounceJob?.cancel()
         for (observer in fileObservers) {
             observer.stopWatching()
         }

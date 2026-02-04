@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.util.Log
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.graphics.PixelFormat
 import android.os.Build
 import android.os.IBinder
@@ -35,6 +36,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import com.translander.settings.SettingsRepository
+import java.util.concurrent.atomic.AtomicBoolean
 
 class FloatingMicService : Service() {
 
@@ -54,7 +56,7 @@ class FloatingMicService : Service() {
     private var audioRecorder: AudioRecorder? = null
     private var recordingJob: Job? = null
 
-    private var isRecording = false
+    private val isRecording = AtomicBoolean(false)
     private var isIntentionalStop = false
     private var initialX = 0
     private var initialY = 0
@@ -91,7 +93,13 @@ class FloatingMicService : Service() {
         }
 
         try {
-            startForeground(TranslanderApp.NOTIFICATION_ID, createNotification())
+            val notification = createNotification()
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                startForeground(TranslanderApp.NOTIFICATION_ID, notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE)
+            } else {
+                startForeground(TranslanderApp.NOTIFICATION_ID, notification)
+            }
             // Dismiss any failure notification from previous boot attempt
             getSystemService(android.app.NotificationManager::class.java)
                 ?.cancel(TranslanderApp.SERVICE_ALERT_NOTIFICATION_ID)
@@ -244,8 +252,8 @@ class FloatingMicService : Service() {
     }
 
     private fun toggleRecording() {
-        Log.i(TAG, "toggleRecording called, isRecording=$isRecording")
-        if (isRecording) {
+        Log.i(TAG, "toggleRecording called, isRecording=${isRecording.get()}")
+        if (isRecording.get()) {
             stopRecording()
         } else {
             startRecording()
@@ -271,7 +279,7 @@ class FloatingMicService : Service() {
             return
         }
 
-        isRecording = true
+        isRecording.set(true)
         updateMicButtonState()
 
         recordingJob = serviceScope.launch(Dispatchers.IO) {
@@ -285,7 +293,7 @@ class FloatingMicService : Service() {
 
     private fun stopRecording() {
         Log.i(TAG, "stopRecording called")
-        isRecording = false
+        isRecording.set(false)
         updateMicButtonState()
 
         recordingJob?.cancel()
@@ -344,11 +352,12 @@ class FloatingMicService : Service() {
     }
 
     private fun updateMicButtonState() {
+        val recording = isRecording.get()
         micButton.setImageResource(
-            if (isRecording) R.drawable.ic_mic_recording else R.drawable.ic_mic
+            if (recording) R.drawable.ic_mic_recording else R.drawable.ic_mic
         )
         micButton.setBackgroundResource(
-            if (isRecording) R.drawable.mic_button_recording_bg else R.drawable.mic_button_bg
+            if (recording) R.drawable.mic_button_recording_bg else R.drawable.mic_button_bg
         )
     }
 

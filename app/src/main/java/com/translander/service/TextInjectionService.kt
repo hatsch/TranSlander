@@ -20,9 +20,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 class TextInjectionService : AccessibilityService() {
 
@@ -30,7 +32,7 @@ class TextInjectionService : AccessibilityService() {
     private val recorderMutex = Mutex()
     private var audioRecorder: AudioRecorder? = null
     private var recordingJob: Job? = null
-    private var isRecording = false
+    private val isRecording = AtomicBoolean(false)
 
     private var accessibilityButtonCallback: AccessibilityButtonController.AccessibilityButtonCallback? = null
 
@@ -85,8 +87,8 @@ class TextInjectionService : AccessibilityService() {
     }
 
     private fun toggleRecording() {
-        Log.i(TAG, "toggleRecording called, isRecording=$isRecording")
-        if (isRecording) {
+        Log.i(TAG, "toggleRecording called, isRecording=${isRecording.get()}")
+        if (isRecording.get()) {
             stopRecording()
         } else {
             startRecording()
@@ -111,7 +113,7 @@ class TextInjectionService : AccessibilityService() {
             return
         }
 
-        isRecording = true
+        isRecording.set(true)
         showToast(getString(R.string.state_recording))
 
         recordingJob = serviceScope.launch(Dispatchers.IO) {
@@ -125,7 +127,7 @@ class TextInjectionService : AccessibilityService() {
 
     private fun stopRecording() {
         Log.i(TAG, "stopRecording called")
-        isRecording = false
+        isRecording.set(false)
         showToast(getString(R.string.state_processing))
 
         recordingJob?.cancel()
@@ -151,6 +153,7 @@ class TextInjectionService : AccessibilityService() {
 
     companion object {
         private const val TAG = "TextInjectionService"
+        @Volatile
         var instance: TextInjectionService? = null
             private set
 
@@ -328,9 +331,10 @@ class TextInjectionService : AccessibilityService() {
 
         // Restore old clipboard after a short delay
         if (oldClip != null) {
-            android.os.Handler(mainLooper).postDelayed({
+            serviceScope.launch {
+                delay(500)
                 clipboard.setPrimaryClip(oldClip)
-            }, 500)
+            }
         }
 
         if (!pasteSuccess) {

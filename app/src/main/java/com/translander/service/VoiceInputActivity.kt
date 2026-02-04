@@ -1,7 +1,6 @@
 package com.translander.service
 
 import android.Manifest
-import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -10,6 +9,8 @@ import android.speech.RecognizerIntent
 import android.util.Log
 import android.view.WindowManager
 import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.core.content.ContextCompat
 import com.translander.R
 import com.translander.TranslanderApp
@@ -27,7 +28,7 @@ import kotlinx.coroutines.withContext
  * Activity that handles voice input requests from keyboards and other apps.
  * Uses a system overlay for UI to avoid stealing focus from the calling app.
  */
-class VoiceInputActivity : Activity() {
+class VoiceInputActivity : ComponentActivity() {
 
     companion object {
         private const val TAG = "VoiceInputActivity"
@@ -49,6 +50,18 @@ class VoiceInputActivity : Activity() {
             WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
             WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
         )
+
+        // Handle back button
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (isRecording) {
+                    stopRecordingAndTranscribe()
+                } else {
+                    setResult(RESULT_CANCELED)
+                    finish()
+                }
+            }
+        })
 
         // Check overlay permission
         if (!Settings.canDrawOverlays(this)) {
@@ -135,15 +148,6 @@ class VoiceInputActivity : Activity() {
         activityScope.cancel()
     }
 
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        if (isRecording) {
-            stopRecordingAndTranscribe()
-        } else {
-            setResult(RESULT_CANCELED)
-            super.onBackPressed()
-        }
-    }
 
     private fun startRecording() {
         Log.i(TAG, "Starting recording")
