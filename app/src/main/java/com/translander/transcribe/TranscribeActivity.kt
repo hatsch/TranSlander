@@ -1,5 +1,6 @@
 package com.translander.transcribe
 
+import android.app.NotificationManager
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
@@ -111,6 +112,13 @@ class TranscribeActivity : ComponentActivity() {
             putExtra(Intent.EXTRA_TEXT, text)
         }
         startActivity(Intent.createChooser(shareIntent, getString(R.string.transcribe_share_title)))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // Dismiss the "audio detected" notification when activity closes
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancel(AudioMonitorService.AUDIO_DETECTED_NOTIFICATION_ID)
     }
 }
 
