@@ -14,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 class BootReceiver : BroadcastReceiver() {
 
@@ -30,8 +31,13 @@ class BootReceiver : BroadcastReceiver() {
             CoroutineScope(Dispatchers.IO).launch {
                 try {
                     val app = TranslanderApp.instance
-                    val floatingMicEnabled = app.settingsRepository.serviceEnabled.first()
-                    val audioMonitorEnabled = app.settingsRepository.audioMonitorEnabled.first()
+                    // Timeout DataStore reads to avoid blocking beyond BroadcastReceiver limit
+                    val floatingMicEnabled = withTimeoutOrNull(5000L) {
+                        app.settingsRepository.serviceEnabled.first()
+                    } ?: false
+                    val audioMonitorEnabled = withTimeoutOrNull(5000L) {
+                        app.settingsRepository.audioMonitorEnabled.first()
+                    } ?: false
 
                     // Check overlay permission for floating mic
                     val hasOverlayPermission = Settings.canDrawOverlays(context)

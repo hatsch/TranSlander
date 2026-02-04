@@ -15,6 +15,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Android Speech Recognition Service that integrates with system voice input.
@@ -69,12 +70,15 @@ class SpeechRecognitionService : RecognitionService() {
 
             serviceScope.launch {
                 try {
-                    val success = recognizerManager.ensureInitialized()
+                    // Timeout after 10 seconds to avoid hanging indefinitely
+                    val success = withTimeoutOrNull(10000L) {
+                        recognizerManager.ensureInitialized()
+                    } ?: false
                     if (success) {
                         Log.i(TAG, "Model initialized successfully")
                         startRecording(listener, languageHint)
                     } else {
-                        Log.w(TAG, "Failed to initialize model")
+                        Log.w(TAG, "Failed to initialize model (timeout or error)")
                         listener.error(SpeechRecognizer.ERROR_SERVER)
                     }
                 } catch (e: Exception) {
@@ -103,15 +107,13 @@ class SpeechRecognitionService : RecognitionService() {
         // Signal that we're ready to receive audio
         listener.readyForSpeech(Bundle())
 
+        // Signal beginning of speech before starting recording
+        listener.beginningOfSpeech()
+
         audioRecorder = AudioRecorder()
         recordingJob = serviceScope.launch(Dispatchers.IO) {
             try {
                 Log.i(TAG, "Starting audio recording")
-
-                withContext(Dispatchers.Main) {
-                    listener.beginningOfSpeech()
-                }
-
                 audioRecorder?.startRecording()
             } catch (e: Exception) {
                 Log.e(TAG, "Recording error", e)

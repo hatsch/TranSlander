@@ -31,7 +31,6 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -163,10 +162,9 @@ class FloatingMicService : Service() {
 
         val layoutFlag = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
 
-        // Get saved position synchronously before adding view to prevent flicker
-        val (savedX, savedY) = runBlocking {
-            TranslanderApp.instance.settingsRepository.buttonPosition.first()
-        }
+        // Default position - will be updated async once loaded from settings
+        val defaultX = 100
+        val defaultY = 300
 
         layoutParams = WindowManager.LayoutParams(
             WindowManager.LayoutParams.WRAP_CONTENT,
@@ -176,11 +174,23 @@ class FloatingMicService : Service() {
             PixelFormat.TRANSLUCENT
         ).apply {
             gravity = Gravity.TOP or Gravity.START
-            x = if (savedX >= 0) savedX else 100
-            y = if (savedY >= 0) savedY else 300
+            x = defaultX
+            y = defaultY
         }
 
         windowManager.addView(floatingView, layoutParams)
+
+        // Load saved position asynchronously and update layout
+        serviceScope.launch {
+            val (savedX, savedY) = TranslanderApp.instance.settingsRepository.buttonPosition.first()
+            if (savedX >= 0 && savedY >= 0) {
+                withContext(Dispatchers.Main) {
+                    layoutParams.x = savedX
+                    layoutParams.y = savedY
+                    windowManager.updateViewLayout(floatingView, layoutParams)
+                }
+            }
+        }
 
         micButton.setOnTouchListener { _, event ->
             when (event.action) {

@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import com.translander.TranslanderApp
 
 /**
@@ -82,11 +83,12 @@ class RecognizerManager(private val context: Context, private val modelManager: 
      * Returns true if model is ready after waiting.
      */
     private suspend fun waitForInitialization(timeoutMs: Long = 30000): Boolean {
-        val startTime = System.currentTimeMillis()
-        while (_isLoading.value && System.currentTimeMillis() - startTime < timeoutMs) {
-            kotlinx.coroutines.delay(100)
-        }
-        return recognizer != null
+        return withTimeoutOrNull(timeoutMs) {
+            while (_isLoading.value) {
+                kotlinx.coroutines.delay(100)
+            }
+            recognizer != null
+        } ?: false
     }
 
     /**

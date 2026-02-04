@@ -221,12 +221,18 @@ class AudioMonitorService : Service() {
         val filePath = file.absolutePath
         Log.i(TAG, "onAudioFileDetected: $filePath")
 
-        // Small debounce to avoid rapid duplicate events from FileObserver
+        // Debounce to avoid rapid duplicate events from FileObserver
+        // and to ensure file is fully written before transcribing
         debounceJob?.cancel()
         debounceJob = serviceScope.launch {
-            delay(500)
-            Log.i(TAG, "Launching transcription for: $filePath")
-            launchTranscription(file)
+            delay(DEBOUNCE_MS)
+            // Verify file still exists and is readable
+            if (file.exists() && file.length() > 0 && file.canRead()) {
+                Log.i(TAG, "Launching transcription for: $filePath")
+                launchTranscription(file)
+            } else {
+                Log.w(TAG, "File not ready or inaccessible: $filePath")
+            }
         }
     }
 
