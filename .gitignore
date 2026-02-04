@@ -26,3 +26,6 @@ Thumbs.db
 # Logs
 *.log
 github-release.md
+
+# Local Claude instructions (not checked in)
+CLAUDE.local.md
