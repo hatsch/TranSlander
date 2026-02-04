@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Woordcorrecties</string>
     <string name="section_appearance">Uiterlijk</string>
     <string name="setting_service_enabled">Service inschakelen</string>
-    <string name="setting_language">Gesproken taal</string>
-    <string name="setting_language_auto">Automatisch detecteren</string>
     <string name="setting_theme">Thema</string>
     <string name="setting_theme_system">Systeem</string>
     <string name="setting_theme_light">Licht</string>

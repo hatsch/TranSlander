@@ -19,11 +19,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 class TextInjectionService : AccessibilityService() {
 
@@ -31,7 +32,7 @@ class TextInjectionService : AccessibilityService() {
     private val recorderMutex = Mutex()
     private var audioRecorder: AudioRecorder? = null
     private var recordingJob: Job? = null
-    private var isRecording = false
+    private val isRecording = AtomicBoolean(false)
 
     private var accessibilityButtonCallback: AccessibilityButtonController.AccessibilityButtonCallback? = null
 
@@ -86,8 +87,8 @@ class TextInjectionService : AccessibilityService() {
     }
 
     private fun toggleRecording() {
-        Log.i(TAG, "toggleRecording called, isRecording=$isRecording")
-        if (isRecording) {
+        Log.i(TAG, "toggleRecording called, isRecording=${isRecording.get()}")
+        if (isRecording.get()) {
             stopRecording()
         } else {
             startRecording()
@@ -112,21 +113,21 @@ class TextInjectionService : AccessibilityService() {
             return
         }
 
-        isRecording = true
+        isRecording.set(true)
         showToast(getString(R.string.state_recording))
 
         recordingJob = serviceScope.launch(Dispatchers.IO) {
-            recorderMutex.withLock {
-                audioRecorder = AudioRecorder()
+            val recorder = recorderMutex.withLock {
+                AudioRecorder().also { audioRecorder = it }
             }
             Log.i(TAG, "Starting audio recording")
-            audioRecorder?.startRecording()
+            recorder.startRecording()
         }
     }
 
     private fun stopRecording() {
         Log.i(TAG, "stopRecording called")
-        isRecording = false
+        isRecording.set(false)
         showToast(getString(R.string.state_processing))
 
         recordingJob?.cancel()
@@ -152,6 +153,7 @@ class TextInjectionService : AccessibilityService() {
 
     companion object {
         private const val TAG = "TextInjectionService"
+        @Volatile
         var instance: TextInjectionService? = null
             private set
 
@@ -160,10 +162,7 @@ class TextInjectionService : AccessibilityService() {
 
     private suspend fun transcribeAudio(audioData: ShortArray) {
         Log.i(TAG, "transcribeAudio called with ${audioData.size} samples")
-        val language = TranslanderApp.instance.settingsRepository.preferredLanguage.first()
-        val langCode = if (language == "auto") null else language
-
-        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, langCode)
+        val result = TranslanderApp.instance.recognizerManager.transcribe(audioData)
         Log.i(TAG, "Transcription result: '$result'")
 
         if (!result.isNullOrBlank()) {
@@ -205,11 +204,7 @@ class TextInjectionService : AccessibilityService() {
         val focusedNode = findFocusedEditText()
         if (focusedNode != null) {
             Log.i(TAG, "Found focused node, injecting text")
-            try {
-                insertTextIntoNode(focusedNode, text)
-            } finally {
-                focusedNode.recycle()
-            }
+            insertTextIntoNode(focusedNode, text)
         } else {
             Log.w(TAG, "No focused text field found, copying to clipboard")
             showToast(getString(R.string.toast_no_field_clipboard))
@@ -228,40 +223,31 @@ class TextInjectionService : AccessibilityService() {
         val inputFocused = rootNode.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
         if (inputFocused != null && inputFocused.isEditable) {
             Log.i(TAG, "Found input-focused editable node")
-            rootNode.recycle()
             return inputFocused
         }
 
-        // Recycle inputFocused if it wasn't editable
-        inputFocused?.recycle()
-
         // Fallback to searching the tree
-        val result = findFocusedNode(rootNode)
-        rootNode.recycle()
-        return result
+        return findFocusedNode(rootNode)
     }
 
     private fun findFocusedNode(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
         if (node.isFocused && node.isEditable) {
             Log.i(TAG, "Found focused editable node: ${node.className}")
-            // Return a copy so caller owns it, original will be recycled by caller of this function
-            return AccessibilityNodeInfo.obtain(node)
+            return node
         }
 
         // Also check for isEditable without isFocused (some apps don't report focus correctly)
         if (node.isEditable && node.isFocusable) {
             Log.i(TAG, "Found editable focusable node: ${node.className}")
-            return AccessibilityNodeInfo.obtain(node)
+            return node
         }
 
         for (i in 0 until node.childCount) {
             val child = node.getChild(i) ?: continue
             val result = findFocusedNode(child)
             if (result != null) {
-                child.recycle()
                 return result
             }
-            child.recycle()
         }
         return null
     }
@@ -330,9 +316,10 @@ class TextInjectionService : AccessibilityService() {
 
         // Restore old clipboard after a short delay
         if (oldClip != null) {
-            android.os.Handler(mainLooper).postDelayed({
+            serviceScope.launch {
+                delay(500)
                 clipboard.setPrimaryClip(oldClip)
-            }, 500)
+            }
         }
 
         if (!pasteSuccess) {

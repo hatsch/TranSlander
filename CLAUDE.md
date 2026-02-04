@@ -97,7 +97,7 @@ When bumping a version, update all of these:
 1. `app/build.gradle.kts` — `versionCode` and `versionName`
 2. `CHANGELOG.md` — Add new version entry with date
 3. `fastlane/metadata/android/en-US/changelogs/{versionCode}.txt` — Short changelog for F-Droid/store
-4. `github-release.md` — Release notes for GitHub releases
+4. `github-release.md` — Release notes for GitHub releases (gitignored, copy manually)
 5. Tag the release: `git tag v{versionName}`
 6. Update fdroiddata YAML — see rules below
 
@@ -143,9 +143,13 @@ app/src/main/java/com/translander/
 │   └── SettingsRepository.kt # DataStore preferences
 ├── transcribe/           # Voice message transcription
 │   ├── AudioDecoder.kt       # Decode audio files to 16kHz PCM
-│   ├── AudioMonitorService.kt # Watch folders for new audio
+│   ├── AudioMonitorService.kt # Watch folders for new audio (specialUse FGS)
 │   ├── TranscribeActivity.kt # UI for shared/opened audio
 │   └── TranscribeManager.kt  # Extensible trigger system
+├── notification/
+│   └── ServiceAlertNotification.kt # Boot failure notification (Android 14+)
+├── util/
+│   └── BootCompatHelper.kt   # Android 14+ FGS restriction checks
 └── k2fsa/sherpa/onnx/    # Native ONNX bindings
 ```
 
@@ -220,6 +224,30 @@ RecognizerManager.transcribe() (reuses existing recognition)
 ### UI Location
 Settings → Voice Message Transcription → Monitor Downloads toggle
 
+## Android 14+ Boot Restrictions
+
+Android 14+ blocks starting foreground services with restricted types (`microphone`, `dataSync`) from `BOOT_COMPLETED`. The app handles this via:
+
+1. **BootCompatHelper** — Checks `Build.VERSION.SDK_INT < UPSIDE_DOWN_CAKE` (API 34)
+2. **ServiceAlertNotification** — Shows persistent notification prompting user to open app
+3. **SettingsActivity.onResume()** — Restarts services when user opens app
+
+### FGS Type for AudioMonitorService
+
+Uses `specialUse` instead of `dataSync` because:
+- `dataSync` has 6-hour timeout on Android 15+ (targetSdk 35)
+- `specialUse` has no time limit
+
+**Google Play requirement:** When submitting, provide justification for `FOREGROUND_SERVICE_SPECIAL_USE`:
+> Monitors user-selected folders for voice messages to enable offline transcription. User-initiated, runs only while enabled in Settings.
+
+**Manifest property:**
+```xml
+<property
+    android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+    android:value="Monitors user-selected folders for voice messages..."/>
+```
+
 ## Hotwords Feature (BLOCKED)
 
 Sherpa-onnx supports hotwords boosting but **NOT for Parakeet TDT models**:
@@ -247,7 +275,7 @@ OfflineRecognizerConfig(
 - RECORD_AUDIO
 - SYSTEM_ALERT_WINDOW (floating button)
 - FOREGROUND_SERVICE_MICROPHONE
-- FOREGROUND_SERVICE_DATA_SYNC (audio monitor)
+- FOREGROUND_SERVICE_SPECIAL_USE (audio monitor — no timeout on Android 15+)
 - BIND_ACCESSIBILITY_SERVICE
 - POST_NOTIFICATIONS
 - INTERNET (model download)

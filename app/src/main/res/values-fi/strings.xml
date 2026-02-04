@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Sanakorjaukset</string>
     <string name="section_appearance">Ulkoasu</string>
     <string name="setting_service_enabled">Ota palvelu käyttöön</string>
-    <string name="setting_language">Puhuttu kieli</string>
-    <string name="setting_language_auto">Automaattinen tunnistus</string>
     <string name="setting_theme">Teema</string>
     <string name="setting_theme_system">Järjestelmä</string>
     <string name="setting_theme_light">Vaalea</string>

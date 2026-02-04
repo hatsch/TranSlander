@@ -23,6 +23,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.concurrent.CopyOnWriteArrayList
 import android.util.Log
 
 class AudioMonitorService : Service() {
@@ -49,7 +50,7 @@ class AudioMonitorService : Service() {
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
-    private var fileObservers: MutableList<FileObserver> = mutableListOf()
+    private val fileObservers: MutableList<FileObserver> = CopyOnWriteArrayList()
     private var debounceJob: Job? = null
 
     override fun onCreate() {
@@ -161,6 +162,9 @@ class AudioMonitorService : Service() {
     }
 
     private fun startMonitoring() {
+        // Stop any existing observers before starting new ones
+        stopMonitoring()
+
         serviceScope.launch {
             val settings = TranslanderApp.instance.settingsRepository
             val monitoredPaths = settings.monitoredFolders.first()
@@ -200,12 +204,17 @@ class AudioMonitorService : Service() {
                 }
             }
         }
-        observer.startWatching()
-        fileObservers.add(observer)
-        Log.i(TAG, "FileObserver started for: ${directory.absolutePath}")
+        try {
+            observer.startWatching()
+            fileObservers.add(observer)
+            Log.i(TAG, "FileObserver started for: ${directory.absolutePath}")
+        } catch (e: Exception) {
+            Log.e(TAG, "Failed to start FileObserver for: ${directory.absolutePath}", e)
+        }
     }
 
     private fun stopMonitoring() {
+        debounceJob?.cancel()
         for (observer in fileObservers) {
             observer.stopWatching()
         }
@@ -221,12 +230,18 @@ class AudioMonitorService : Service() {
         val filePath = file.absolutePath
         Log.i(TAG, "onAudioFileDetected: $filePath")
 
-        // Small debounce to avoid rapid duplicate events from FileObserver
+        // Debounce to avoid rapid duplicate events from FileObserver
+        // and to ensure file is fully written before transcribing
         debounceJob?.cancel()
         debounceJob = serviceScope.launch {
-            delay(500)
-            Log.i(TAG, "Launching transcription for: $filePath")
-            launchTranscription(file)
+            delay(DEBOUNCE_MS)
+            // Verify file still exists and is readable
+            if (file.exists() && file.length() > 0 && file.canRead()) {
+                Log.i(TAG, "Launching transcription for: $filePath")
+                launchTranscription(file)
+            } else {
+                Log.w(TAG, "File not ready or inaccessible: $filePath")
+            }
         }
     }
 

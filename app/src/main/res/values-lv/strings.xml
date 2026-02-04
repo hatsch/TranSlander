@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Vārdu labojumi</string>
     <string name="section_appearance">Izskats</string>
     <string name="setting_service_enabled">Iespējot pakalpojumu</string>
-    <string name="setting_language">Runātā valoda</string>
-    <string name="setting_language_auto">Automātiskā noteikšana</string>
     <string name="setting_theme">Motīvs</string>
     <string name="setting_theme_system">Sistēmas</string>
     <string name="setting_theme_light">Gaišs</string>

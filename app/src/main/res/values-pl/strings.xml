@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Korekty słów</string>
     <string name="section_appearance">Wygląd</string>
     <string name="setting_service_enabled">Włącz usługę</string>
-    <string name="setting_language">Język mówiony</string>
-    <string name="setting_language_auto">Automatyczne wykrywanie</string>
     <string name="setting_theme">Motyw</string>
     <string name="setting_theme_system">Systemowy</string>
     <string name="setting_theme_light">Jasny</string>

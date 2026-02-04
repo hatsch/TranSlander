@@ -25,8 +25,6 @@
 
     <!-- Settings Items -->
     <string name="setting_service_enabled">Активиране на услугата</string>
-    <string name="setting_language">Говорим език</string>
-    <string name="setting_language_auto">Автоматично разпознаване</string>
     <string name="setting_theme">Тема</string>
     <string name="setting_theme_system">Системна</string>
     <string name="setting_theme_light">Светла</string>

@@ -162,29 +162,29 @@ class ModelManager(private val context: Context) {
 
     private suspend fun downloadFile(url: String, targetFile: File, onProgress: (Int) -> Unit) {
         val request = Request.Builder().url(url).build()
-        val response = httpClient.newCall(request).execute()
+        httpClient.newCall(request).execute().use { response ->
+            if (!response.isSuccessful) {
+                throw java.io.IOException("Download failed: ${response.code}")
+            }
 
-        if (!response.isSuccessful) {
-            throw java.io.IOException("Download failed: ${response.code}")
-        }
+            val body = response.body ?: throw java.io.IOException("Empty response body")
+            val contentLength = body.contentLength()
 
-        val body = response.body ?: throw java.io.IOException("Empty response body")
-        val contentLength = body.contentLength()
+            body.byteStream().use { input ->
+                FileOutputStream(targetFile).use { output ->
+                    val buffer = ByteArray(8192)
+                    var bytesRead: Int
+                    var totalBytesRead = 0L
 
-        body.byteStream().use { input ->
-            FileOutputStream(targetFile).use { output ->
-                val buffer = ByteArray(8192)
-                var bytesRead: Int
-                var totalBytesRead = 0L
+                    while (input.read(buffer).also { bytesRead = it } != -1) {
+                        coroutineContext.ensureActive()
+                        output.write(buffer, 0, bytesRead)
+                        totalBytesRead += bytesRead
 
-                while (input.read(buffer).also { bytesRead = it } != -1) {
-                    coroutineContext.ensureActive()
-                    output.write(buffer, 0, bytesRead)
-                    totalBytesRead += bytesRead
-
-                    if (contentLength > 0) {
-                        val progress = ((totalBytesRead * 100) / contentLength).toInt()
-                        onProgress(progress)
+                        if (contentLength > 0) {
+                            val progress = ((totalBytesRead * 100) / contentLength).toInt()
+                            onProgress(progress)
+                        }
                     }
                 }
             }

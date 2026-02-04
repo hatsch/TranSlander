@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Sõnaparandused</string>
     <string name="section_appearance">Välimus</string>
     <string name="setting_service_enabled">Luba teenus</string>
-    <string name="setting_language">Räägitav keel</string>
-    <string name="setting_language_auto">Automaatne tuvastus</string>
     <string name="setting_theme">Teema</string>
     <string name="setting_theme_system">Süsteemne</string>
     <string name="setting_theme_light">Hele</string>

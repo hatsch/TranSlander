@@ -25,8 +25,6 @@
 
     <!-- Settings Items -->
     <string name="setting_service_enabled">Dienst aktivieren</string>
-    <string name="setting_language">Gesprochene Sprache</string>
-    <string name="setting_language_auto">Automatisch erkennen</string>
     <string name="setting_theme">Design</string>
     <string name="setting_theme_system">System</string>
     <string name="setting_theme_light">Hell</string>

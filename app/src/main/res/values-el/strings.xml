@@ -19,8 +19,6 @@
     <string name="section_word_corrections">Διορθώσεις λέξεων</string>
     <string name="section_appearance">Εμφάνιση</string>
     <string name="setting_service_enabled">Ενεργοποίηση υπηρεσίας</string>
-    <string name="setting_language">Γλώσσα ομιλίας</string>
-    <string name="setting_language_auto">Αυτόματη ανίχνευση</string>
     <string name="setting_theme">Θέμα</string>
     <string name="setting_theme_system">Σύστημα</string>
     <string name="setting_theme_light">Φωτεινό</string>

@@ -5,6 +5,7 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
 import android.util.Log
+import java.util.concurrent.atomic.AtomicBoolean
 
 class AudioRecorder {
 
@@ -16,7 +17,7 @@ class AudioRecorder {
     }
 
     private var audioRecord: AudioRecord? = null
-    private var isRecording = false
+    private val isRecording = AtomicBoolean(false)
     private val audioBuffer = mutableListOf<Short>()
 
     private val bufferSize = AudioRecord.getMinBufferSize(
@@ -27,7 +28,7 @@ class AudioRecorder {
 
     @SuppressLint("MissingPermission")
     fun startRecording() {
-        if (isRecording) return
+        if (!isRecording.compareAndSet(false, true)) return
 
         audioBuffer.clear()
 
@@ -47,12 +48,11 @@ class AudioRecorder {
                 return
             }
 
-            isRecording = true
             audioRecord?.startRecording()
 
             val buffer = ShortArray(bufferSize / 2)
 
-            while (isRecording) {
+            while (isRecording.get()) {
                 val readCount = audioRecord?.read(buffer, 0, buffer.size) ?: 0
                 if (readCount > 0) {
                     synchronized(audioBuffer) {
@@ -78,12 +78,12 @@ class AudioRecorder {
             audioRecord?.release()
             audioRecord = null
         } finally {
-            isRecording = false
+            isRecording.set(false)
         }
     }
 
     fun stopRecording(): ShortArray {
-        isRecording = false
+        isRecording.set(false)
 
         try {
             audioRecord?.stop()
@@ -99,7 +99,7 @@ class AudioRecorder {
     }
 
     fun release() {
-        isRecording = false
+        isRecording.set(false)
         try {
             audioRecord?.stop()
         } catch (e: IllegalStateException) {
@@ -110,5 +110,5 @@ class AudioRecorder {
         audioBuffer.clear()
     }
 
-    fun isRecording(): Boolean = isRecording
+    fun isRecording(): Boolean = isRecording.get()
 }

@@ -17,6 +17,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 
 /**
  * Voice Input Method Service - registers as an auxiliary/voice IME.
@@ -96,10 +97,14 @@ class VoiceInputMethodService : InputMethodService() {
 
             serviceScope.launch {
                 try {
-                    val success = recognizerManager.ensureInitialized()
+                    // Timeout after 10 seconds to avoid hanging indefinitely
+                    val success = withTimeoutOrNull(10000L) {
+                        recognizerManager.ensureInitialized()
+                    } ?: false
                     if (success) {
                         Log.i(TAG, "Model initialized successfully")
-                        startRecording()
+                        // Start actual recording after successful init (non-recursive)
+                        doStartRecording()
                     } else {
                         Log.w(TAG, "Failed to initialize model")
                         statusText?.text = getString(R.string.ime_model_not_available)
@@ -116,6 +121,10 @@ class VoiceInputMethodService : InputMethodService() {
             return
         }
 
+        doStartRecording()
+    }
+
+    private fun doStartRecording() {
         Log.i(TAG, "Starting recording")
         isRecording = true
         statusText?.text = getString(R.string.state_listening)
@@ -158,7 +167,7 @@ class VoiceInputMethodService : InputMethodService() {
 
                 Log.i(TAG, "Audio data: ${audioData.size} samples")
 
-                val result = TranslanderApp.instance.recognizerManager.transcribe(audioData, null)
+                val result = TranslanderApp.instance.recognizerManager.transcribe(audioData)
 
                 withContext(Dispatchers.Main) {
                     if (!result.isNullOrBlank()) {
