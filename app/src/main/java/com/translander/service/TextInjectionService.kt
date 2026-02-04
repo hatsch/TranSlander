@@ -204,11 +204,7 @@ class TextInjectionService : AccessibilityService() {
         val focusedNode = findFocusedEditText()
         if (focusedNode != null) {
             Log.i(TAG, "Found focused node, injecting text")
-            try {
-                insertTextIntoNode(focusedNode, text)
-            } finally {
-                focusedNode.recycle()
-            }
+            insertTextIntoNode(focusedNode, text)
         } else {
             Log.w(TAG, "No focused text field found, copying to clipboard")
             showToast(getString(R.string.toast_no_field_clipboard))
@@ -227,41 +223,30 @@ class TextInjectionService : AccessibilityService() {
         val inputFocused = rootNode.findFocus(AccessibilityNodeInfo.FOCUS_INPUT)
         if (inputFocused != null && inputFocused.isEditable) {
             Log.i(TAG, "Found input-focused editable node")
-            rootNode.recycle()
             return inputFocused
         }
 
-        // Recycle inputFocused if it wasn't editable
-        inputFocused?.recycle()
-
         // Fallback to searching the tree
-        val result = findFocusedNode(rootNode)
-        rootNode.recycle()
-        return result
+        return findFocusedNode(rootNode)
     }
 
     private fun findFocusedNode(node: AccessibilityNodeInfo): AccessibilityNodeInfo? {
         if (node.isFocused && node.isEditable) {
             Log.i(TAG, "Found focused editable node: ${node.className}")
-            // Return a copy so caller owns it, original will be recycled by caller of this function
-            return AccessibilityNodeInfo.obtain(node)
+            return node
         }
 
         // Also check for isEditable without isFocused (some apps don't report focus correctly)
         if (node.isEditable && node.isFocusable) {
             Log.i(TAG, "Found editable focusable node: ${node.className}")
-            return AccessibilityNodeInfo.obtain(node)
+            return node
         }
 
         for (i in 0 until node.childCount) {
             val child = node.getChild(i) ?: continue
-            try {
-                val result = findFocusedNode(child)
-                if (result != null) {
-                    return result
-                }
-            } finally {
-                child.recycle()
+            val result = findFocusedNode(child)
+            if (result != null) {
+                return result
             }
         }
         return null
