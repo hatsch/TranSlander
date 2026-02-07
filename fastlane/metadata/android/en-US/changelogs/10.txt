@@ -1,0 +1,5 @@
+• Improved boot notification: tap to start services instantly
+• Thread safety and memory improvements
+• Recording overlay adapts to dark/light mode
+• Fix text injection targeting wrong field
+• Swipeable service notification (less intrusive)

@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.4] - 2026-02-07
+
+### Fixed
+- Boot notification UX: tap to start services silently via trampoline activity
+- Thread safety: ReadWriteLock on native recognizer, ConcurrentHashMap for debounce jobs
+- Memory: replace boxed MutableList<Short> with ShortArray chunks in AudioRecorder and AudioDecoder
+- Fix text injection into wrong field (remove aggressive editable+focusable fallback)
+- Fix AudioMonitorService state tracking with static isRunning flag
+
+### Changed
+- Service notification: swipeable (IMPORTANCE_MIN), no stop button
+- Boot alert notification: auto-cancel on tap, IMPORTANCE_LOW
+- Recording overlay adapts to system dark/light mode
+- Lazy-init OkHttpClient to avoid idle thread pools
+- Extract hardcoded English strings to resources
+- Remove dead code in RecognizerManager.initialize()
+
 ## [1.2.3] - 2026-02-04
 
 ### Fixed
