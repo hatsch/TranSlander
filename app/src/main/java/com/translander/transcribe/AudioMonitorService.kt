@@ -111,11 +111,11 @@ class AudioMonitorService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = getSystemService(NotificationManager::class.java)
 
-            // Service channel (low importance, silent)
+            // Service channel (min importance, nearly invisible)
             val serviceChannel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
                 getString(R.string.monitor_channel_name),
-                NotificationManager.IMPORTANCE_LOW
+                NotificationManager.IMPORTANCE_MIN
             ).apply {
                 description = getString(R.string.monitor_channel_description)
                 setShowBadge(false)
@@ -139,25 +139,10 @@ class AudioMonitorService : Service() {
     }
 
     private fun createServiceNotification(): Notification {
-        val stopIntent = Intent(this, AudioMonitorService::class.java).apply {
-            action = ACTION_STOP
-        }
-        val stopPendingIntent = PendingIntent.getService(
-            this, 0, stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
         return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_mic)
             .setContentTitle(getString(R.string.monitor_notification_title))
-            .setContentText(getString(R.string.monitor_notification_text))
-            .setPriority(NotificationCompat.PRIORITY_LOW)
-            .setOngoing(true)
-            .addAction(
-                R.drawable.ic_mic,
-                getString(R.string.monitor_stop),
-                stopPendingIntent
-            )
+            .setPriority(NotificationCompat.PRIORITY_MIN)
             .build()
     }
 

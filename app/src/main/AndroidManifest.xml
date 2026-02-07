@@ -54,6 +54,14 @@
                 android:resource="@xml/accessibility_service_config" />
         </service>
 
+        <!-- Invisible trampoline to start services from boot notification -->
+        <activity
+            android:name=".service.ServiceStartActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.NoDisplay"
+            android:excludeFromRecents="true"
+            android:noHistory="true" />
+
         <!-- Boot Receiver to restart service -->
         <receiver
             android:name=".receiver.BootReceiver"

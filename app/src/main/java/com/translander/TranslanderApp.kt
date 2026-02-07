@@ -84,7 +84,7 @@ class TranslanderApp : Application() {
             val alertChannel = NotificationChannel(
                 SERVICE_ALERT_CHANNEL_ID,
                 getString(R.string.service_alert_channel_name),
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_LOW
             ).apply {
                 description = getString(R.string.service_alert_channel_description)
             }

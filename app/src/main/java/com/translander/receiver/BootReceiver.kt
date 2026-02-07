@@ -11,6 +11,8 @@ import com.translander.service.FloatingMicService
 import com.translander.transcribe.AudioMonitorService
 import com.translander.util.BootCompatHelper
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -48,15 +50,17 @@ class BootReceiver : BroadcastReceiver() {
         }
     }
 
-    private suspend fun handleBootCompleted(context: Context) {
+    private suspend fun handleBootCompleted(context: Context) = coroutineScope {
         val app = TranslanderApp.instance
-        // Timeout DataStore reads to avoid blocking beyond BroadcastReceiver limit
-        val floatingMicEnabled = withTimeoutOrNull(5000L) {
-            app.settingsRepository.serviceEnabled.first()
-        } ?: false
-        val audioMonitorEnabled = withTimeoutOrNull(5000L) {
-            app.settingsRepository.audioMonitorEnabled.first()
-        } ?: false
+        // Parallel DataStore reads to minimize boot delay
+        val floatingMicDeferred = async {
+            withTimeoutOrNull(5000L) { app.settingsRepository.serviceEnabled.first() } ?: false
+        }
+        val audioMonitorDeferred = async {
+            withTimeoutOrNull(5000L) { app.settingsRepository.audioMonitorEnabled.first() } ?: false
+        }
+        val floatingMicEnabled = floatingMicDeferred.await()
+        val audioMonitorEnabled = audioMonitorDeferred.await()
 
         // Check overlay permission for floating mic
         val hasOverlayPermission = Settings.canDrawOverlays(context)
@@ -68,7 +72,7 @@ class BootReceiver : BroadcastReceiver() {
 
         if (!canStartFloatingMic && !canStartAudioMonitor) {
             Log.i(TAG, "No services enabled, nothing to start")
-            return
+            return@coroutineScope
         }
 
         if (BootCompatHelper.canStartFgsFromBoot) {
