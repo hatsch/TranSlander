@@ -213,6 +213,10 @@
     <string name="transcribe_share_title">Share transcription</string>
     <string name="transcribe_close">Close</string>
     <string name="transcribe_copied">Copied to clipboard</string>
+    <string name="transcribe_error_no_audio">No audio file provided</string>
+    <string name="transcribe_error_no_model">Speech model not downloaded. Please download it in Settings first.</string>
+    <string name="transcribe_error_failed">Transcription failed</string>
+    <string name="transcribe_error_decoding">Unexpected decoding error</string>
 
     <!-- Audio Monitor Service -->
     <string name="monitor_channel_name">Audio Monitor</string>

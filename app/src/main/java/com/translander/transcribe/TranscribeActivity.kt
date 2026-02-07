@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -91,7 +92,7 @@ class TranscribeActivity : ComponentActivity() {
         }
     }
 
-    @Suppress("DEPRECATION")
+    @Suppress("DEPRECATION", "UNCHECKED_CAST")
     private fun <T> getParcelableExtraCompat(intent: Intent, name: String, clazz: Class<T>): T? {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             intent.getParcelableExtra(name, clazz)
@@ -147,17 +148,19 @@ fun TranscribeScreen(
     val modelManager = app.modelManager
     val settingsRepository = app.settingsRepository
 
+    val context = LocalContext.current
+
     // Start transcription when URI or file path is available
     LaunchedEffect(audioUri, filePath) {
         if (audioUri == null && filePath == null) {
-            state = TranscribeState.Error("No audio file provided")
+            state = TranscribeState.Error(context.getString(R.string.transcribe_error_no_audio))
             return@LaunchedEffect
         }
 
         // Check if model is ready
         state = TranscribeState.CheckingModel
         if (!modelManager.isModelReady()) {
-            state = TranscribeState.Error("Speech model not downloaded. Please download it in Settings first.")
+            state = TranscribeState.Error(context.getString(R.string.transcribe_error_no_model))
             return@LaunchedEffect
         }
 
@@ -202,11 +205,11 @@ fun TranscribeScreen(
                 if (result != null) {
                     state = TranscribeState.Success(result)
                 } else {
-                    state = TranscribeState.Error("Transcription failed")
+                    state = TranscribeState.Error(context.getString(R.string.transcribe_error_failed))
                 }
             }
             else -> {
-                state = TranscribeState.Error("Unexpected decoding state")
+                state = TranscribeState.Error(context.getString(R.string.transcribe_error_decoding))
             }
         }
     }

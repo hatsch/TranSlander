@@ -11,6 +11,9 @@ import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import com.translander.TranslanderApp
+import java.util.concurrent.locks.ReentrantReadWriteLock
+import kotlin.concurrent.read
+import kotlin.concurrent.write
 
 /**
  * Manages a shared ParakeetRecognizer instance across services.
@@ -24,6 +27,8 @@ class RecognizerManager(private val context: Context, private val modelManager: 
 
     private var recognizer: ParakeetRecognizer? = null
     private val mutex = Mutex()
+    // Protects recognizer access: read lock for transcribe(), write lock for release()
+    private val recognizerLock = ReentrantReadWriteLock()
 
     private val _isReady = MutableStateFlow(false)
     val isReady: StateFlow<Boolean> = _isReady
@@ -99,40 +104,50 @@ class RecognizerManager(private val context: Context, private val modelManager: 
     /**
      * Transcribe audio data using the shared recognizer.
      * Applies dictionary replacements if enabled.
+     * Uses read lock to prevent release() from freeing native resources mid-transcription.
      */
     suspend fun transcribe(audioData: ShortArray): String? {
-        val rec = recognizer
-        if (rec == null) {
-            Log.w(TAG, "Recognizer not initialized")
-            return null
-        }
         return withContext(Dispatchers.IO) {
-            val rawResult = rec.transcribe(audioData)
-
-            // Apply dictionary replacements if enabled
-            if (rawResult != null) {
-                val app = TranslanderApp.instance
-                val dictionaryEnabled = app.settingsRepository.dictionaryEnabled.first()
-                if (dictionaryEnabled) {
-                    val corrected = app.dictionaryManager.applyReplacements(rawResult)
-                    if (corrected != rawResult) {
-                        Log.i(TAG, "Applied corrections: '$rawResult' -> '$corrected'")
-                    }
-                    corrected
-                } else {
-                    rawResult
+            recognizerLock.read {
+                val rec = recognizer
+                if (rec == null) {
+                    Log.w(TAG, "Recognizer not initialized")
+                    return@withContext null
                 }
-            } else {
-                null
+
+                val rawResult = rec.transcribe(audioData)
+
+                // Apply dictionary replacements if enabled
+                if (rawResult != null) {
+                    val app = TranslanderApp.instance
+                    val dictionaryEnabled = app.settingsRepository.dictionaryEnabled.first()
+                    if (dictionaryEnabled) {
+                        val corrected = app.dictionaryManager.applyReplacements(rawResult)
+                        if (corrected != rawResult) {
+                            Log.i(TAG, "Applied corrections: '$rawResult' -> '$corrected'")
+                        }
+                        corrected
+                    } else {
+                        rawResult
+                    }
+                } else {
+                    null
+                }
             }
         }
     }
 
     fun isInitialized(): Boolean = recognizer != null
 
+    /**
+     * Release the recognizer and free native resources.
+     * Uses write lock to wait for any in-flight transcribe() calls to finish.
+     */
     fun release() {
-        recognizer?.release()
-        recognizer = null
-        _isReady.value = false
+        recognizerLock.write {
+            recognizer?.release()
+            recognizer = null
+            _isReady.value = false
+        }
     }
 }

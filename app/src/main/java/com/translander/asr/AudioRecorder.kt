@@ -18,7 +18,9 @@ class AudioRecorder {
 
     private var audioRecord: AudioRecord? = null
     private val isRecording = AtomicBoolean(false)
-    private val audioBuffer = mutableListOf<Short>()
+    // Collect ShortArray chunks to avoid boxing overhead of MutableList<Short>
+    private val audioChunks = mutableListOf<ShortArray>()
+    private var totalSamples = 0
 
     private val bufferSize = AudioRecord.getMinBufferSize(
         SAMPLE_RATE,
@@ -30,7 +32,10 @@ class AudioRecorder {
     fun startRecording() {
         if (!isRecording.compareAndSet(false, true)) return
 
-        audioBuffer.clear()
+        synchronized(audioChunks) {
+            audioChunks.clear()
+            totalSamples = 0
+        }
 
         try {
             audioRecord = AudioRecord(
@@ -55,10 +60,10 @@ class AudioRecorder {
             while (isRecording.get()) {
                 val readCount = audioRecord?.read(buffer, 0, buffer.size) ?: 0
                 if (readCount > 0) {
-                    synchronized(audioBuffer) {
-                        for (i in 0 until readCount) {
-                            audioBuffer.add(buffer[i])
-                        }
+                    val chunk = buffer.copyOfRange(0, readCount)
+                    synchronized(audioChunks) {
+                        audioChunks.add(chunk)
+                        totalSamples += readCount
                     }
                 } else if (readCount < 0) {
                     Log.e(TAG, "AudioRecord read error: $readCount")
@@ -93,8 +98,14 @@ class AudioRecorder {
         audioRecord?.release()
         audioRecord = null
 
-        synchronized(audioBuffer) {
-            return audioBuffer.toShortArray()
+        synchronized(audioChunks) {
+            val result = ShortArray(totalSamples)
+            var offset = 0
+            for (chunk in audioChunks) {
+                System.arraycopy(chunk, 0, result, offset, chunk.size)
+                offset += chunk.size
+            }
+            return result
         }
     }
 
@@ -107,7 +118,10 @@ class AudioRecorder {
         }
         audioRecord?.release()
         audioRecord = null
-        audioBuffer.clear()
+        synchronized(audioChunks) {
+            audioChunks.clear()
+            totalSamples = 0
+        }
     }
 
     fun isRecording(): Boolean = isRecording.get()

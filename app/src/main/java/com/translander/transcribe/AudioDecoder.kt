@@ -39,7 +39,6 @@ class AudioDecoder(private val context: Context) {
         onProgress: (Int) -> Unit = {}
     ): DecodingState = withContext(Dispatchers.IO) {
         val extractor = MediaExtractor()
-        var codec: MediaCodec? = null
 
         try {
             // Open the audio source
@@ -51,8 +50,6 @@ class AudioDecoder(private val context: Context) {
         } catch (e: Exception) {
             DecodingState.Error(e.message ?: "Unknown decoding error")
         } finally {
-            codec?.stop()
-            codec?.release()
             extractor.release()
         }
     }
@@ -66,7 +63,6 @@ class AudioDecoder(private val context: Context) {
         onProgress: (Int) -> Unit = {}
     ): DecodingState = withContext(Dispatchers.IO) {
         val extractor = MediaExtractor()
-        var codec: MediaCodec? = null
 
         try {
             extractor.setDataSource(filePath)
@@ -74,8 +70,6 @@ class AudioDecoder(private val context: Context) {
         } catch (e: Exception) {
             DecodingState.Error(e.message ?: "Unknown decoding error")
         } finally {
-            codec?.stop()
-            codec?.release()
             extractor.release()
         }
     }
@@ -161,7 +155,9 @@ class AudioDecoder(private val context: Context) {
         durationUs: Long,
         onProgress: (Int) -> Unit
     ): ShortArray = withContext(Dispatchers.IO) {
-        val outputSamples = mutableListOf<Short>()
+        // Collect ShortArray chunks to avoid boxing overhead of MutableList<Short>
+        val chunks = mutableListOf<ShortArray>()
+        var totalSamples = 0
         val bufferInfo = MediaCodec.BufferInfo()
         var inputDone = false
         var outputDone = false
@@ -204,11 +200,12 @@ class AudioDecoder(private val context: Context) {
                     outputBuffer.position(bufferInfo.offset)
                     outputBuffer.limit(bufferInfo.offset + bufferInfo.size)
 
-                    // Read PCM samples (16-bit)
+                    // Read PCM samples (16-bit) directly into ShortArray
                     val shortBuffer = outputBuffer.order(ByteOrder.nativeOrder()).asShortBuffer()
                     val samples = ShortArray(shortBuffer.remaining())
                     shortBuffer.get(samples)
-                    outputSamples.addAll(samples.toList())
+                    chunks.add(samples)
+                    totalSamples += samples.size
 
                     // Report progress
                     if (durationUs > 0) {
@@ -221,7 +218,14 @@ class AudioDecoder(private val context: Context) {
             }
         }
 
-        outputSamples.toShortArray()
+        // Merge chunks into single ShortArray
+        val result = ShortArray(totalSamples)
+        var offset = 0
+        for (chunk in chunks) {
+            System.arraycopy(chunk, 0, result, offset, chunk.size)
+            offset += chunk.size
+        }
+        result
     }
 
     /**

@@ -51,7 +51,8 @@ class AudioMonitorService : Service() {
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val fileObservers: MutableList<FileObserver> = CopyOnWriteArrayList()
-    private var debounceJob: Job? = null
+    // Per-file debounce to avoid losing distinct files arriving within the debounce window
+    private val debounceJobs = mutableMapOf<String, Job>()
 
     override fun onCreate() {
         super.onCreate()
@@ -199,7 +200,8 @@ class AudioMonitorService : Service() {
     }
 
     private fun stopMonitoring() {
-        debounceJob?.cancel()
+        debounceJobs.values.forEach { it.cancel() }
+        debounceJobs.clear()
         for (observer in fileObservers) {
             observer.stopWatching()
         }
@@ -215,11 +217,12 @@ class AudioMonitorService : Service() {
         val filePath = file.absolutePath
         Log.i(TAG, "onAudioFileDetected: $filePath")
 
-        // Debounce to avoid rapid duplicate events from FileObserver
-        // and to ensure file is fully written before transcribing
-        debounceJob?.cancel()
-        debounceJob = serviceScope.launch {
+        // Per-file debounce: cancels duplicate events for the same file
+        // without losing distinct files arriving in the same window
+        debounceJobs[filePath]?.cancel()
+        debounceJobs[filePath] = serviceScope.launch {
             delay(DEBOUNCE_MS)
+            debounceJobs.remove(filePath)
             // Verify file still exists and is readable
             if (file.exists() && file.length() > 0 && file.canRead()) {
                 Log.i(TAG, "Launching transcription for: $filePath")
