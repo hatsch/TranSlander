@@ -56,7 +56,8 @@ class AudioMonitorService : Service() {
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val fileObservers: MutableList<FileObserver> = CopyOnWriteArrayList()
     // Per-file debounce to avoid losing distinct files arriving within the debounce window
-    private val debounceJobs = mutableMapOf<String, Job>()
+    // ConcurrentHashMap because FileObserver events arrive on a background thread
+    private val debounceJobs = java.util.concurrent.ConcurrentHashMap<String, Job>()
 
     override fun onCreate() {
         super.onCreate()

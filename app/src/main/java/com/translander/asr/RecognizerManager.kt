@@ -43,13 +43,6 @@ class RecognizerManager(private val context: Context, private val modelManager: 
      */
     suspend fun initialize(): Boolean {
         return mutex.withLock {
-            // Check loading state inside lock to prevent race
-            if (_isLoading.value) {
-                Log.i(TAG, "Already loading, waiting for completion")
-                // Release lock and wait for initialization
-                return waitForInitialization()
-            }
-
             if (recognizer != null) {
                 Log.i(TAG, "Recognizer already initialized")
                 return true
