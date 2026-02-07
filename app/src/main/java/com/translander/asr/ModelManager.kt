@@ -68,10 +68,12 @@ class ModelManager(private val context: Context) {
     private val modelDir: File
         get() = File(context.filesDir, MODEL_DIR_NAME)
 
-    private val httpClient = OkHttpClient.Builder()
-        .connectTimeout(30, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
-        .build()
+    private val httpClient by lazy {
+        OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(60, TimeUnit.SECONDS)
+            .build()
+    }
 
     init {
         checkModelStatus()
