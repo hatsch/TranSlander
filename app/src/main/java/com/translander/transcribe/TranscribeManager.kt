@@ -42,29 +42,25 @@ class TranscribeManager(private val context: Context) {
 
     // Audio monitor trigger wrapper
     private val audioMonitorTrigger = object : TranscriptionTrigger {
-        private var active = false
-
         override fun start() {
-            if (active) return
+            if (AudioMonitorService.isRunning) return
             try {
                 val intent = Intent(context, AudioMonitorService::class.java)
                 context.startForegroundService(intent)
-                active = true
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to start AudioMonitorService", e)
             }
         }
 
         override fun stop() {
-            if (!active) return
+            if (!AudioMonitorService.isRunning) return
             val intent = Intent(context, AudioMonitorService::class.java).apply {
                 action = AudioMonitorService.ACTION_STOP
             }
             context.startService(intent)
-            active = false
         }
 
-        override val isActive: Boolean get() = active
+        override val isActive: Boolean get() = AudioMonitorService.isRunning
     }
 
     init {

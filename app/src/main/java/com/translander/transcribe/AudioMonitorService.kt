@@ -36,6 +36,10 @@ class AudioMonitorService : Service() {
         const val SERVICE_NOTIFICATION_ID = 2001
         const val AUDIO_DETECTED_NOTIFICATION_ID = 2002
 
+        @Volatile
+        var isRunning = false
+            private set
+
         private const val DEBOUNCE_MS = 2000L
 
         private val AUDIO_EXTENSIONS = setOf(
@@ -95,6 +99,7 @@ class AudioMonitorService : Service() {
             stopSelf()
             return START_NOT_STICKY
         }
+        isRunning = true
         startMonitoring()
 
         return START_STICKY
@@ -104,6 +109,7 @@ class AudioMonitorService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        isRunning = false
         stopMonitoring()
         serviceScope.cancel()
     }

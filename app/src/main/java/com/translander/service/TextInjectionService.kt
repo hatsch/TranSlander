@@ -236,12 +236,6 @@ class TextInjectionService : AccessibilityService() {
             return node
         }
 
-        // Also check for isEditable without isFocused (some apps don't report focus correctly)
-        if (node.isEditable && node.isFocusable) {
-            Log.i(TAG, "Found editable focusable node: ${node.className}")
-            return node
-        }
-
         for (i in 0 until node.childCount) {
             val child = node.getChild(i) ?: continue
             val result = findFocusedNode(child)

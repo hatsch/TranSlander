@@ -1,6 +1,7 @@
 package com.translander.ui
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
@@ -23,24 +24,32 @@ object RecordingUIBuilder {
         val statusText: TextView
     )
 
+    private fun isNightMode(context: Context): Boolean {
+        val uiMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+        return uiMode == Configuration.UI_MODE_NIGHT_YES
+    }
+
     fun createRecordingBar(
         context: Context,
         onDoneClick: () -> Unit,
         onCancelClick: () -> Unit
     ): RecordingUI {
         val statusText: TextView
+        val night = isNightMode(context)
+        val backgroundColor = if (night) Color.parseColor("#2D2D2D") else Color.parseColor("#F2F2F2")
+        val textColor = if (night) Color.WHITE else Color.parseColor("#1C1B1F")
 
         val layout = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             setPadding(24, 24, 24, 24)
-            setBackgroundColor(Color.parseColor("#2D2D2D"))
+            setBackgroundColor(backgroundColor)
             gravity = Gravity.CENTER_VERTICAL
         }
 
         statusText = TextView(context).apply {
             text = context.getString(R.string.state_listening)
             textSize = 16f
-            setTextColor(Color.WHITE)
+            setTextColor(textColor)
             layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
         }
         layout.addView(statusText)
