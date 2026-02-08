@@ -26,6 +26,7 @@ class SettingsRepository(private val context: Context) {
         private val AUDIO_MONITOR_ENABLED_KEY = booleanPreferencesKey("audio_monitor_enabled")
         private val MONITORED_FOLDERS_KEY = stringSetPreferencesKey("monitored_folders")
         private val FLOATING_BUTTON_SIZE_KEY = stringPreferencesKey("floating_button_size")
+        private val ALERT_NOTIFICATION_STYLE_KEY = stringPreferencesKey("alert_notification_style")
 
         const val BUTTON_SIZE_SMALL = "small"   // 44dp
         const val BUTTON_SIZE_MEDIUM = "medium" // 56dp (default)
@@ -33,6 +34,10 @@ class SettingsRepository(private val context: Context) {
         const val THEME_SYSTEM = "system"
         const val THEME_LIGHT = "light"
         const val THEME_DARK = "dark"
+
+        const val ALERT_SILENT = "silent"   // IMPORTANCE_MIN
+        const val ALERT_NORMAL = "normal"   // IMPORTANCE_LOW (default)
+        const val ALERT_HIGH = "high"       // IMPORTANCE_DEFAULT (with sound)
     }
 
     val serviceEnabled: Flow<Boolean> = context.dataStore.data.map { preferences ->
@@ -67,6 +72,16 @@ class SettingsRepository(private val context: Context) {
 
     val floatingButtonSize: Flow<String> = context.dataStore.data.map { preferences ->
         preferences[FLOATING_BUTTON_SIZE_KEY] ?: BUTTON_SIZE_MEDIUM
+    }
+
+    val alertNotificationStyle: Flow<String> = context.dataStore.data.map { preferences ->
+        preferences[ALERT_NOTIFICATION_STYLE_KEY] ?: ALERT_NORMAL
+    }
+
+    suspend fun setAlertNotificationStyle(style: String) {
+        context.dataStore.edit { preferences ->
+            preferences[ALERT_NOTIFICATION_STYLE_KEY] = style
+        }
     }
 
     suspend fun setFloatingButtonSize(size: String) {

@@ -348,6 +348,7 @@ fun SettingsScreen(
     val audioMonitorEnabled by settingsRepository.audioMonitorEnabled.collectAsStateWithLifecycle(initialValue = false)
     val monitoredFolders by settingsRepository.monitoredFolders.collectAsStateWithLifecycle(initialValue = emptySet())
     val floatingButtonSize by settingsRepository.floatingButtonSize.collectAsStateWithLifecycle(initialValue = SettingsRepository.BUTTON_SIZE_MEDIUM)
+    val alertNotificationStyle by settingsRepository.alertNotificationStyle.collectAsStateWithLifecycle(initialValue = SettingsRepository.ALERT_NORMAL)
     val transcribeManager = TranslanderApp.instance.transcribeManager
 
     val hasMicPermission = remember { mutableStateOf(false) }
@@ -737,6 +738,19 @@ fun SettingsScreen(
                 )
             }
 
+            // Notifications Section
+            SettingsSection(title = stringResource(R.string.section_notifications)) {
+                AlertNotificationStyleSettingItem(
+                    selectedStyle = alertNotificationStyle,
+                    onStyleSelected = { style ->
+                        scope.launch {
+                            settingsRepository.setAlertNotificationStyle(style)
+                            TranslanderApp.instance.recreateAlertChannel()
+                        }
+                    }
+                )
+            }
+
             // Appearance Section
             SettingsSection(title = stringResource(R.string.section_appearance)) {
                 ThemeSettingItem(
@@ -1009,6 +1023,45 @@ fun ButtonSizeSettingItem(
                     expanded = false
                 },
                 leadingIcon = if (code == selectedSize) {
+                    { Icon(Icons.Default.Check, null) }
+                } else null
+            )
+        }
+    }
+}
+
+@Composable
+fun AlertNotificationStyleSettingItem(
+    selectedStyle: String,
+    onStyleSelected: (String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val styles = listOf(
+        SettingsRepository.ALERT_SILENT to stringResource(R.string.notification_alert_silent),
+        SettingsRepository.ALERT_NORMAL to stringResource(R.string.notification_alert_normal),
+        SettingsRepository.ALERT_HIGH to stringResource(R.string.notification_alert_high)
+    )
+    val selectedStyleName = styles.find { it.first == selectedStyle }?.second ?: stringResource(R.string.notification_alert_normal)
+
+    ListItem(
+        headlineContent = { Text(stringResource(R.string.notification_alert_style)) },
+        supportingContent = { Text(selectedStyleName) },
+        leadingContent = { Icon(Icons.Default.Notifications, contentDescription = null) },
+        modifier = Modifier.clickable { expanded = true }
+    )
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = { expanded = false }
+    ) {
+        styles.forEach { (code, name) ->
+            DropdownMenuItem(
+                text = { Text(name) },
+                onClick = {
+                    onStyleSelected(code)
+                    expanded = false
+                },
+                leadingIcon = if (code == selectedStyle) {
                     { Icon(Icons.Default.Check, null) }
                 } else null
             )

@@ -1,8 +1,6 @@
 package com.translander.service
 
 import android.annotation.SuppressLint
-import android.app.Notification
-import android.app.PendingIntent
 import android.app.Service
 import android.util.Log
 import android.content.Intent
@@ -17,14 +15,12 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
-import androidx.core.app.NotificationCompat
 import android.Manifest
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import com.translander.R
 import com.translander.TranslanderApp
 import com.translander.asr.AudioRecorder
-import com.translander.settings.SettingsActivity
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -43,6 +39,10 @@ class FloatingMicService : Service() {
     companion object {
         private const val TAG = "FloatingMicService"
         const val ACTION_STOP = "at.webformat.translander.STOP_SERVICE"
+
+        @Volatile
+        var isRunning = false
+            private set
     }
 
     private val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
@@ -93,13 +93,15 @@ class FloatingMicService : Service() {
         }
 
         try {
-            val notification = createNotification()
+            val notification = TranslanderApp.instance.buildServiceNotification()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
                 startForeground(TranslanderApp.NOTIFICATION_ID, notification,
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE)
             } else {
                 startForeground(TranslanderApp.NOTIFICATION_ID, notification)
             }
+            isRunning = true
+            TranslanderApp.instance.updateServiceNotification()
             // Dismiss any failure notification from previous boot attempt
             getSystemService(android.app.NotificationManager::class.java)
                 ?.cancel(TranslanderApp.SERVICE_ALERT_NOTIFICATION_ID)
@@ -129,6 +131,7 @@ class FloatingMicService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        isRunning = false
         // Only sync preference to false if intentionally stopped (not restarting for size change)
         if (isIntentionalStop) {
             TranslanderApp.instance.applicationScope.launch {
@@ -143,6 +146,7 @@ class FloatingMicService : Service() {
             windowManager.removeView(floatingView)
         }
         serviceScope.cancel()
+        TranslanderApp.instance.updateServiceNotification()
     }
 
     @SuppressLint("InflateParams", "ClickableViewAccessibility")
@@ -365,30 +369,6 @@ class FloatingMicService : Service() {
         TranslanderApp.instance.serviceAlertNotification.show(R.string.service_start_floating_mic)
     }
 
-    private fun createNotification(): Notification {
-        val stopIntent = Intent(this, FloatingMicService::class.java).apply {
-            action = ACTION_STOP
-        }
-        val stopPendingIntent = PendingIntent.getService(
-            this, 0, stopIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        val openIntent = Intent(this, SettingsActivity::class.java)
-        val openPendingIntent = PendingIntent.getActivity(
-            this, 0, openIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-
-        return NotificationCompat.Builder(this, TranslanderApp.NOTIFICATION_CHANNEL_ID)
-            .setContentTitle(getString(R.string.service_notification_title))
-            .setContentText(getString(R.string.service_notification_text))
-            .setSmallIcon(R.drawable.ic_mic_small)
-            .setContentIntent(openPendingIntent)
-            .addAction(R.drawable.ic_close, getString(R.string.action_stop), stopPendingIntent)
-            .setOngoing(true)
-            .build()
-    }
 
     private fun showToast(message: String) {
         android.widget.Toast.makeText(this, message, android.widget.Toast.LENGTH_SHORT).show()

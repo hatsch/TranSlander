@@ -14,7 +14,17 @@
     <string name="accessibility_service_label">TranSlander Text Input</string>
     <string name="accessibility_service_description">Allows TranSlander to insert transcribed text directly into text fields. Enable this for seamless voice-to-text input.</string>
 
+    <!-- Alert notification style -->
+    <string name="notification_alert_style">Boot alert priority</string>
+    <string name="notification_alert_silent">Silent</string>
+    <string name="notification_alert_normal">Normal</string>
+    <string name="notification_alert_high">High</string>
+
+    <!-- Combined service notification -->
+    <string name="notification_mic_and_monitor">Voice input and folder monitoring active</string>
+
     <!-- Settings Sections -->
+    <string name="section_notifications">Notifications</string>
     <string name="section_speech_model">Speech Model</string>
     <string name="section_microphone">Microphone</string>
     <string name="section_keyboard">Keyboard Integration</string>

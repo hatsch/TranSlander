@@ -1,6 +1,5 @@
 package com.translander.transcribe
 
-import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -32,8 +31,6 @@ class AudioMonitorService : Service() {
     companion object {
         const val ACTION_STOP = "at.webformat.translander.action.STOP_MONITOR"
 
-        const val NOTIFICATION_CHANNEL_ID = "audio_monitor"
-        const val SERVICE_NOTIFICATION_ID = 2001
         const val AUDIO_DETECTED_NOTIFICATION_ID = 2002
 
         @Volatile
@@ -61,6 +58,11 @@ class AudioMonitorService : Service() {
 
     override fun onCreate() {
         super.onCreate()
+        // Delete orphaned audio_monitor channel (now using shared service channel)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            getSystemService(NotificationManager::class.java)
+                .deleteNotificationChannel("audio_monitor")
+        }
         createNotificationChannels()
     }
 
@@ -71,13 +73,15 @@ class AudioMonitorService : Service() {
         }
 
         try {
-            val notification = createServiceNotification()
+            val notification = TranslanderApp.instance.buildServiceNotification()
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
-                startForeground(SERVICE_NOTIFICATION_ID, notification,
+                startForeground(TranslanderApp.NOTIFICATION_ID, notification,
                     ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
             } else {
-                startForeground(SERVICE_NOTIFICATION_ID, notification)
+                startForeground(TranslanderApp.NOTIFICATION_ID, notification)
             }
+            isRunning = true
+            TranslanderApp.instance.updateServiceNotification()
             // Dismiss any failure notification from previous boot attempt
             getSystemService(android.app.NotificationManager::class.java)
                 ?.cancel(TranslanderApp.SERVICE_ALERT_NOTIFICATION_ID)
@@ -100,7 +104,6 @@ class AudioMonitorService : Service() {
             stopSelf()
             return START_NOT_STICKY
         }
-        isRunning = true
         startMonitoring()
 
         return START_STICKY
@@ -113,22 +116,12 @@ class AudioMonitorService : Service() {
         isRunning = false
         stopMonitoring()
         serviceScope.cancel()
+        TranslanderApp.instance.updateServiceNotification()
     }
 
     private fun createNotificationChannels() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = getSystemService(NotificationManager::class.java)
-
-            // Service channel (min importance, nearly invisible)
-            val serviceChannel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                getString(R.string.monitor_channel_name),
-                NotificationManager.IMPORTANCE_MIN
-            ).apply {
-                description = getString(R.string.monitor_channel_description)
-                setShowBadge(false)
-            }
-            notificationManager.createNotificationChannel(serviceChannel)
 
             // Audio detected channel (default importance with sound)
             val audioDetectedChannel = NotificationChannel(
@@ -144,14 +137,6 @@ class AudioMonitorService : Service() {
 
     private fun showFailureNotification() {
         TranslanderApp.instance.serviceAlertNotification.show(R.string.service_start_folder_monitor)
-    }
-
-    private fun createServiceNotification(): Notification {
-        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_mic)
-            .setContentTitle(getString(R.string.monitor_notification_title))
-            .setPriority(NotificationCompat.PRIORITY_MIN)
-            .build()
     }
 
     private fun startMonitoring() {
